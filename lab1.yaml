@@ -156,8 +156,12 @@ paths:
                   numberOfElements:
                     type: integer
                     description: Количество элементов на текущей странице
-        '404':
+        '400':
           description: Указаны несуществующие фильтры или некорректный номер страницы
+        '404':
+          description: Маршруты не найдены
+        '500':
+          description: Внутренняя ошибка сервера
 
     put:
       summary: Метод добавления нового маршрута
@@ -178,6 +182,10 @@ paths:
                 $ref: '#/components/schemas/RouteExample'
         '400':
           description: Ошибка валидации входных данных
+        '409':
+          description: Маршрут с указанным id уже существует
+        '500':
+          description: Внутренняя ошибка сервера
 
   /routes/{id}:
     get:
@@ -199,8 +207,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RouteExample'
+        '400':
+          description: Невалидный id
         '404':
           description: Маршрут не найден
+        '500':
+          description: Внутренняя ошибка сервера
 
     patch:
       summary: Обновление маршрута по id
@@ -229,9 +241,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/RouteExample'
         '400':
-          description: Ошибка валидации входных данных
+          description: Невалидные входные данные или параметр id
         '404':
           description: Маршрут не найден
+        '500':
+          description: Внутренняя ошибка сервера
 
     delete:
       summary: Удаление маршрута по id
@@ -248,8 +262,12 @@ paths:
       responses:
         '204':
           description: Успешное удаление маршрута
+        '400':
+          description: Невалидное значение параметра id
         '404':
           description: Маршрут не найден
+        '500':
+          description: Внутренняя ошибка сервера
   /routes/min-id:
     get:
       summary: Получить элемент с минимальным id
@@ -263,7 +281,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/RouteExample'
         '404':
-          description: Массив пуст.
+          description: Коллекция маршрутов пуста
+        '500':
+          description: Внутренняя ошибка сервера
 
   /routes/distance/count/{value}:
     get:
@@ -283,8 +303,12 @@ paths:
             application/json:
               schema:
                 type: integer
+        '400':
+          description: Невалидное значение distance
         '404':
           description: Элементы не найдены.
+        '500':
+          description: Внутренняя ошибка сервера
 
   /routes/distance/greater/{value}:
     get:
@@ -306,8 +330,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RouteExample'
+        '400':
+          description: Невалидное значение distance
         '404':
           description: Элементы не найдены.
+        '500':
+          description: Внутренняя ошибка сервера
   /navigator/routes/{id-from}/{id-to}/{order-by}:
     get:
       summary: Найти все маршруты между указанными локациями и отсортировать по параметру
@@ -338,8 +366,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Route'
+        '400':
+          description: Ошибка валидации параметров запроса
         '404':
           description: Маршруты не найдены.
+        '500':
+          description: Внутренняя ошибка сервера
 
   /navigator/route/add/{id-from}/{id-to}/{distance}:
     post:
@@ -366,4 +398,6 @@ paths:
         '201':
           description: Новый маршрут успешно добавлен.
         '400':
-          description: Данные не соответствуют требованиям.
+          description: Ошибка валидации параметров запроса
+        '500':
+          description: Внутренняя ошибка сервера
