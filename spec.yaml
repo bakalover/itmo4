@@ -174,12 +174,8 @@ paths:
             schema:
               $ref: '#/components/schemas/RouteExample'
       responses:
-        '201':
+        '200':
           description: Успешное создание маршрута
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RouteExample'
         '400':
           description: Ошибка валидации входных данных
         '409':
@@ -236,10 +232,6 @@ paths:
       responses:
         '200':
           description: Успешное обновление маршрута
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RouteExample'
         '400':
           description: Невалидные входные данные или параметр id
         '404':
