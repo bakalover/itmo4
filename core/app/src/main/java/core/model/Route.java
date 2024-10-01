@@ -20,7 +20,7 @@ public class Route {
 	@Id
 	@NotNull
 	@Positive(message ="Id should be positive integer!")
-	private Integer id;
+	private Long id;
 
 	@NotNull
 	@NotBlank
