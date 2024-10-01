@@ -8,6 +8,9 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+    id 'war'
+    id 'java'
+    id "io.freefair.lombok" version "8.10"
 }
 
 repositories {
@@ -24,6 +27,11 @@ dependencies {
     // This dependency is used by the application.
     implementation libs.guava
     implementation 'javax:javaee-api:8.0.1'
+    implementation 'javax.persistence:javax.persistence-api:2.2'
+    implementation 'javax.validation:validation-api:2.0.1'
+    implementation 'org.postgresql:postgresql:42.1.4'
+    implementation 'org.hibernate:hibernate-core:5.4.32'
+    implementation 'org.hibernate.validator:hibernate-validator:6.2.0'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -36,6 +44,14 @@ java {
 application {
     // Define the main class for the application.
     mainClass = 'core.App'
+}
+
+war {
+    webAppDirectory = file('src/main/webapp')
+    from 'src/main/java/core' // adds a file-set to the root of the archive
+//     webInf { from 'src/additionalWebInf' } // adds a file-set to the WEB-INF dir.
+//     webXml = file('src/someWeb.xml') // copies a file to WEB-INF/web.xml
+    archiveFileName = 'core.war'
 }
 
 tasks.named('test') {
