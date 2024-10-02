@@ -13,8 +13,10 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 
 import core.model.Route;
+import lombok.extern.slf4j.Slf4j;
 
 @Stateless
+@Slf4j
 public class RoutesManagerImpl implements RoutesManager {
     @PersistenceContext(unitName = "routes persistence unit")
     private EntityManager em;
@@ -22,8 +24,8 @@ public class RoutesManagerImpl implements RoutesManager {
     private Route safeFind(Long id) throws EntityNotFoundException {
         var r = em.find(Route.class, id);
         if (r == null) {
+            log.warn("Route with id:{} not found", id);
             throw new EntityNotFoundException("Route with id " + id + " not found");
-
         }
         return r;
     }
@@ -35,8 +37,8 @@ public class RoutesManagerImpl implements RoutesManager {
     }
 
     @Override
-    public Route getRoute(Long id) throws IllegalArgumentException {
-        return em.find(Route.class, id);
+    public Route getRoute(Long id) throws EntityNotFoundException {
+        return safeFind(id);
     }
 
     @Override
@@ -45,12 +47,15 @@ public class RoutesManagerImpl implements RoutesManager {
 
         var result = em.createQuery("SELECT * FROM routes", Route.class)
                 .getResultList();
+
         if (result.isEmpty()) {
+            log.warn("No routes in persistence");
             throw new EntityNotFoundException("Routes collection is empty");
         }
 
         var filtered = applyFilters(filters);
         if (filtered.isEmpty()) {
+            log.warn("Empty after filters");
             throw new EntityNotFoundException("Routes collection is empty after filter apply");
         }
 
@@ -109,6 +114,7 @@ public class RoutesManagerImpl implements RoutesManager {
                 .filter(r -> f.test(r.getDistance()))
                 .collect(Collectors.toList());
         if (result.isEmpty()) {
+            log.warn("No routes with requested criteria");
             throw new EntityNotFoundException("There is no routes with specified distance criteria");
         }
         return result;
