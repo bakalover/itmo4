@@ -32,12 +32,13 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.1.4'
     implementation 'org.hibernate:hibernate-core:5.4.32'
     implementation 'org.hibernate.validator:hibernate-validator:6.2.0'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
