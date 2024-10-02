@@ -5,13 +5,13 @@ package core.rest;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import javax.ws.rs.core.Response.Status;
 import javax.validation.Valid;
 
 import core.model.*;
 import core.routes.RoutesManager;
 
 import java.util.List;
+import java.util.Optional;
 import javax.inject.Inject;
 
 @ApplicationPath("/routes")
@@ -20,55 +20,64 @@ public class RestAPI extends Application {
     @Inject
     private RoutesManager rm;
 
+    private final String justOk = "Ok";
+
+    // All Exceptions will be intercepted via ExceptionToStatus class
+    private Response okWith(Object entity) {
+        return Response.ok(entity).build();
+    }
+
     @GET
     public Response getAllRoutes(
             @QueryParam("page") @DefaultValue("0") int page,
             @QueryParam("size") @DefaultValue("10") int size,
             @QueryParam("sort") List<String> sort,
-            @QueryParam("filter") List<String> filter) {
+            @QueryParam("filter") List<String> filters) {
 
-        return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Not implemented").build();
+        return okWith(rm.getRoutes(Optional.of(filters))); // Need apply pages
     }
 
     @GET
     @Path("/{id}")
-    public Response getRoute(@PathParam("page") int page) {
-        return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Not implemented").build();
+    public Response getRoute(@PathParam("page") Long id) {
+        return okWith(rm.getRoute(id));
     }
 
     @GET
     @Path("/min-id")
     public Response getMinRoute() {
-        return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Not implemented").build();
+        return okWith(rm.minRoute());
     }
 
     @GET
     @Path("/distance/count/{value}")
-    public Response getRouteCount(@PathParam("value") int value) {
-        return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Not implemented").build();
+    public Response getRouteCount(@PathParam("value") Integer value) {
+        return okWith(rm.distanceEqual(value));
     }
 
     @GET
     @Path("/distance/grater/{value}")
-    public Response getRouteAbove(@PathParam("value") int value) {
-        return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Not implemented").build();
+    public Response getRouteAbove(@PathParam("value") Integer value) {
+        return okWith(rm.distanceGreater(value));
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addNewRoute(@Valid Route route) {
-        return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Not implemented").build();
+        rm.addRoute(route);
+        return okWith(justOk);
     }
 
     @PATCH
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateRoute(@Valid Route route) {
-        return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Not implemented").build();
+        rm.updateRoute(route);
+        return okWith(justOk);
     }
 
     @DELETE
-    public Response deleteRoute(@PathParam("id") int id) {
-        return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Not implemented").build();
+    public Response deleteRoute(@PathParam("id") Long id) {
+        rm.deleteRoute(id);
+        return okWith(justOk);
     }
-
 }
