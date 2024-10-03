@@ -3,9 +3,9 @@
  */
 package core.rest;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import javax.validation.Valid;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.*;
+import jakarta.validation.Valid;
 
 import core.model.*;
 import core.routes.RoutesManager;
@@ -13,9 +13,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
 
-@ApplicationPath("/routes")
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+@ApplicationScoped
+@Path("/routes")
 @Slf4j
 public class RestAPI extends Application {
 
