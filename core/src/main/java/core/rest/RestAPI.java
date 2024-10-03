@@ -9,12 +9,14 @@ import javax.validation.Valid;
 
 import core.model.*;
 import core.routes.RoutesManager;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
 
 @ApplicationPath("/routes")
+@Slf4j
 public class RestAPI extends Application {
 
     @Inject
@@ -34,12 +36,14 @@ public class RestAPI extends Application {
             @QueryParam("sort") List<String> sort,
             @QueryParam("filter") List<String> filters) {
 
+        log.info("Got params:\npage:{}\nsize:{}\nsort:{}\nfilters:{}", page, size, sort, filters);
         return okWith(rm.getRoutes(Optional.of(filters))); // Need apply pages
     }
 
     @GET
     @Path("/{id}")
-    public Response getRoute(@PathParam("page") Long id) {
+    public Response getRoute(@PathParam("page") long id) {
+        log.info("Get route by id:{}", id);
         return okWith(rm.getRoute(id));
     }
 
@@ -51,13 +55,15 @@ public class RestAPI extends Application {
 
     @GET
     @Path("/distance/count/{value}")
-    public Response getRouteCount(@PathParam("value") Integer value) {
+    public Response getRouteCount(@PathParam("value") int value) {
+        log.info("Get route with distance value:{}", value);
         return okWith(rm.distanceEqual(value));
     }
 
     @GET
     @Path("/distance/grater/{value}")
-    public Response getRouteAbove(@PathParam("value") Integer value) {
+    public Response getRouteAbove(@PathParam("value") int value) {
+        log.info("Get route with distance value grater than:{}", value);
         return okWith(rm.distanceGreater(value));
     }
 
@@ -71,12 +77,14 @@ public class RestAPI extends Application {
     @PATCH
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateRoute(@Valid Route route) {
+        log.info("Update route, new route:{}", route);
         rm.updateRoute(route);
         return okWith(justOk);
     }
 
     @DELETE
-    public Response deleteRoute(@PathParam("id") Long id) {
+    public Response deleteRoute(@PathParam("id") long id) {
+        log.info("Delete route with id:{}", id);
         rm.deleteRoute(id);
         return okWith(justOk);
     }

@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Stateless
 @Slf4j
 public class RoutesManagerImpl implements RoutesManager {
-    @PersistenceContext(unitName = "routes persistence unit")
+    @PersistenceContext(unitName = "routesPersistence")
     private EntityManager em;
 
     private Route safeFind(Long id) throws EntityNotFoundException {
@@ -93,7 +93,8 @@ public class RoutesManagerImpl implements RoutesManager {
     @Override
     public Route minRoute() throws EntityNotFoundException {
         var routes = getRoutes(Optional.empty());
-        return routes.stream().min(Comparator.comparingLong(Route::getId)).get(); // Should be at least one
+        // Should be at least one, so there is no Exception on get()
+        return routes.stream().min(Comparator.comparingLong(Route::getId)).get();
     }
 
     @Override
