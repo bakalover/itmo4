@@ -1,5 +1,6 @@
 package com.soa.navigator.app;
 
+import com.soa.navigator.helpers.validation.Order;
 import com.soa.navigator.model.Location;
 import com.soa.navigator.model.Route;
 import jakarta.ws.rs.*;
@@ -14,12 +15,10 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
-import com.soa.navigator.helpers.validation.Order;
-
 @ApplicationPath("/navigator")
 public class NavigatorApplication extends Application {
 
-    private final String coreServerUrl = "localhost:5000/routes";
+    private final String coreServerUrl = "localhost:8080/routes";
     private final Client client = ClientBuilder.newClient();
     private final WebTarget target = client.target(coreServerUrl);
 
@@ -29,27 +28,34 @@ public class NavigatorApplication extends Application {
     }
 
 
-//    @GET
-//    @Path("/routes/{id-from}/{id-to}/{order-by}")
-//    public Response getAllRoutesBetweenLocations(@PathParam("id-from") Long idFrom,
-//                                                 @PathParam("id-to") Long idTo,
-//                                                 @PathParam("order-by") String orderBy) {
-//        Response routesResponce = target.path("/").queryParam("filter", "filter=[from.id=" + idFrom + ",id.to=" + idTo + "]")
-//                .request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
-//                });
-//        List<Route>routes;
-//        order(routes, orderBy);
-//        return okWith(routes);
-//    }
+    @GET
+    @Path("/routes/{id-from}/{id-to}/{order-by}")
+    public Response getAllRoutesBetweenLocations(@PathParam("id-from") Long idFrom, @PathParam("id-to") Long idTo, @PathParam("order-by") String orderBy) {
+        Response routesResponse = target.path("/").queryParam("filter", "filter=[from.id=" + idFrom + ",to.id=" + idTo + "]").request(MediaType.APPLICATION_JSON).get();
+
+        if (routesResponse.getStatus() == Response.Status.OK.getStatusCode()
+        || routesResponse.getStatus() == Response.Status.CREATED.getStatusCode()) {
+            List<Route> routes = routesResponse.readEntity(new GenericType<List<Route>>() {
+            });
+            order(routes, orderBy);
+            return okWith(routes);
+        } else {
+            System.out.println("request status is: " + routesResponse.getStatus());
+            if (routesResponse.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+            else return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 
     @POST
     @Path("/route/add/{id-from}/{id-to}/{distance}")
     public Response addRouteBetweenLocations(@PathParam("id-from") Long idFrom, @PathParam("id-to") Long idTo, @PathParam("distance") Integer distance) {
-        Response routesWithFrom = target.path("/").queryParam("filter", "idFrom=" + idFrom).
-                request(MediaType.APPLICATION_JSON).get(new GenericType<>() {});
-        Response routesWithTo = target.path("/").queryParam("filter", "idFrom=" + idFrom).
-                request(MediaType.APPLICATION_JSON).get(new GenericType<>() {});
+        Response routesWithFrom = target.path("/").queryParam("filter", "idFrom=" + idFrom).request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
+        });
+        Response routesWithTo = target.path("/").queryParam("filter", "idFrom=" + idFrom).request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
+        });
 
         /*
         TODO:
@@ -66,8 +72,7 @@ public class NavigatorApplication extends Application {
         route.setTo(locationTo);
         route.setDistance(distance);
 
-        return target.path("/route").request(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(route, MediaType.APPLICATION_JSON));
+        return target.path("/route").request(MediaType.APPLICATION_JSON).post(Entity.entity(route, MediaType.APPLICATION_JSON));
     }
 
 
