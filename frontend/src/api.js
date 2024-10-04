@@ -1,42 +1,79 @@
-// api.js
 const API_URL = 'http://localhost:8080/routes';
 
-export const getRoutes = async (filters) => {
-    // TODO does not work without backend
-    // const response = await fetch(`${API_URL}?${new URLSearchParams(filters)}`);
-    //return await response.json();
-    return [];
+export const getRoutes = async (filters = {}) => {
+    try {
+        const response = await fetch(`${API_URL}?${new URLSearchParams(filters)}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch routes');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching routes:', error);
+        throw error;
+    }
 };
 
 export const getRouteById = async (id) => {
-    const response = await fetch(`${API_URL}/${id}`);
-    return await response.json();
+    try {
+        const response = await fetch(`${API_URL}/${id}`);
+        if (!response.ok) {
+            throw new Error('Route not found');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching route by ID:', error);
+        throw error;
+    }
 };
 
 export const addRoute = async (route) => {
-    const response = await fetch(API_URL, {
-        method: 'POST', // Changed from 'PUT' to 'POST' for adding a new resource
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(route),
-    });
-    return await response.json();
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(route),
+        });
+        if (!response.ok) {
+            throw new Error('Failed to add route');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error adding route:', error);
+        throw error;
+    }
 };
 
 export const updateRouteById = async (id, route) => {
-    const response = await fetch(`${API_URL}/${id}`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(route),
-    });
-    return await response.json();
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(route),
+        });
+        if (!response.ok) {
+            throw new Error('Failed to update route');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error updating route:', error);
+        throw error;
+    }
 };
 
 export const deleteRouteById = async (id) => {
-    await fetch(`${API_URL}/${id}`, {
-        method: 'DELETE',
-    });
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE',
+        });
+        if (!response.ok) {
+            throw new Error('Failed to delete route');
+        }
+    } catch (error) {
+        console.error('Error deleting route:', error);
+        throw error;
+    }
 };
