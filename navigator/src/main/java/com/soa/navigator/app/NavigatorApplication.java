@@ -13,11 +13,12 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
+import com.soa.navigator.helpers.validation.Order;
 
 @ApplicationPath("/navigator")
 public class NavigatorApplication extends Application {
 
-    private final String coreServerUrl = "localhost:8080/routes";
+    private final String coreServerUrl = "localhost:5000/routes";
     private final Client client = ClientBuilder.newClient();
     private final WebTarget target = client.target(coreServerUrl);
 
@@ -25,6 +26,8 @@ public class NavigatorApplication extends Application {
     private Response okWith(Object entity) {
         return Response.ok(entity).build();
     }
+
+
 
     @GET
     @Path("/routes/{id-from}/{id-to}/{order-by}")
@@ -34,6 +37,7 @@ public class NavigatorApplication extends Application {
         List<Route> routes = target.path("/").queryParam("filter", "idFrom=" + idFrom + "&idTo=" + idTo)
                 .request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
                 });
+        order(routes, orderBy);
         return okWith(routes);
     }
 
@@ -61,6 +65,44 @@ public class NavigatorApplication extends Application {
         route.setDistance(distance);
         return target.path("/route").request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(route, MediaType.APPLICATION_JSON));
+    }
+
+
+    void order(List<Route> routes, String orderBy) {
+        routes.sort((route1, route2) -> {
+            try {
+                Order orderField = Order.valueOf(orderBy.toUpperCase()); // Преобразуем orderBy в верхний регистр
+                System.out.println(orderField + " " + orderBy);
+                switch (orderField) {
+                    case NAME:
+                        return route1.getName().compareTo(route2.getName());
+                    case FROM_X:
+                        return Double.compare(route1.getFrom().getX(), route2.getFrom().getX());
+                    case FROM_Y:
+                        return Long.compare(route1.getFrom().getY(), route2.getFrom().getY());
+                    case FROM_NAME:
+                        return route1.getFrom().getName().compareTo(route2.getFrom().getName());
+                    case TO_X:
+                        return Double.compare(route1.getTo().getX(), route2.getTo().getX());
+                    case TO_Y:
+                        return Long.compare(route1.getTo().getY(), route2.getTo().getY());
+                    case TO_NAME:
+                        return route1.getTo().getName().compareTo(route2.getTo().getName());
+                    case COORDINATES_X:
+                        return Double.compare(route1.getCoordinates().getX(), route2.getCoordinates().getX());
+                    case COORDINATES_Y:
+                        return Long.compare(route1.getCoordinates().getY(), route2.getCoordinates().getY());
+                    case DISTANCE:
+                        return Double.compare(route1.getDistance(), route2.getDistance());
+                    default:
+                        return 0; // Отсортировать по умолчанию (не сортировать)
+                }
+            } catch (IllegalArgumentException e) {
+                // Обработка ошибки, если orderBy не является допустимым значением перечисления
+                System.err.println("Неверный параметр сортировки: " + orderBy);
+                return 0;
+            }
+        });
     }
 
 

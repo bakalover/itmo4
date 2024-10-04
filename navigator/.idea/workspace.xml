@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="450eda56-8719-4cdc-b30f-7e3bb7c02f80" name="Changes" comment="New jakarta.persistence library version">
+    <list default="true" id="450eda56-8719-4cdc-b30f-7e3bb7c02f80" name="Changes" comment="Expanded templates for navigator methods">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/soa/navigator/helpers/validation/Order.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/soa/navigator/app/NavigatorApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/soa/navigator/app/NavigatorApplication.java" afterDir="false" />
     </list>
@@ -19,6 +20,13 @@
       <option value="module" />
     </option>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
@@ -27,18 +35,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "themyav"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;themyav&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/bakalover/itmo4",
-    "accountId": "0b29f82a-b442-45e0-a047-e9b73003c023"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/bakalover/itmo4&quot;,
+    &quot;accountId&quot;: &quot;0b29f82a-b442-45e0-a047-e9b73003c023&quot;
   }
-}]]></component>
+}</component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -54,22 +62,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Maven.navigator [package].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "soa-navigator",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/myav/IdeaProjects/itmo4/navigator",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.navigator [package].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;soa-navigator&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/myav/IdeaProjects/itmo4/navigator&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/java/com/soa/helpers/validation" />
@@ -98,7 +106,9 @@
       <workItem from="1727986732389" duration="222000" />
       <workItem from="1727987031852" duration="343000" />
       <workItem from="1727987818778" duration="684000" />
-      <workItem from="1727990634087" duration="4257000" />
+      <workItem from="1727990634087" duration="5266000" />
+      <workItem from="1728038073696" duration="829000" />
+      <workItem from="1728057777155" duration="1681000" />
     </task>
     <task id="LOCAL-00001" summary="New jakarta.persistence library version">
       <option name="closed" value="true" />
@@ -108,7 +118,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727991050342</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Expanded templates for navigator methods">
+      <option name="closed" value="true" />
+      <created>1727995558709</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1727995558709</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -127,6 +145,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="New jakarta.persistence library version" />
-    <option name="LAST_COMMIT_MESSAGE" value="New jakarta.persistence library version" />
+    <MESSAGE value="Expanded templates for navigator methods" />
+    <option name="LAST_COMMIT_MESSAGE" value="Expanded templates for navigator methods" />
   </component>
 </project>
