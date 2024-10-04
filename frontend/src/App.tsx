@@ -49,9 +49,17 @@ function App() {
         setLoading(true);
         setError(null);
         try {
-            const response: ApiResponse = await getRoutes();
+            const response : ApiResponse = await getRoutes();
             if (response && response.content) {
-                setRoutes(response.content);
+                console.log("responce ", response)
+                console.log("responce content: ", response.content)
+                const content_only : Route[] = response.content
+                console.log("content array is: ", content_only)
+                setRoutes(content_only);
+                console.log("routes is ", routes)
+            }
+            else {
+                console.log("content: ", response.content)
             }
         } catch (err) {
             setError('Failed to fetch routes');
@@ -76,7 +84,7 @@ function App() {
     const [selectedAction, setSelectedAction] = useState<string | null>(null);
 
     const actions: { [key: string]: string } = {
-        addRoute: 'Добавить маршрут',
+        addRoute: 'Добавить новый маршрут в хранилище',
         getMinRoute: 'Получить минимальный маршрут',
         getRouteWithDistance: 'Получить маршрут с расстоянием',
         getRoutesBetweenLocation: 'Получить маршруты между локациями',
@@ -105,25 +113,37 @@ function App() {
         <div className="App">
             <header className="App-header">
                 <h2>Маршруты</h2>
-                <p>Тут будет таблица с маршрутами. В каждой строке 2 кнопки: подробнее и удалить</p>
-                {loading && <p>Loading...</p>}
-                {error && <p>Error: {error}</p>}
-                <ul>
-                    {routes.map(route => (
-                        <li key={route.id}>
-                            {route.from.name} to {route.to.name} - {route.distance} km
-                            <button onClick={() => handleDeleteRoute(route.id)}>Delete</button>
-                        </li>
+                {loading && <p>Загрузка...</p>}
+                {error && <p>Ошибка: {error}</p>}
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Номер</th>
+                        <th>Маршрут</th>
+                        <th>Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {routes.map((route, index) => (
+                        <tr key={index}>
+                            <td>{index + 1}</td>
+                            <td>{JSON.stringify(route)}</td>
+                            <td>
+                                <button>Подробнее</button>
+                                <button>Удалить</button>
+                            </td>
+                        </tr>
                     ))}
-                </ul>
-                <div style={{ textAlign: 'center', marginTop: '50px' }}>
+                    </tbody>
+                </table>
+                <div style={{textAlign: 'center', marginTop: '50px'}} className="menu">
                     <div>
                         {Object.keys(actions).map((key) => (
                             <button key={key} onClick={() => handleButtonClick(key as keyof typeof actions)}>
                                 {actions[key]}
                             </button>))}
                     </div>
-                    <div style={{ marginTop: '20px' }}>
+                    <div style={{marginTop: '20px'}}>
                         {renderContent()}
                     </div>
                 </div>

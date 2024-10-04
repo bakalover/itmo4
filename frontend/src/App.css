@@ -14,3 +14,30 @@
 button {
   background-color: #61dafb;
 }
+
+table {
+  border-collapse: collapse; /* Убираем двойные границы */
+  width: 70%; /* Занимаем всю ширину */
+  margin-left: 10%;
+}
+
+th, td {
+  border: 1px solid black; /* Добавляем границу каждой ячейке */
+  padding: 8px; /* Добавляем отступы */
+}
+
+th {
+  background-color: #f2f2f2; /* Задаем фон заголовка */
+}
+
+button {
+  margin: 10px;
+  height: 30px;
+  width: 150px;
+  border-radius: 10px;
+}
+
+.menu button {
+  height: 50px;
+  width: 200px;
+}

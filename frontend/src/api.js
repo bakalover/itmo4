@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/routes';
+const API_URL = 'http://localhost:5000/routes';
 
 export const getRoutes = async (filters = {}) => {
     try {
