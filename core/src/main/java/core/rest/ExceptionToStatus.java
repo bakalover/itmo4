@@ -13,12 +13,14 @@ import lombok.extern.slf4j.Slf4j;
 @Provider
 @Slf4j
 public class ExceptionToStatus implements ExceptionMapper<Exception> {
-    private final String InternalErrMsg = "Internal server error";
+    private final String internalErrMsg = "Internal server error";
 
     @Override
     public Response toResponse(Exception e) {
         log.warn("Got exception: {}", e.getMessage());
-        if (e instanceof ValidationException) {
+        if (e instanceof ValidationException
+                || e instanceof IllegalArgumentException
+                || e instanceof ClassCastException) {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
         if (e instanceof EntityNotFoundException) {
@@ -27,6 +29,6 @@ public class ExceptionToStatus implements ExceptionMapper<Exception> {
         if (e instanceof EntityExistsException) {
             return Response.status(Status.CONFLICT).entity(e.getMessage()).build();
         }
-        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(InternalErrMsg).build();
+        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(internalErrMsg).build();
     }
 }

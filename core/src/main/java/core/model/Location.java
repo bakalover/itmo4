@@ -3,7 +3,6 @@ package core.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import core.helpers.validation.NullableNotBlank;
 import lombok.Data;
 

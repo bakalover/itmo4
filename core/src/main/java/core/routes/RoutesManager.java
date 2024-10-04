@@ -2,6 +2,7 @@ package core.routes;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,7 +16,7 @@ public interface RoutesManager {
         public Route getRoute(Long id)
                         throws EntityNotFoundException;
 
-        public List<Route> getRoutes(Optional<List<String>> filters)
+        public List<Route> getRoutes(List<Predicate<Route>> fs)
                         throws EntityNotFoundException;
 
         public void deleteRoute(Long id)

@@ -2,16 +2,14 @@ package core.routes;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
-
+import core.helpers.Filter;
 import core.model.Route;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,7 +40,7 @@ public class RoutesManagerImpl implements RoutesManager {
     }
 
     @Override
-    public List<Route> getRoutes(Optional<List<String>> filters)
+    public List<Route> getRoutes(List<Predicate<Route>> fs)
             throws EntityNotFoundException {
 
         var result = em.createQuery("SELECT * FROM routes", Route.class)
@@ -53,18 +51,14 @@ public class RoutesManagerImpl implements RoutesManager {
             throw new EntityNotFoundException("Routes collection is empty");
         }
 
-        var filtered = applyFilters(filters);
+        var filtered = Filter.apply(result, fs);
+
         if (filtered.isEmpty()) {
             log.warn("Empty after filters");
             throw new EntityNotFoundException("Routes collection is empty after filter apply");
         }
 
         return filtered;
-    }
-
-    private List<Route> applyFilters(Optional<List<String>> filters) {
-        // Somehow apply filters
-        return null;
     }
 
     @Override
@@ -92,33 +86,19 @@ public class RoutesManagerImpl implements RoutesManager {
 
     @Override
     public Route minRoute() throws EntityNotFoundException {
-        var routes = getRoutes(Optional.empty());
+        var routes = getRoutes(Filter.withoutFilters());
         // Should be at least one, so there is no Exception on get()
         return routes.stream().min(Comparator.comparingLong(Route::getId)).get();
     }
 
     @Override
     public List<Route> distanceEqual(Integer searchD) throws EntityNotFoundException {
-        return distanceByCriteria(entityD -> entityD == searchD);
+        return getRoutes(List.of(route -> route.getDistance() == searchD));
     }
 
     @Override
     public List<Route> distanceGreater(Integer searchD) throws EntityNotFoundException {
-        return distanceByCriteria(entityD -> entityD > searchD);
-    }
-
-    private List<Route> distanceByCriteria(Predicate<Integer> f)
-            throws EntityNotFoundException {
-        var routes = getRoutes(Optional.empty());
-        var result = routes
-                .stream()
-                .filter(r -> f.test(r.getDistance()))
-                .collect(Collectors.toList());
-        if (result.isEmpty()) {
-            log.warn("No routes with requested criteria");
-            throw new EntityNotFoundException("There is no routes with specified distance criteria");
-        }
-        return result;
+        return getRoutes(List.of(route -> route.getDistance() > searchD));
     }
 
 }

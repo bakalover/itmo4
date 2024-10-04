@@ -6,7 +6,7 @@ package core.rest;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import jakarta.validation.Valid;
-
+import core.helpers.Filter;
 import core.model.*;
 import core.routes.RoutesManager;
 import lombok.extern.slf4j.Slf4j;
@@ -37,10 +37,10 @@ public class RestAPI extends Application {
             @QueryParam("page") @DefaultValue("0") int page,
             @QueryParam("size") @DefaultValue("10") int size,
             @QueryParam("sort") List<String> sort,
-            @QueryParam("filter") List<String> filters) {
+            @QueryParam("filter") String filters) {
 
         log.info("Got params:\npage:{}\nsize:{}\nsort:{}\nfilters:{}", page, size, sort, filters);
-        return okWith(rm.getRoutes(Optional.of(filters))); // Need apply pages
+        return okWith(rm.getRoutes(Filter.tryParse(filters))); // Need apply pages
     }
 
     @GET
