@@ -6,13 +6,8 @@
 
     <persistence-unit name="routesPersistence">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-
+        <jta-data-source>java:/MDS</jta-data-source>
         <properties>
-            <!-- Database connection settings -->
-            <property name="javax.persistence.jdbc.url" value="${PG_URL}"/>
-            <property name="javax.persistence.jdbc.user" value="${PG_USERNAME}"/>
-            <property name="javax.persistence.jdbc.password" value="${PG_PASSWORD}"/>
-            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
 
             <!-- Hibernate settings -->
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>

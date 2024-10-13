@@ -2,7 +2,10 @@ package core.model;
 
 import java.util.Date;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
@@ -19,7 +22,7 @@ import lombok.Data;
 @Data
 public class Route {
 	@Id
-	@NotNull
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Positive(message = "Id should be positive integer!")
 	private Long id;
 
@@ -28,7 +31,7 @@ public class Route {
 	private String name;
 
 	@NotNull
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Coordinates coordinates;
 
 	@NotNull
@@ -40,11 +43,11 @@ public class Route {
 	}
 
 	@NotNull
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Location from;
 
 	@NotNull
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Location to;
 
 	@NotNull

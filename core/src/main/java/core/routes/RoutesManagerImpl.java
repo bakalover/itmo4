@@ -43,7 +43,7 @@ public class RoutesManagerImpl implements RoutesManager {
     public List<Route> getRoutes(List<Predicate<Route>> fs)
             throws EntityNotFoundException {
 
-        var result = em.createQuery("SELECT * FROM routes", Route.class)
+        var result = em.createNativeQuery("SELECT * FROM routes", Route.class)
                 .getResultList();
 
         if (result.isEmpty()) {
@@ -93,7 +93,7 @@ public class RoutesManagerImpl implements RoutesManager {
 
     @Override
     public List<Route> distanceEqual(Integer searchD) throws EntityNotFoundException {
-        return getRoutes(List.of(route -> route.getDistance() == searchD));
+        return getRoutes(List.of(route -> route.getDistance().equals(searchD)));
     }
 
     @Override
