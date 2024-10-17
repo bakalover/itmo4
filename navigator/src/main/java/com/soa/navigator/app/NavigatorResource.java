@@ -14,7 +14,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
-@Path("/navigator")
+@Path("navigator")
 public class NavigatorResource {
     private final String coreServerUrl = "localhost:8080/routes";
     private final Client client = ClientBuilder.newClient();

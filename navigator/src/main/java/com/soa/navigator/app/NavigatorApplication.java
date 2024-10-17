@@ -15,7 +15,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
-@ApplicationPath("/api")
+@ApplicationPath("/")
 public class NavigatorApplication extends Application {
 
 
