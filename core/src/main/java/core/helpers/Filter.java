@@ -1,6 +1,7 @@
 package core.helpers;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.Arrays;
@@ -16,13 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Filter {
 
-    private static final String example = "[coordinates.x=100,coordinates.y=200,from.x=300]";
+    private static final String example = "coordinates.x:100,coordinates.y:200,from.x:55.7566668]";
     private static final List<Field> routeFields = Arrays.asList(Route.class.getDeclaredFields());
     private static final List<Field> locationFields = Arrays.asList(Location.class.getDeclaredFields());
     private static final List<Field> coordinateFields = Arrays.asList(Coordinates.class.getDeclaredFields());
     private static final List<String> secondLayerFields = List.of("from", "to", "coordinates");
     private static final Pattern pattern = Pattern
-            .compile("\\[([a-zA-Z0-9_.]+=[^,\\]]+(?:,[a-zA-Z0-9_.]+=[^,\\]]+)*)\\]");
+            .compile("([a-zA-Z0-9_.]+:[^,\\]]+(?:,[a-zA-Z0-9_.]+:[^,\\]]+)*)");
 
     private static Object convertValue(String value, Class<?> targetType) {
         if (targetType == String.class) {
@@ -49,12 +50,17 @@ public class Filter {
             panic("");
         }
         var kvs = Arrays.asList(input.split(","));
-        List<Predicate<Route>> resultFs = List.of();
+        log.info("{}", kvs);
+        List<Predicate<Route>> resultFs = new ArrayList<>();
         kvs.stream().forEach(entry -> {
-            var kv = Arrays.asList(entry.split("="));
+            var kv = Arrays.asList(entry.split(":"));
+            log.info("kv to parse: {}", kv);
             var key = kv.get(0);
-            var keyPath = Arrays.asList(key.split("."));
+            log.info("key: {}", key);
+            var keyPath = Arrays.asList(key.split("\\."));
+            log.info("keyPath: {}", keyPath);
             var value = kv.get(1);
+            log.info("value: {}", value);
             resultFs.add(kvF(keyPath, value));
         });
         return resultFs;
@@ -82,6 +88,8 @@ public class Filter {
                 result = lastField.get(current).equals(convertedValue);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 panic(e.getMessage());
+            } catch (NumberFormatException e) {
+                panic("Invalid type for key: " + keyPath.toString());
             }
 
             return result;
