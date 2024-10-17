@@ -5,13 +5,14 @@ package core.rest;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
-import jakarta.validation.Valid;
+import jakarta.ws.rs.core.Response.Status;
 import core.helpers.Filter;
 import core.model.*;
 import core.routes.RoutesManager;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -31,12 +32,23 @@ public class RestAPI extends Application {
         return Response.ok(entity).build();
     }
 
+    // page > 0, size > 0
+    private List<Route> cut(List<Route> input, int page, int size) {
+        var result = new ArrayList<Route>();
+        var toSkip = (page - 1) * size;
+        var start = toSkip; // First element has index -=1
+        for (int i = start; i < Math.min(start + size, input.size()); i++) {
+            result.add(input.get(i));
+        }
+        return result;
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRoutes(
             @QueryParam("page") @DefaultValue("0") int page,
             @QueryParam("size") @DefaultValue("10") int size,
-            @QueryParam("sort") List<String> sort,
+            @QueryParam("sort") String sort,
             @QueryParam("filter") String filters) {
 
         log.info("Got params:\npage:{}\nsize:{}\nsort:{}\nfilters:{}", page, size, sort, filters);
@@ -46,7 +58,20 @@ public class RestAPI extends Application {
         } else {
             routes = rm.getRoutes(Filter.tryParse(filters));
         }
-        return okWith(routes); // Need apply pages
+        if (page < 0) {
+            return Response.status(Status.BAD_REQUEST).entity("Invalid page value").build();
+        }
+        if (size <= 0) {
+            return Response.status(Status.BAD_REQUEST).entity("Invalid size value").build();
+        }
+        if (page == 0) { // All routes, size - ignored
+            return okWith(routes);
+        }
+        var result = cut(routes, page, size);
+        if (result.isEmpty()) {
+            return Response.status(Status.NOT_FOUND).entity("No routes at specified page").build();
+        }
+        return okWith(result);
     }
 
     @GET
