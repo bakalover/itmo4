@@ -175,11 +175,7 @@ public class Filter {
         for (Comparator<Route> f : fs) {
             resultStream = resultStream.sorted(f);
         }
-        var result = resultStream.collect(Collectors.toList());
-        if (result.isEmpty()) {
-            log.warn("No routes after filters remain");
-        }
-        return result;
+        return resultStream.collect(Collectors.toList());
     }
 
     public static List<Predicate<Route>> withoutFilters() {
