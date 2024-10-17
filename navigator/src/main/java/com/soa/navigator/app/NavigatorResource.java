@@ -15,7 +15,7 @@ import java.util.List;
 
 @Path("navigator")
 public class NavigatorResource {
-    private final String coreServerUrl = "localhost:8080/routes";
+    private final String coreServerUrl = "http://localhost:35080/routes";
     private final Client client = ClientBuilder.newClient();
     private final WebTarget target = client.target(coreServerUrl);
 
@@ -39,34 +39,42 @@ public class NavigatorResource {
         return Response.ok(hello).build();
     }
 
-
     @GET
     @Path("/routes/{id-from}/{id-to}/{order-by}")
     @Produces("application/json")
-    public Response getAllRoutesBetweenLocations(@PathParam("id-from") Long idFrom, @PathParam("id-to") Long idTo, @PathParam("order-by") String orderBy) {
-        Response routesResponse = target.path("/").queryParam("filter", "from.id:" + idFrom + ",to.id:" + idTo + ",sort:" + orderBy).request(MediaType.APPLICATION_JSON).get();
+    public Response getAllRoutesBetweenLocations(@PathParam("id-from") Long idFrom, @PathParam("id-to") Long idTo,
+            @PathParam("order-by") String orderBy) {
+        Response routesResponse = target.path("/")
+                .queryParam("filter", "from.id:" + idFrom + "," + "to.id:" + idTo)
+                .queryParam("sort", orderBy)
+                .request(MediaType.APPLICATION_JSON).get();
 
         if (isResponseStatusOK(routesResponse)) {
             List<Route> routes = routesResponse.readEntity(new GenericType<>() {
             });
-            if (routes.isEmpty()) return Response.status(Response.Status.NOT_FOUND).build();
+            if (routes.isEmpty())
+                return Response.status(Response.Status.NOT_FOUND).build();
             return okWith(routes);
         } else {
             System.out.println("request status is: " + routesResponse.getStatus());
             if (isResponseStatusCrashed(routesResponse))
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-            else return Response.status(Response.Status.BAD_REQUEST).build();
+            else
+                return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 
-
     @POST
     @Path("/route/add/{id-from}/{id-to}/{distance}")
-    public Response addRouteBetweenLocations(@PathParam("id-from") Long idFrom, @PathParam("id-to") Long idTo, @PathParam("distance") Integer distance) {
-        Response routesWithFrom = target.path("/").queryParam("filter", "idFrom:" + idFrom).request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
-        });
-        Response routesWithTo = target.path("/").queryParam("filter", "idTo:" + idTo).request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
-        });
+    public Response addRouteBetweenLocations(@PathParam("id-from") Long idFrom, @PathParam("id-to") Long idTo,
+            @PathParam("distance") Integer distance) {
+        // "sort=x,from.x,coordinates.y"
+        Response routesWithFrom = target.path("/").queryParam("filter", "from.id:" + idFrom)
+                .request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
+                });
+        Response routesWithTo = target.path("/").queryParam("filter", "to.id:" + idTo)
+                .request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
+                });
         if (isResponseStatusOK(routesWithFrom) && isResponseStatusOK(routesWithTo)) {
             List<Route> routesFrom = routesWithFrom.readEntity(new GenericType<>() {
             });
@@ -77,17 +85,21 @@ public class NavigatorResource {
                 Location locationTo = routesTo.get(0).getTo();
                 Route route = new Route();
 
-                route.setName("from_" + locationFrom.getName() + "_to_" + locationTo.getName() + "_distance_" + distance);
+                route.setName(
+                        "from_" + locationFrom.getName() + "_to_" + locationTo.getName() + "_distance_" + distance);
                 route.setFrom(locationFrom);
                 route.setTo(locationTo);
                 route.setDistance(distance);
 
-                return target.path("/route").request(MediaType.APPLICATION_JSON).post(Entity.entity(route, MediaType.APPLICATION_JSON));
+                return target.path("/route").request(MediaType.APPLICATION_JSON)
+                        .put(Entity.entity(route, MediaType.APPLICATION_JSON));
 
-            } else return Response.status(Response.Status.BAD_REQUEST).build();
+            } else
+                return Response.status(Response.Status.BAD_REQUEST).build();
         } else if (isResponseStatusCrashed(routesWithFrom) || isResponseStatusCrashed(routesWithTo)) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        } else return Response.status(Response.Status.BAD_REQUEST).build();
+        } else
+            return Response.status(Response.Status.BAD_REQUEST).build();
 
     }
 }
