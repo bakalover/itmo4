@@ -1,6 +1,5 @@
 package com.soa.navigator.app;
 
-import com.soa.navigator.helpers.validation.Order;
 import com.soa.navigator.model.Location;
 import com.soa.navigator.model.Route;
 import jakarta.ws.rs.*;
@@ -45,13 +44,12 @@ public class NavigatorResource {
     @Path("/routes/{id-from}/{id-to}/{order-by}")
     @Produces("application/json")
     public Response getAllRoutesBetweenLocations(@PathParam("id-from") Long idFrom, @PathParam("id-to") Long idTo, @PathParam("order-by") String orderBy) {
-        Response routesResponse = target.path("/").queryParam("filter", "filter=[from.id=" + idFrom + ",to.id=" + idTo + "]").request(MediaType.APPLICATION_JSON).get();
+        Response routesResponse = target.path("/").queryParam("filter", "from.id:" + idFrom + ",to.id:" + idTo + ",sort:" + orderBy).request(MediaType.APPLICATION_JSON).get();
 
         if (isResponseStatusOK(routesResponse)) {
-            List<Route> routes = routesResponse.readEntity(new GenericType<List<Route>>() {
+            List<Route> routes = routesResponse.readEntity(new GenericType<>() {
             });
             if (routes.isEmpty()) return Response.status(Response.Status.NOT_FOUND).build();
-            order(routes, orderBy);
             return okWith(routes);
         } else {
             System.out.println("request status is: " + routesResponse.getStatus());
@@ -65,14 +63,14 @@ public class NavigatorResource {
     @POST
     @Path("/route/add/{id-from}/{id-to}/{distance}")
     public Response addRouteBetweenLocations(@PathParam("id-from") Long idFrom, @PathParam("id-to") Long idTo, @PathParam("distance") Integer distance) {
-        Response routesWithFrom = target.path("/").queryParam("filter", "idFrom=" + idFrom).request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
+        Response routesWithFrom = target.path("/").queryParam("filter", "idFrom:" + idFrom).request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
         });
-        Response routesWithTo = target.path("/").queryParam("filter", "idFrom=" + idFrom).request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
+        Response routesWithTo = target.path("/").queryParam("filter", "idTo:" + idTo).request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
         });
         if (isResponseStatusOK(routesWithFrom) && isResponseStatusOK(routesWithTo)) {
-            List<Route> routesFrom = routesWithFrom.readEntity(new GenericType<List<Route>>() {
+            List<Route> routesFrom = routesWithFrom.readEntity(new GenericType<>() {
             });
-            List<Route> routesTo = routesWithFrom.readEntity(new GenericType<List<Route>>() {
+            List<Route> routesTo = routesWithFrom.readEntity(new GenericType<>() {
             });
             if (!routesFrom.isEmpty() && !routesTo.isEmpty()) {
                 Location locationFrom = routesFrom.get(0).getFrom();
@@ -91,42 +89,5 @@ public class NavigatorResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         } else return Response.status(Response.Status.BAD_REQUEST).build();
 
-    }
-
-
-    void order(List<Route> routes, String orderBy) {
-        routes.sort((route1, route2) -> {
-            try {
-                Order orderField = Order.valueOf(orderBy.toUpperCase());
-                System.out.println(orderField + " " + orderBy);
-                switch (orderField) {
-                    case NAME:
-                        return route1.getName().compareTo(route2.getName());
-                    case FROM_X:
-                        return Double.compare(route1.getFrom().getX(), route2.getFrom().getX());
-                    case FROM_Y:
-                        return Long.compare(route1.getFrom().getY(), route2.getFrom().getY());
-                    case FROM_NAME:
-                        return route1.getFrom().getName().compareTo(route2.getFrom().getName());
-                    case TO_X:
-                        return Double.compare(route1.getTo().getX(), route2.getTo().getX());
-                    case TO_Y:
-                        return Long.compare(route1.getTo().getY(), route2.getTo().getY());
-                    case TO_NAME:
-                        return route1.getTo().getName().compareTo(route2.getTo().getName());
-                    case COORDINATES_X:
-                        return Double.compare(route1.getCoordinates().getX(), route2.getCoordinates().getX());
-                    case COORDINATES_Y:
-                        return Long.compare(route1.getCoordinates().getY(), route2.getCoordinates().getY());
-                    case DISTANCE:
-                        return Double.compare(route1.getDistance(), route2.getDistance());
-                    default:
-                        return 0;
-                }
-            } catch (IllegalArgumentException e) {
-                System.err.println("Неверный параметр сортировки: " + orderBy);
-                return 0;
-            }
-        });
     }
 }

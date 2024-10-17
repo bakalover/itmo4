@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="450eda56-8719-4cdc-b30f-7e3bb7c02f80" name="Changes" comment="Made possible to deploy it on payara" />
+    <list default="true" id="450eda56-8719-4cdc-b30f-7e3bb7c02f80" name="Changes" comment="Fixed api path">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/soa/navigator/app/NavigatorResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/soa/navigator/app/NavigatorResource.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -156,7 +158,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729184394327</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Fixed api path">
+      <option name="closed" value="true" />
+      <created>1729184772134</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1729184772134</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -180,6 +190,7 @@
     <MESSAGE value="Added errors handling to the method" />
     <MESSAGE value="Finished first approximation of response system" />
     <MESSAGE value="Made possible to deploy it on payara" />
-    <option name="LAST_COMMIT_MESSAGE" value="Made possible to deploy it on payara" />
+    <MESSAGE value="Fixed api path" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed api path" />
   </component>
 </project>
