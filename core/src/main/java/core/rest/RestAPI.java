@@ -32,17 +32,6 @@ public class RestAPI extends Application {
         return Response.ok(entity).build();
     }
 
-    // page > 0, size > 0
-    private List<Route> cut(List<Route> input, int page, int size) {
-        var result = new ArrayList<Route>();
-        var toSkip = (page - 1) * size;
-        var start = toSkip; // First element has index -=1
-        for (int i = start; i < Math.min(start + size, input.size()); i++) {
-            result.add(input.get(i));
-        }
-        return result;
-    }
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRoutes(
@@ -52,22 +41,26 @@ public class RestAPI extends Application {
             @QueryParam("filter") String filters) {
 
         log.info("Got params:\npage:{}\nsize:{}\nsort:{}\nfilters:{}", page, size, sort, filters);
-        List<Route> routes;
-        if (filters == null) {
-            routes = rm.getRoutes(Filter.withoutFilters());
-        } else {
-            routes = rm.getRoutes(Filter.tryParse(filters));
-        }
         if (page < 0) {
             return Response.status(Status.BAD_REQUEST).entity("Invalid page value").build();
         }
         if (size <= 0) {
             return Response.status(Status.BAD_REQUEST).entity("Invalid size value").build();
         }
+        List<Route> routes;
+        if (filters == null) {
+            routes = rm.getRoutes(Filter.withoutFilters());
+        } else {
+            routes = rm.getRoutes(Filter.tryParseFilters(filters));
+        }
+        if (sort != null) {
+            var sorts = Filter.tryParseSort(sort);
+            routes = Filter.applySorts(routes, sorts);
+        }
         if (page == 0) { // All routes, size - ignored
             return okWith(routes);
         }
-        var result = cut(routes, page, size);
+        var result = Filter.cut(routes, page, size);
         if (result.isEmpty()) {
             return Response.status(Status.NOT_FOUND).entity("No routes at specified page").build();
         }

@@ -51,7 +51,7 @@ public class RoutesManagerImpl implements RoutesManager {
             throw new EntityNotFoundException("Routes collection is empty");
         }
 
-        var filtered = Filter.apply(result, fs);
+        var filtered = Filter.applyFilters(result, fs);
 
         if (filtered.isEmpty()) {
             log.warn("Empty after filters");
