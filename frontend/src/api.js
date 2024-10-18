@@ -41,8 +41,9 @@ export const getRouteById = async (id) => {
 
 export const addRoute = async (route) => {
     try {
+        console.log("going to add", route)
         const response = await fetch(API_URL, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -51,7 +52,6 @@ export const addRoute = async (route) => {
         if (!response.ok) {
             throw new Error('Failed to add route');
         }
-        return await response.json();
     } catch (error) {
         console.error('Error adding route:', error);
         throw error;

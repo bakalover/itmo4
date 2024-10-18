@@ -2,10 +2,25 @@ import React, { useState } from 'react';
 import { addRoute, getRoutes } from '../api';
 
 interface Route {
+    id: number;
     name: string;
-    coordinates: { x: number; y: number };
-    from: { x: number; y: number; z: number; name: string };
-    to: { x: number; y: number; z: number; name: string };
+    coordinates: {
+        x: number;
+        y: number;
+    };
+    creationDate: string;
+    from: {
+        x: number;
+        y: number;
+        z: number;
+        name: string;
+    };
+    to: {
+        x: number;
+        y: number;
+        z: number;
+        name: string;
+    };
     distance: number;
 }
 
@@ -19,7 +34,7 @@ interface State {
     isSimple: boolean;
     routes: Route[];
     newRoute: SimpleRoute;
-    detailedRoute: Route;
+    detailedRoute: Omit<Route, 'id' | 'creationDate'>;
 }
 
 const initialState: State = {
@@ -215,6 +230,13 @@ const AddRoute: React.FC = () => {
                         value={state.detailedRoute.from.y}
                         onChange={(e) => handleFromChange('y', e.target.valueAsNumber)}
                     />
+                    <label htmlFor="from-z"> Z</label>
+                    <input
+                        id="from-z"
+                        type="number"
+                        value={state.detailedRoute.from.z}
+                        onChange={(e) => handleFromChange('z', e.target.valueAsNumber)}
+                    />
                     <h3>Конечная точка</h3>
                     <label htmlFor="to-name">Название</label>
                     <br />
@@ -240,6 +262,13 @@ const AddRoute: React.FC = () => {
                         type="number"
                         value={state.detailedRoute.to.y}
                         onChange={(e) => handleToChange('y', e.target.valueAsNumber)}
+                    />
+                    <label htmlFor="to-z"> Z</label>
+                    <input
+                        id="to-z"
+                        type="number"
+                        value={state.detailedRoute.to.z}
+                        onChange={(e) => handleToChange('z', e.target.valueAsNumber)}
                     />
                     <br />
                     <label htmlFor="distance">Длина маршрута</label>
