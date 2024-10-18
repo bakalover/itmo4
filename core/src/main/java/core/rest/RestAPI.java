@@ -114,8 +114,9 @@ public class RestAPI extends Application {
     }
 
     @PATCH
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateRoute(Route route) {
+    public Response updateRoute(@PathParam("id") long id, Route route) {
         log.info("Update route, new route: {}", route);
         rm.updateRoute(route);
         return okWith(justOk);
