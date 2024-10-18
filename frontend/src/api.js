@@ -17,7 +17,10 @@ export const getRoutes = async (filters = {}) => {
     try {
         const response = await fetch(`${API_URL}?${new URLSearchParams(filters)}`);
         if (!response.ok) {
-            throw new Error('Failed to fetch routes');
+            console.log(response)
+            if (response.status === 404) throw new Error('Список маршрутов пуст! Добавьте первый маршрут, чтобы он отобразился в таблице')
+            else throw new Error('Не удалось получить маршруты');
+
         }
         return await response.json();
     } catch (error) {
@@ -63,7 +66,7 @@ export const updateRouteById = async (id, route) => {
         console.log(id);
         console.log(route);
 
-        const updatedRoute = { ...route };
+        const updatedRoute = {...route};
 
         delete updatedRoute.from.id;
         delete updatedRoute.to.id;
