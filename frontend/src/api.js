@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:35080/routes';
+const API_URL = 'https://localhost:35443/routes';
 
 export const fetchMinRoute = async () => {
     try {
@@ -60,17 +60,25 @@ export const addRoute = async (route) => {
 
 export const updateRouteById = async (id, route) => {
     try {
+        console.log(id);
+        console.log(route);
+
+        const updatedRoute = { ...route };
+
+        delete updatedRoute.from.id;
+        delete updatedRoute.to.id;
+
         const response = await fetch(`${API_URL}/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(route),
+            body: JSON.stringify(updatedRoute),
         });
         if (!response.ok) {
             throw new Error('Failed to update route');
         }
-        return await response.json();
+        return response
     } catch (error) {
         console.error('Error updating route:', error);
         throw error;
