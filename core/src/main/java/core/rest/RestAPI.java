@@ -12,7 +12,6 @@ import core.routes.RoutesManager;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.ArrayList;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -53,8 +52,9 @@ public class RestAPI extends Application {
         } else {
             routes = rm.getRoutes(Filter.tryParseFilters(filters));
         }
-        if (sort != null) {
+        if (sort != null && routes.size() > 1) {
             var sorts = Filter.tryParseSort(sort);
+            log.info("Total sort functions: {}", sorts.size());
             routes = Filter.applySorts(routes, sorts);
         }
         if (page == 0) { // All routes, size - ignored
@@ -71,7 +71,7 @@ public class RestAPI extends Application {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRoute(@PathParam("id") long id) {
-        log.info("Get route by id:{}", id);
+        log.info("Get route by id: {}", id);
         return okWith(rm.getRoute(id));
     }
 
@@ -85,7 +85,7 @@ public class RestAPI extends Application {
     @GET
     @Path("/distance/count/{value}")
     public Response getRouteCount(@PathParam("value") int value) {
-        log.info("Get route with distance value:{}", value);
+        log.info("Get route with distance value: {}", value);
         return okWith(rm.distanceEqual(value).size());
     }
 
@@ -93,7 +93,7 @@ public class RestAPI extends Application {
     @Path("/distance/greater/{value}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRouteAbove(@PathParam("value") int value) {
-        log.info("Get route with distance value grater than:{}", value);
+        log.info("Get route with distance value grater than: {}", value);
         return okWith(rm.distanceGreater(value));
     }
 

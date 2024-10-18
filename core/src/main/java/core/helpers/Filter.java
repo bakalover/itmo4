@@ -131,10 +131,11 @@ public class Filter {
                 if (secondLayerFields.contains(lastField1.getName())) {
                     panic("Detected not complete path! Target value should be primitive!");
                 }
+
                 // Black magik
                 result = ((Comparable) lastField1.get(current1)).compareTo(lastField2.get(current2));
             } catch (NoSuchFieldException | IllegalAccessException e) {
-                panic(e.getMessage());
+                panic("Cannot access such field for sorting: " + keyPath.toString());
             } catch (NumberFormatException e) {
                 panic("Invalid type for key: " + keyPath.toString());
             }
@@ -155,7 +156,7 @@ public class Filter {
     }
 
     private static void panic(String with) throws IllegalArgumentException {
-        throw new IllegalArgumentException("Invalid filter format!\n" + with + "\n" + "Example: " + example);
+        throw new IllegalArgumentException("Invalid request!\n" + with + "\n" + "Example: " + example);
     }
 
     public static List<Route> applyFilters(List<Route> input, List<Predicate<Route>> fs) {
