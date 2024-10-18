@@ -46,25 +46,33 @@ public class RestAPI extends Application {
         if (size <= 0) {
             return Response.status(Status.BAD_REQUEST).entity("Invalid size value").build();
         }
+        GetStat stat = new GetStat();
         List<Route> routes;
-        if (filters == null) {
-            routes = rm.getRoutes(Filter.withoutFilters());
-        } else {
-            routes = rm.getRoutes(Filter.tryParseFilters(filters));
+        var all = rm.getRoutes(Filter.withoutFilters());
+        routes = all;
+        if (filters != null) {
+            routes = Filter.applyFilters(routes, Filter.tryParseFilters(filters));
         }
         if (sort != null && routes.size() > 1) {
             var sorts = Filter.tryParseSort(sort);
             log.info("Total sort functions: {}", sorts.size());
             routes = Filter.applySorts(routes, sorts);
         }
+        stat.setRoutes(routes);
+        stat.setNumberOfElements(routes.size());
+        stat.setTotalElements(all.size());
+
+        stat.setTotalPages((int) Math.ceil((double) stat.getTotalElements() / (double) size));
         if (page == 0) { // All routes, size - ignored
-            return okWith(routes);
+            return okWith(stat);
         }
-        var result = Filter.cut(routes, page, size);
-        if (result.isEmpty()) {
+        var routesCutted = Filter.cut(routes, page, size);
+        if (routesCutted.isEmpty()) {
             return Response.status(Status.NOT_FOUND).entity("No routes at specified page").build();
         }
-        return okWith(result);
+        stat.setRoutes(routesCutted);
+        stat.setNumberOfElements(routesCutted.size());
+        return okWith(stat);
     }
 
     @GET
