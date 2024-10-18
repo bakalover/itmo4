@@ -127,7 +127,7 @@ public class NavigatorResource {
         if (isResponseStatusOK(routesWithFrom) && isResponseStatusOK(routesWithTo)) {
             List<Route> routesFrom = routesWithFrom.readEntity(new GenericType<>() {
             });
-            List<Route> routesTo = routesWithFrom.readEntity(new GenericType<>() {
+            List<Route> routesTo = routesWithTo.readEntity(new GenericType<>() {
             });
             Location locationFrom = routesFrom.get(0).getFrom();
             Location locationTo = routesTo.get(0).getTo();
@@ -139,7 +139,7 @@ public class NavigatorResource {
             route.setTo(locationTo);
             route.setDistance(distance);
 
-            return target.path("/route").request(MediaType.APPLICATION_JSON)
+            return target.path("/").request(MediaType.APPLICATION_JSON)
                     .put(Entity.entity(route, MediaType.APPLICATION_JSON));
 
         } else if (isResponseStatusCrashed(routesWithFrom)) return routesWithFrom;
