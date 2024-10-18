@@ -2,7 +2,8 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-!!! run `npm install` before next actions
+All actions must be done in /frontend directory
+!!! run `npm install`  before next actions
 
 ## Available Scripts
 

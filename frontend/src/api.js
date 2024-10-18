@@ -1,4 +1,17 @@
-const API_URL = 'http://localhost:5000/routes';
+const API_URL = 'http://localhost:35080/routes';
+
+export const fetchMinRoute = async () => {
+    try {
+        const response = await fetch(`${API_URL}/min-id`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
 
 export const getRoutes = async (filters = {}) => {
     try {
