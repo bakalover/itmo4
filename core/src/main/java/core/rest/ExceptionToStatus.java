@@ -3,6 +3,7 @@ package core.rest;
 import jakarta.json.bind.JsonbException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NoResultException;
 import jakarta.validation.ValidationException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.NotSupportedException;
@@ -39,7 +40,8 @@ public class ExceptionToStatus implements ExceptionMapper<Exception> {
         if (flatten instanceof NotFoundException) {
             return Response.status(Status.BAD_REQUEST).entity("Specified path does not exist!").build();
         }
-        if (flatten instanceof EntityNotFoundException) {
+        if (flatten instanceof EntityNotFoundException
+                || flatten instanceof NoResultException) {
             return Response.status(Status.NOT_FOUND).entity(flatten.getMessage()).build();
         }
         if (flatten instanceof EntityExistsException) {

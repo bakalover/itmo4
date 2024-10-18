@@ -129,7 +129,7 @@ public class Filter {
                 Field lastField2 = current2.getClass().getDeclaredField(keyPath.get(keyPath.size() - 1));
                 lastField2.setAccessible(true);
                 if (secondLayerFields.contains(lastField1.getName())) {
-                    panic("Detected not complete path! Target value should be primitive!");
+                    panic("Detected incomplete path! Target value should be primitive!");
                 }
 
                 // Black magik

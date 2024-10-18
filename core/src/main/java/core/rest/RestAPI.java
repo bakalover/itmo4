@@ -108,7 +108,7 @@ public class RestAPI extends Application {
     @PATCH
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateRoute(Route route) {
-        log.info("Update route, new route:{}", route);
+        log.info("Update route, new route: {}", route);
         rm.updateRoute(route);
         return okWith(justOk);
     }
