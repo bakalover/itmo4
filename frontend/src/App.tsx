@@ -5,6 +5,7 @@ import AddRoute from './sub-pages/AddRoute';
 import GetMinRoute from './sub-pages/GetMinRoute';
 import GetRouteWithDistance from './sub-pages/GetRouteWithDistance';
 import GetRoutesBetweenLocation from './sub-pages/GetRoutesBetweenLocation';
+import EditRoute from "./sub-pages/EditRoute";
 
 interface Route {
     id: number;
@@ -30,7 +31,7 @@ interface Route {
 }
 
 interface ApiResponse {
-    content: Route[];
+    routes: Route[];
     totalElements: number;
     totalPages: number;
     numberOfElements: number;
@@ -41,6 +42,21 @@ function App() {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
+    const [editingRoute, setEditingRoute] = useState<Route | null>(null);
+
+    const handleEditRoute = (route: Route) => {
+        setEditingRoute(route);
+    };
+
+    const handleCancelEdit = () => {
+        setEditingRoute(null);
+    };
+
+    const handleSaveEdit = () => {
+        fetchRoutes();
+        setEditingRoute(null);
+    };
+
     useEffect(() => {
         fetchRoutes();
     }, []);
@@ -50,16 +66,15 @@ function App() {
         setError(null);
         try {
             const response : ApiResponse = await getRoutes();
-            if (response && response.content) {
-                console.log("responce ", response)
-                console.log("responce content: ", response.content)
-                const content_only : Route[] = response.content
-                console.log("content array is: ", content_only)
+            console.log("resp is", response)
+            if (response) {
+                const content_only : Route[] = response.routes
+                console.log(content_only)
                 setRoutes(content_only);
                 console.log("routes is ", routes)
             }
             else {
-                console.log("content: ", response.content)
+               // console.log("content: ", response.content)
             }
         } catch (err) {
             setError('Failed to fetch routes');
@@ -95,6 +110,17 @@ function App() {
     };
 
     const renderContent = () => {
+
+        if (editingRoute) {
+            return (
+                <EditRoute
+                    route={editingRoute}
+                    onSave={handleSaveEdit}
+                    onCancel={handleCancelEdit}
+                />
+            );
+        }
+
         switch (selectedAction) {
             case 'addRoute':
                 return <AddRoute />;
@@ -129,7 +155,7 @@ function App() {
                             <td>{index + 1}</td>
                             <td>{JSON.stringify(route)}</td>
                             <td>
-                                <button>Подробнее</button>
+                                <button onClick={() => handleEditRoute(route)}>Подробнее</button>
                                 <button>Удалить</button>
                             </td>
                         </tr>
