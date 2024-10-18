@@ -1,5 +1,8 @@
 package com.soa.navigator.app;
 
+import com.soa.navigator.model.Coordinates;
+import com.soa.navigator.model.GetStat;
+import com.soa.navigator.model.GetStat.*;
 import com.soa.navigator.model.Location;
 import com.soa.navigator.model.Route;
 import jakarta.ws.rs.*;
@@ -66,9 +69,9 @@ public class NavigatorResource {
                 .request(MediaType.APPLICATION_JSON).get();
 
         if (isResponseStatusOK(routesResponse)) {
-            List<Route> routes = routesResponse.readEntity(new GenericType<>() {
+            GetStat getStat = routesResponse.readEntity(new GenericType<>() {
             });
-            return okWith(routes);
+            return okWith(getStat);
         } else {
             if (isResponseStatusBadRequest(routesResponse))
                 return Response.status(Response.Status.BAD_REQUEST).entity("Incorrect sort parameters are provided").build();
@@ -125,16 +128,16 @@ public class NavigatorResource {
         }
 
         if (isResponseStatusOK(routesWithFrom) && isResponseStatusOK(routesWithTo)) {
-            List<Route> routesFrom = routesWithFrom.readEntity(new GenericType<>() {
-            });
-            List<Route> routesTo = routesWithTo.readEntity(new GenericType<>() {
-            });
+            List<Route> routesFrom = routesWithFrom.readEntity(GetStat.class).getRoutes();
+            List<Route> routesTo = routesWithTo.readEntity(GetStat.class).getRoutes();
+
             Location locationFrom = routesFrom.get(0).getFrom();
             Location locationTo = routesTo.get(0).getTo();
             Route route = new Route();
 
             route.setName(
                     "from_" + locationFrom.getName() + "_to_" + locationTo.getName() + "_distance_" + distance);
+            route.setCoordinates(new Coordinates(0, 0));
             route.setFrom(locationFrom);
             route.setTo(locationTo);
             route.setDistance(distance);
