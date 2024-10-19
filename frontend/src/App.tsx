@@ -32,7 +32,6 @@ function App() {
         fetchRoutes();
     }, []);
 
-    // Modified fetchRoutes to accept filters and sortingFields
     const fetchRoutes = async (filters?: string, sortingFields?: string) => {
         setLoading(true);
         setError(null);
@@ -78,6 +77,11 @@ function App() {
         setSelectedAction(action as string);
     };
 
+    const handleBackButtonClick = () => {
+        setSelectedAction(null);
+        setEditingRoute(null);
+    };
+
     const renderContent = () => {
         if (editingRoute) {
             return (
@@ -106,27 +110,40 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <MainTable
-                    routes={routes}
-                    loading={loading}
-                    error={error}
-                    onEditRoute={handleEditRoute}
-                    onDeleteRoute={handleDeleteRoute}
-                    onAppliedFilters={fetchRoutes} // Ensure this matches the prop name in MainTable
-                />
+                {/* Conditionally render the MainTable based on whether a route is being edited or an action is selected */}
+                {!editingRoute && !selectedAction && (
+                    <MainTable
+                        routes={routes}
+                        loading={loading}
+                        error={error}
+                        onEditRoute={handleEditRoute}
+                        onDeleteRoute={handleDeleteRoute}
+                        onAppliedFilters={fetchRoutes}
+                    />
+                )}
 
-                <div style={{ textAlign: 'center', marginTop: '50px' }} className="menu">
-                    <div>
-                        {Object.keys(actions).map((key) => (
-                            <button key={key} onClick={() => handleButtonClick(key as keyof typeof actions)}>
-                                {actions[key]}
-                            </button>
-                        ))}
+                {/* Render the selected action content */}
+                {(editingRoute || selectedAction) && renderContent()}
+
+                {/* Render the menu and Back button when an action is selected or a route is being edited */}
+                {(editingRoute || selectedAction) && (
+                    <button onClick={handleBackButtonClick} style={{ marginTop: '20px' }}>
+                        Назад
+                    </button>
+                )}
+
+                {/* Render the action buttons only when the main table is visible */}
+                {!editingRoute && !selectedAction && (
+                    <div style={{ textAlign: 'center', marginTop: '50px' }} className="menu">
+                        <div>
+                            {Object.keys(actions).map((key) => (
+                                <button key={key} onClick={() => handleButtonClick(key as keyof typeof actions)}>
+                                    {actions[key]}
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                    <div style={{ marginTop: '20px' }}>
-                        {renderContent()}
-                    </div>
-                </div>
+                )}
             </header>
         </div>
     );
