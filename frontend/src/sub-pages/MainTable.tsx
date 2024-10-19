@@ -206,6 +206,12 @@ const MainTable: React.FC<MainTableProps> = ({
         }
     };
 
+    const handleGoToPage = async () => {
+        const filters = await getFiltersForAPI();
+        const sorting = await getSortingForApi();
+        await onPageChanged(filters, sorting, pageSize, currentPage);
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             await handleGoToPage();
@@ -216,13 +222,6 @@ const MainTable: React.FC<MainTableProps> = ({
             fetchData();
         }
     }, [currentPage]); // Effect will run whenever currentPage changes
-
-
-    const handleGoToPage = async () => {
-        const filters = await getFiltersForAPI();
-        const sorting = await getSortingForApi();
-        await onPageChanged(filters, sorting, pageSize, currentPage);
-    };
 
     return (
         <div>
