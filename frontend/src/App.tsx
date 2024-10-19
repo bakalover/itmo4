@@ -88,6 +88,10 @@ function App() {
         setEditingRoute(null);
     };
 
+    const handlePageChange = () => {
+
+    }
+
     const renderContent = () => {
         if (editingRoute) {
             return (
@@ -127,6 +131,7 @@ function App() {
                         numberOfElements={numberOfElements}
                         totalElements={totalElements}
                         totalPages={totalPages}
+                        onPageChanged={fetchRoutes}
                     />
                 )}
 

@@ -45,6 +45,6 @@ button {
 input[type="checkbox"] {
   background-color:  red;
 }
-input {
+th input {
   width: 50%;
 }

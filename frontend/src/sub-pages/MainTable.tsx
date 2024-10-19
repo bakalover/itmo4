@@ -10,7 +10,8 @@ interface MainTableProps {
     onAppliedFilters: (filters: string, sortingFields: string) => Promise<void>,
     numberOfElements: number,
     totalElements: number,
-    totalPages: number
+    totalPages: number,
+    onPageChanged: (filters: string, sortingFields: string, pageSize: number, currentPage: number) => Promise<void>
 
 }
 
@@ -23,7 +24,8 @@ const MainTable: React.FC<MainTableProps> = ({
                                                  onAppliedFilters,
                                                  numberOfElements,
                                                  totalElements,
-                                                 totalPages
+                                                 totalPages,
+                                                 onPageChanged,
                                              }) => {
     const [filters, setFilters] = useState({
         id: '',
@@ -134,7 +136,7 @@ const MainTable: React.FC<MainTableProps> = ({
         return paths;
     };
 
-    const applyFiltersAndSort = async () => {
+    const getFiltersForAPI = async () => {
         const filtersArray: string[] = [];
 
         for (const key in filters) {
@@ -150,12 +152,56 @@ const MainTable: React.FC<MainTableProps> = ({
                 filtersArray.push(`${key}:${value}`);
             }
         }
+        return filtersArray.join(',');
+    }
 
-        const filtersForApi = filtersArray.join(',');
+    const getSortingForApi = async () => {
         const sortingFieldsArray = getTruthyPaths(checkboxes);
-        const sortingFields = sortingFieldsArray.join(',');
+        return sortingFieldsArray.join(',');
+    }
 
-        await onAppliedFilters(filtersForApi, sortingFields);
+    const applyFiltersAndSort = async () => {
+        const filters = await getFiltersForAPI();
+        const sorting = await getSortingForApi()
+        await onAppliedFilters(filters, sorting);
+    };
+
+    const [pageSize, setPageSize] = useState(10); // размер страницы
+    const [currentPage, setCurrentPage] = useState(1); // текущая страница
+
+    const handlePageSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newSize = parseInt(e.target.value, 10);
+        if (!isNaN(newSize) && newSize >= 1 && newSize <= totalElements) {
+            setPageSize(newSize);
+            setCurrentPage(1); // Сбрасываем страницу на 1 при изменении размера страницы
+        }
+    };
+
+    const handlePageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newPage = parseInt(e.target.value, 10);
+        if (!isNaN(newPage) && newPage >= 1 && newPage <= totalPages) {
+            setCurrentPage(newPage);
+        }
+    };
+
+    const handlePreviousPage = async () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+            await handleGoToPage();
+        }
+    };
+
+    const handleNextPage = async () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+            await handleGoToPage();
+        }
+    };
+
+    const handleGoToPage = async () => {
+        const filters = await getFiltersForAPI();
+        const sorting = await getSortingForApi();
+        await onPageChanged(filters, sorting, pageSize, currentPage);
     };
 
     return (
@@ -163,6 +209,28 @@ const MainTable: React.FC<MainTableProps> = ({
             <h2>Маршруты</h2>
             {loading && <p>Загрузка...</p>}
             {error && <p>{error}</p>}
+
+            <div style={{marginTop: '20px', textAlign: 'center'}}>
+                <input
+                    type="number"
+                    value={pageSize}
+                    onChange={handlePageSizeChange}
+                    min={1}
+                    max={totalElements}
+                />
+                <span>Элементов на странице</span>
+                <input
+                    type="number"
+                    value={currentPage}
+                    onChange={handlePageChange}
+                    min={1}
+                    max={totalPages}
+                />
+                <span>Текущая страница</span>
+                <button onClick={handlePreviousPage}>Предыдущая</button>
+                <button onClick={handleNextPage}>Следующая</button>
+                <button onClick={handleGoToPage}>Перейти к странице</button>
+            </div>
 
             <table>
                 <thead>
