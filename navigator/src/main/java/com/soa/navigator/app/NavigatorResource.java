@@ -2,7 +2,6 @@ package com.soa.navigator.app;
 
 import com.soa.navigator.model.Coordinates;
 import com.soa.navigator.model.GetStat;
-import com.soa.navigator.model.GetStat.*;
 import com.soa.navigator.model.Location;
 import com.soa.navigator.model.Route;
 import jakarta.ws.rs.*;
@@ -82,80 +81,108 @@ public class NavigatorResource {
     }
 
 
-
-
     @POST
     @Path("/route/add/{id-from}/{id-to}/{distance}")
     public Response addRouteBetweenLocations(@PathParam("id-from") Long idFrom, @PathParam("id-to") Long idTo,
                                              @PathParam("distance") Integer distance) {
-        // "sort=x,from.x,coordinates.y"
 
-        if (idFrom < 1 && idTo > 1)
-            return Response.status(Response.Status.BAD_REQUEST).entity("id of start location (from) must be positive").build();
-        if (idTo < 1 && idFrom > 1)
-            return Response.status(Response.Status.BAD_REQUEST).entity("id of finish location (to) must be positive").build();
-        if (idTo < 1 && idFrom < 1)
-            return Response.status(Response.Status.BAD_REQUEST).entity("id of start (from) and finish (to) locations must be positive").build();
+        // Validate input parameters
+        if (idFrom < 1)
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("id of start location (from) must be positive").build();
+        if (idTo < 1)
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("id of finish location (to) must be positive").build();
         if (distance <= 1)
-            return Response.status(Response.Status.BAD_REQUEST).entity("distance must be greater than 1").build();
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("distance must be greater than 1").build();
 
-
-        Response routesWithFrom = target.path("/").queryParam("filter", "from.id:" + idFrom)
-                .request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
-                });
-        if (isResponseStatusNotFound(routesWithFrom)) {
-            //try to find all routes where current 'from' value is 'to' location
-            routesWithFrom = target.path("/").queryParam("filter", "to.id:" + idFrom)
-                    .request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
-                    });
-            if (isResponseStatusNotFound(routesWithFrom)) {
-                return Response.status(Response.Status.NOT_FOUND).entity("Location with id = " + idFrom + " not found").build();
+        try {
+            // Find the 'from' location
+            Location locationFrom = findLocationById(idFrom);
+            if (locationFrom == null) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("Could not find location with id = " + idFrom).build();
             }
-        }
 
-        Response routesWithTo = target.path("/").queryParam("filter", "to.id:" + idTo)
-                .request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
-                });
-
-        if (isResponseStatusNotFound(routesWithTo)) {
-            //try to find all routes where current 'to' value is 'from' location
-            routesWithTo = target.path("/").queryParam("filter", "to.from:" + idTo)
-                    .request(MediaType.APPLICATION_JSON).get(new GenericType<>() {
-                    });
-            if (isResponseStatusNotFound(routesWithTo)) {
-                return Response.status(Response.Status.NOT_FOUND).entity("Location with id = " + idTo + " not found").build();
+            // Find the 'to' location
+            Location locationTo = findLocationById(idTo);
+            if (locationTo == null) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("Could not find location with id = " + idTo).build();
             }
-        }
 
-        if (isResponseStatusOK(routesWithFrom) && isResponseStatusOK(routesWithTo)) {
-            List<Route> routesFrom = routesWithFrom.readEntity(GetStat.class).getRoutes();
-            List<Route> routesTo = routesWithTo.readEntity(GetStat.class).getRoutes();
-
-            Location locationFrom = routesFrom.get(0).getFrom();
-            Location locationTo = routesTo.get(0).getTo();
+            // Both locations are found, proceed to create the route
             Route route = new Route();
-
-            route.setName(
-                    "from_" + locationFrom.getName() + "_to_" + locationTo.getName() + "_distance_" + distance);
-            route.setCoordinates(new Coordinates(0, 0));
+            route.setName("from_" + locationFrom.getName() + "_to_" + locationTo.getName() + "_distance_" + distance);
+            route.setCoordinates(new Coordinates(0, 0)); // Assuming default coordinates
             route.setFrom(locationFrom);
             route.setTo(locationTo);
             route.setDistance(distance);
 
-            return target.path("/").request(MediaType.APPLICATION_JSON)
+            // Create the route by sending a PUT request
+            return target.path("/")
+                    .request(MediaType.APPLICATION_JSON)
                     .put(Entity.entity(route, MediaType.APPLICATION_JSON));
 
-        } else if (isResponseStatusCrashed(routesWithFrom)) return routesWithFrom;
-        else if (isResponseStatusCrashed(routesWithTo)) return routesWithTo;
-        else {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Request parameters can not be validated properly:\n"
-                            + routesWithFrom.readEntity(new GenericType<>() {
-                    })
-                            + "\n"
-                            + routesWithTo.readEntity(new GenericType<>() {
-                    }))
-                    .build();
+        } catch (ProcessingException | WebApplicationException e) {
+            // Handle any unexpected exceptions
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred while processing the request: " + e.getMessage()).build();
         }
+    }
 
+    // Helper method to find a Location by its ID
+    private Location findLocationById(Long id) {
+        // First, make a request with 'from.id'
+        Response response = target.path("/")
+                .queryParam("filter", "from.id:" + id)
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            // Response is OK, check if routes are found
+            GetStat getStat = response.readEntity(GetStat.class);
+            List<Route> routes = getStat.getRoutes();
+
+            if (!routes.isEmpty()) {
+                // Routes found using 'from.id', return the 'from' location
+                return routes.get(0).getFrom();
+            } else {
+                // No routes found, try with 'to.id'
+                return findLocationByToId(id);
+            }
+        } else if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+            // 'from.id' not found, try with 'to.id'
+            return findLocationByToId(id);
+        } else {
+            // Other response status, treat as error
+            return null;
+        }
+    }
+
+    // Helper method to find a Location using 'to.id'
+    private Location findLocationByToId(Long id) {
+        Response response = target.path("/")
+                .queryParam("filter", "to.id:" + id)
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            // Response is OK, check if routes are found
+            GetStat getStat = response.readEntity(GetStat.class);
+            List<Route> routes = getStat.getRoutes();
+
+            if (!routes.isEmpty()) {
+                // Routes found using 'to.id', return the 'to' location
+                return routes.get(0).getTo();
+            } else {
+                // No routes found, return null
+                return null;
+            }
+        } else {
+            // 'to.id' not found or other error, return null
+            return null;
+        }
     }
 }
