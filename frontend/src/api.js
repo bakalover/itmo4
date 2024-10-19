@@ -145,6 +145,35 @@ export const updateRouteById = async (id, route) => {
     }
 };
 
+export const getRoutesWithDistanceGreater = async (distance) => {
+    try {
+        const response = await fetch(`${CORE_URL}/distance/greater/${distance}`);
+
+        if (!response.ok) {
+            throw new Error("Маршрутов с большим чем заданным расстоянием нет");
+        }
+        return await response.json();
+    } catch (error) {
+        console.log("greater distance route find error:", error);
+        throw error;
+    }
+};
+
+export const getRoutesWithDistanceCount = async (distance) => {
+    try {
+        const response = await fetch(`${CORE_URL}/distance/count/${distance}`);
+
+        if (!response.ok) {
+            throw new Error("Маршрутов с заданным расстоянием нет");
+        }
+        return response;
+    } catch (error) {
+        console.log("equal route find error:", error);
+        throw error; // Rethrow the error for further handling if needed
+    }
+};
+
+
 export const deleteRouteById = async (id) => {
     try {
         const response = await fetch(`${CORE_URL}/${id}`, {

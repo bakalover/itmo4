@@ -37,11 +37,13 @@ const MainTable: React.FC<MainTableProps> = ({
         creationDate: '',
         from: {
             name: '',
+            id: ' ',
             x: '',
             y: '',
             z: ''
         },
         to: {
+            id: '',
             name: '',
             x: '',
             y: '',
@@ -59,12 +61,14 @@ const MainTable: React.FC<MainTableProps> = ({
         },
         creationDate: false,
         from: {
+            id: false,
             name: false,
             x: false,
             y: false,
             z: false
         },
         to: {
+            id: false,
             name: false,
             x: false,
             y: false,
@@ -77,21 +81,29 @@ const MainTable: React.FC<MainTableProps> = ({
     const [uniqueNames, setUniqueNames] = useState<string[]>([]);
     const [uniqueFromNames, setUniqueFromNames] = useState<string[]>([]);
     const [uniqueToNames, setUniqueToNames] = useState<string[]>([]);
+    const [uniqueFromIds, setUniqueFromIds] = useState<string[]>([]);
+    const [uniqueToIds, setUniqueToIds] = useState<string[]>([]);
 
     useEffect(() => {
         const ids = Array.from(new Set(routes.map(route => route.id.toString())));
         const names = Array.from(new Set(routes.map(route => route.name)));
         const fromNames = Array.from(new Set(routes.map(route => route.from.name)));
         const toNames = Array.from(new Set(routes.map(route => route.to.name)));
+        const fromIds = Array.from(new Set(routes.map(route => route.from.id.toString())));
+        const toIds = Array.from(new Set(routes.map(route => route.to.id.toString())));
 
         setUniqueIds(ids);
         setUniqueNames(names);
         setUniqueFromNames(fromNames);
         setUniqueToNames(toNames);
+        setUniqueFromIds(fromIds);
+        setUniqueToIds(toIds);
+
     }, [routes]);
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const {name, value} = e.target;
+        console.log(name,value)
         setFilters(prevFilters => {
             const newFilters = {...prevFilters};
             const keys = name.split('.');
@@ -144,11 +156,12 @@ const MainTable: React.FC<MainTableProps> = ({
             if (typeof value === 'object' && value !== null) {
                 for (const subKey in value) {
                     const subValue = value[subKey as keyof typeof value];
-                    if (subValue !== '') {
-                        filtersArray.push(`${key}.${subKey}=${JSON.stringify(subValue)}`);
+                    if (subValue !== '' && subValue!== " ") {
+                        console.log(filtersArray)
+                        filtersArray.push(`${key}.${subKey}:${subValue}`);
                     }
                 }
-            } else if (value !== '') {
+            } else if (value !== '' && value!== " ") {
                 filtersArray.push(`${key}:${value}`);
             }
         }
@@ -290,8 +303,8 @@ const MainTable: React.FC<MainTableProps> = ({
                         <input type="text" name="creationDate" value={filters.creationDate}
                                onChange={handleFilterChange}/>
                     </th>
-                    <th colSpan={4}>Откуда</th>
-                    <th colSpan={4}>Куда</th>
+                    <th colSpan={5}>Откуда</th>
+                    <th colSpan={5}>Куда</th>
                     <th rowSpan={2}>
                         Расстояние<br/>
                         <input type="checkbox" name="distance" checked={checkboxes.distance}
@@ -324,8 +337,20 @@ const MainTable: React.FC<MainTableProps> = ({
                                onChange={handleCheckboxChange}/>
                         <br/>
                         <select name="from.name" value={filters.from?.name || ''} onChange={handleFilterChange}>
-                            <option value="">Выберите название</option>
+                            <option value="">Выберите имя</option>
                             {uniqueFromNames.map(name => (
+                                <option key={name} value={name}>{name}</option>
+                            ))}
+                        </select>
+                    </th>
+                    <th>
+                        id<br/>
+                        <input type="checkbox" name="from.id" checked={checkboxes.from?.id || false}
+                               onChange={handleCheckboxChange}/>
+                        <br/>
+                        <select name="from.id" value={filters.from?.id || 0} onChange={handleFilterChange}>
+                            <option value="">Выберите id</option>
+                            {uniqueFromIds.map(name => (
                                 <option key={name} value={name}>{name}</option>
                             ))}
                         </select>
@@ -357,13 +382,26 @@ const MainTable: React.FC<MainTableProps> = ({
                                onChange={handleCheckboxChange}/>
                         <br/>
                         <select name="to.name" value={filters.to?.name || ''} onChange={handleFilterChange}>
-                            <option value="">Выберите название</option>
+                            <option value="">Выберите имя</option>
                             {uniqueToNames.map(name => (
                                 <option key={name} value={name}>{name}</option>
                             ))}
                         </select>
                     </th>
                     <th>
+                        id<br/>
+                        <input type="checkbox" name="to.id" checked={checkboxes.to?.id || false}
+                               onChange={handleCheckboxChange}/>
+                        <br/>
+                        <select name="to.id" value={filters.to?.id || 0} onChange={handleFilterChange}>
+                            <option value="">Выберите id</option>
+                            {uniqueToIds.map(name => (
+                                <option key={name} value={name}>{name}</option>
+                            ))}
+                        </select>
+                    </th>
+                    <th>
+
                         X<br/>
                         <input type="checkbox" name="to.x" checked={checkboxes.to?.x || false}
                                onChange={handleCheckboxChange}/>

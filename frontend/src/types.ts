@@ -7,12 +7,14 @@ export interface Route {
     };
     creationDate: string;
     from: {
+        id: number
         x: number;
         y: number;
         z: number;
         name: string;
     };
     to: {
+        id: number
         x: number;
         y: number;
         z: number;
