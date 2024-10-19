@@ -10,8 +10,8 @@ import MainTable from './sub-pages/MainTable';
 import { Route, ApiResponse } from './types';
 
 function getErrorMessage(error: unknown) {
-    if (error instanceof Error) return error.message
-    return String(error)
+    if (error instanceof Error) return error.message;
+    return String(error);
 }
 
 function App() {
@@ -32,11 +32,12 @@ function App() {
         fetchRoutes();
     }, []);
 
-    const fetchRoutes = async () => {
+    // Modified fetchRoutes to accept filters and sortingFields
+    const fetchRoutes = async (filters?: string, sortingFields?: string) => {
         setLoading(true);
         setError(null);
         try {
-            const response: ApiResponse = await getRoutes();
+            const response: ApiResponse = await getRoutes(filters, sortingFields);
             if (response) {
                 setRoutes(response.routes);
             }
@@ -111,6 +112,7 @@ function App() {
                     error={error}
                     onEditRoute={handleEditRoute}
                     onDeleteRoute={handleDeleteRoute}
+                    onAppliedFilters={fetchRoutes} // Ensure this matches the prop name in MainTable
                 />
 
                 <div style={{ textAlign: 'center', marginTop: '50px' }} className="menu">
@@ -118,7 +120,8 @@ function App() {
                         {Object.keys(actions).map((key) => (
                             <button key={key} onClick={() => handleButtonClick(key as keyof typeof actions)}>
                                 {actions[key]}
-                            </button>))}
+                            </button>
+                        ))}
                     </div>
                     <div style={{ marginTop: '20px' }}>
                         {renderContent()}

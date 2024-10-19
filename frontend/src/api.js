@@ -13,14 +13,17 @@ export const fetchMinRoute = async () => {
     }
 };
 
-export const getRoutes = async (filters = {}) => {
+export const getRoutes = async (filters = {}, sortingFields = {}) => {
+    console.log("Filters:", filters);
+    console.log("Sorting fields:", sortingFields);
     try {
-        const response = await fetch(`${API_URL}?${new URLSearchParams(filters)}`);
+        const response = await fetch(`${API_URL}`);
         if (!response.ok) {
-            console.log(response)
-            if (response.status === 404) throw new Error('Список маршрутов пуст! Добавьте первый маршрут, чтобы он отобразился в таблице')
-            else throw new Error('Не удалось получить маршруты');
-
+            if (response.status === 404) {
+                throw new Error('Список маршрутов пуст! Добавьте первый маршрут, чтобы он отобразился в таблице');
+            } else {
+                throw new Error(`Ошибка при получении маршрутов: ${response.status} ${response.statusText}`);
+            }
         }
         return await response.json();
     } catch (error) {
