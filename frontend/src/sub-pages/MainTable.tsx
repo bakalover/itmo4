@@ -169,13 +169,23 @@ const MainTable: React.FC<MainTableProps> = ({
     const [pageSize, setPageSize] = useState(10); // размер страницы
     const [currentPage, setCurrentPage] = useState(1); // текущая страница
 
-    const handlePageSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handlePageSizeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const newSize = parseInt(e.target.value, 10);
         if (!isNaN(newSize) && newSize >= 1 && newSize <= totalElements) {
             setPageSize(newSize);
             setCurrentPage(1); // Сбрасываем страницу на 1 при изменении размера страницы
+            //const filters = await getFiltersForAPI();
+            //const sorting = await getSortingForApi()
+            //await onPageChanged(filters, sorting, pageSize, currentPage)
+            console.log("page size changed")
         }
     };
+
+    const onPageChangeButtonClicked= async() => {
+        const filters = await getFiltersForAPI();
+        const sorting = await getSortingForApi()
+        await onPageChanged(filters, sorting, pageSize, currentPage)
+    }
 
     const handlePageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newPage = parseInt(e.target.value, 10);
@@ -219,6 +229,7 @@ const MainTable: React.FC<MainTableProps> = ({
                     min={1}
                     max={totalElements}
                 />
+                <button onClick={onPageChangeButtonClicked}>Изменить размер страницы</button>
                 <br/>
                 <p>Текущая </p>
                 <input
