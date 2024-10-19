@@ -211,6 +211,7 @@ const MainTable: React.FC<MainTableProps> = ({
             {error && <p>{error}</p>}
 
             <div style={{marginTop: '20px', textAlign: 'center'}}>
+                <p>Размер страницы</p>
                 <input
                     type="number"
                     value={pageSize}
@@ -218,7 +219,8 @@ const MainTable: React.FC<MainTableProps> = ({
                     min={1}
                     max={totalElements}
                 />
-                <span>Элементов на странице</span>
+                <br/>
+                <p>Текущая </p>
                 <input
                     type="number"
                     value={currentPage}
@@ -226,7 +228,8 @@ const MainTable: React.FC<MainTableProps> = ({
                     min={1}
                     max={totalPages}
                 />
-                <span>Текущая страница</span>
+
+                <br/>
                 <button onClick={handlePreviousPage}>Предыдущая</button>
                 <button onClick={handleNextPage}>Следующая</button>
                 <button onClick={handleGoToPage}>Перейти к странице</button>
