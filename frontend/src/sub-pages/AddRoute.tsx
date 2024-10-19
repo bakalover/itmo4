@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { addRoute, getRoutes } from '../api';
+import {addRoute, addRoutesWithId, getRoutes} from '../api';
 
 interface Route {
     id: number;
@@ -65,11 +65,7 @@ const AddRoute: React.FC = () => {
     const handleAddRoute = async () => {
         try {
             if (state.isSimple) {
-                await addRoute({
-                    from: { name: state.newRoute.from, x: 0, y: 0, z: 0 },
-                    to: { name: state.newRoute.to, x: 0, y: 0, z: 0 },
-                    distance: state.newRoute.distance,
-                });
+                await addRoutesWithId(state.newRoute.from, state.newRoute.to, state.newRoute.distance);
             } else {
                 await addRoute(state.detailedRoute);
             }

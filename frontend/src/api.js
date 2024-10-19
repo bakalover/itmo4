@@ -1,8 +1,9 @@
-const API_URL = 'https://localhost:35443/routes';
+const CORE_URL = 'https://localhost:35443/routes';
+const NAVIGATOR_URL = 'http://desktop-6saablk:8080/navigator-1.0-SNAPSHOT/navigator';
 
 export const fetchMinRoute = async () => {
     try {
-        const response = await fetch(`${API_URL}/min-id`);
+        const response = await fetch(`${CORE_URL}/min-id`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -18,7 +19,7 @@ export const getRoutes = async (filters = '', sortingFields = '') => {
     console.log("Sorting fields:", sortingFields);
 
     try {
-        let url = `${API_URL}`;
+        let url = `${CORE_URL}`;
 
         const queryParams = [];
 
@@ -55,9 +56,9 @@ export const getRoutes = async (filters = '', sortingFields = '') => {
 
 export const getRouteById = async (id) => {
     try {
-        const response = await fetch(`${API_URL}/${id}`);
+        const response = await fetch(`${CORE_URL}/${id}`);
         if (!response.ok) {
-            throw new Error('Route not found');
+
         }
         return await response.json();
     } catch (error) {
@@ -66,10 +67,25 @@ export const getRouteById = async (id) => {
     }
 };
 
+export const addRoutesWithId = async (idTo, idFrom, distance) => {
+    console.log("going to add", idTo, idFrom, distance)
+    try {
+        const response = await fetch(`${NAVIGATOR_URL}/route/add/${idFrom}/${idTo}/${distance}`, {
+            method: 'POST'
+        });
+        if (!response.ok) throw new Error('Маршрут не найден!');
+        return response;
+    } catch (error) {
+        console.error('Error adding route with IDs:', error);
+        throw error;
+    }
+
+}
+
 export const addRoute = async (route) => {
     try {
         console.log("going to add", route)
-        const response = await fetch(API_URL, {
+        const response = await fetch(CORE_URL, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -95,7 +111,7 @@ export const updateRouteById = async (id, route) => {
         delete updatedRoute.from.id;
         delete updatedRoute.to.id;
 
-        const response = await fetch(`${API_URL}/${id}`, {
+        const response = await fetch(`${CORE_URL}/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -114,7 +130,7 @@ export const updateRouteById = async (id, route) => {
 
 export const deleteRouteById = async (id) => {
     try {
-        const response = await fetch(`${API_URL}/${id}`, {
+        const response = await fetch(`${CORE_URL}/${id}`, {
             method: 'DELETE',
         });
         if (!response.ok) {
