@@ -7,7 +7,7 @@ interface MainTableProps {
     error: string | null;
     onEditRoute: (route: Route) => void;
     onDeleteRoute: (id: number) => void;
-    onAppliedFilters: (filters: string, sortingFields: string) => Promise<void>,
+    onAppliedFilters: (filters: string, sortingFields: string, pageSize: number, currentPage: number) => Promise<void>,
     numberOfElements: number,
     totalElements: number,
     totalPages: number,
@@ -163,7 +163,7 @@ const MainTable: React.FC<MainTableProps> = ({
     const applyFiltersAndSort = async () => {
         const filters = await getFiltersForAPI();
         const sorting = await getSortingForApi()
-        await onAppliedFilters(filters, sorting);
+        await onAppliedFilters(filters, sorting, pageSize, currentPage);
     };
 
     const [pageSize, setPageSize] = useState(10); // размер страницы
