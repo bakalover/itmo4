@@ -197,16 +197,26 @@ const MainTable: React.FC<MainTableProps> = ({
     const handlePreviousPage = async () => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1);
-            await handleGoToPage();
         }
     };
 
     const handleNextPage = async () => {
         if (currentPage < totalPages) {
             setCurrentPage(currentPage + 1);
-            await handleGoToPage();
         }
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            await handleGoToPage();
+        };
+
+        // Always fetch data when currentPage changes
+        if (currentPage) {
+            fetchData();
+        }
+    }, [currentPage]); // Effect will run whenever currentPage changes
+
 
     const handleGoToPage = async () => {
         const filters = await getFiltersForAPI();
