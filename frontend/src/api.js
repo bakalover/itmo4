@@ -13,11 +13,31 @@ export const fetchMinRoute = async () => {
     }
 };
 
-export const getRoutes = async (filters = {}, sortingFields = {}) => {
+export const getRoutes = async (filters = '', sortingFields = '') => {
     console.log("Filters:", filters);
     console.log("Sorting fields:", sortingFields);
+
     try {
-        const response = await fetch(`${API_URL}`);
+        let url = `${API_URL}`;
+
+        const queryParams = [];
+
+        if (filters) {
+            queryParams.push(`filter=${encodeURIComponent(filters)}`);
+        }
+
+        if (sortingFields) {
+            queryParams.push(`sort=${encodeURIComponent(sortingFields)}`);
+        }
+
+        if (queryParams.length > 0) {
+            url += `?${queryParams.join('&')}`;
+        }
+
+        console.log("Request URL:", url);
+
+        const response = await fetch(url);
+
         if (!response.ok) {
             if (response.status === 404) {
                 throw new Error('Список маршрутов пуст! Добавьте первый маршрут, чтобы он отобразился в таблице');
@@ -25,6 +45,7 @@ export const getRoutes = async (filters = {}, sortingFields = {}) => {
                 throw new Error(`Ошибка при получении маршрутов: ${response.status} ${response.statusText}`);
             }
         }
+
         return await response.json();
     } catch (error) {
         console.error('Error fetching routes:', error);

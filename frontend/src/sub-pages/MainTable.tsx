@@ -21,41 +21,53 @@ const MainTable: React.FC<MainTableProps> = ({
     const [filters, setFilters] = useState({
         id: '',
         name: '',
-        coordinatesX: '',
-        coordinatesY: '',
+        coordinates: {
+            x: '',
+            y: ''
+        },
         creationDate: '',
-        fromName: '',
-        fromX: '',
-        fromY: '',
-        fromZ: '',
-        toName: '',
-        toX: '',
-        toY: '',
-        toZ: '',
+        from: {
+            name: '',
+            x: '',
+            y: '',
+            z: ''
+        },
+        to: {
+            name: '',
+            x: '',
+            y: '',
+            z: ''
+        },
         distance: ''
+    });
+
+    const [checkboxes, setCheckboxes] = useState({
+        id: false,
+        name: false,
+        coordinates: {
+            x: false,
+            y: false
+        },
+        creationDate: false,
+        from: {
+            name: false,
+            x: false,
+            y: false,
+            z: false
+        },
+        to: {
+            name: false,
+            x: false,
+            y: false,
+            z: false
+        },
+        distance: false
     });
 
     const [uniqueIds, setUniqueIds] = useState<string[]>([]);
     const [uniqueNames, setUniqueNames] = useState<string[]>([]);
     const [uniqueFromNames, setUniqueFromNames] = useState<string[]>([]);
     const [uniqueToNames, setUniqueToNames] = useState<string[]>([]);
-
-    const [checkboxes, setCheckboxes] = useState({
-        id: false,
-        name: false,
-        coordinatesX: false,
-        coordinatesY: false,
-        creationDate: false,
-        fromName: false,
-        fromX: false,
-        fromY: false,
-        fromZ: false,
-        toName: false,
-        toX: false,
-        toY: false,
-        toZ: false,
-        distance: false
-    });
 
     useEffect(() => {
         const ids = Array.from(new Set(routes.map(route => route.id.toString())));
@@ -71,20 +83,70 @@ const MainTable: React.FC<MainTableProps> = ({
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const {name, value} = e.target;
-        setFilters(prevFilters => ({...prevFilters, [name]: value}));
+        setFilters(prevFilters => {
+            const newFilters = {...prevFilters};
+            const keys = name.split('.');
+            let current: any = newFilters;
+            for (let i = 0; i < keys.length - 1; i++) {
+                const key = keys[i];
+                if (!(key in current)) current[key] = {};
+                current = current[key];
+            }
+            current[keys[keys.length - 1]] = value;
+            return newFilters;
+        });
     };
 
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, checked} = e.target;
-        setCheckboxes(prevCheckboxes => ({...prevCheckboxes, [name]: checked}));
+        setCheckboxes(prevCheckboxes => {
+            const newCheckboxes = {...prevCheckboxes};
+            const keys = name.split('.');
+            let current: any = newCheckboxes;
+            for (let i = 0; i < keys.length - 1; i++) {
+                const key = keys[i];
+                if (!(key in current)) current[key] = {};
+                current = current[key];
+            }
+            current[keys[keys.length - 1]] = checked;
+            return newCheckboxes;
+        });
+    };
+
+    const getTruthyPaths = (obj: any, prefix = '') => {
+        let paths: string[] = [];
+        for (const key in obj) {
+            const value = obj[key];
+            const path = prefix ? `${prefix}.${key}` : key;
+            if (typeof value === 'object' && value !== null) {
+                paths = paths.concat(getTruthyPaths(value, path));
+            } else if (value) {
+                paths.push(path);
+            }
+        }
+        return paths;
     };
 
     const applyFiltersAndSort = async () => {
-        const filtersForApi = JSON.stringify(filters);
-        const sortingFields = Object.entries(checkboxes)
-            .filter(([, value]) => value)
-            .map(([key]) => key)
-            .join(',');
+        const filtersArray: string[] = [];
+
+        for (const key in filters) {
+            const value = filters[key as keyof typeof filters];
+            if (typeof value === 'object' && value !== null) {
+                for (const subKey in value) {
+                    const subValue = value[subKey as keyof typeof value];
+                    if (subValue !== '') {
+                        filtersArray.push(`${key}.${subKey}=${JSON.stringify(subValue)}`);
+                    }
+                }
+            } else if (value !== '') {
+                filtersArray.push(`${key}:${value}`);
+            }
+        }
+
+        const filtersForApi = filtersArray.join(',');
+        const sortingFieldsArray = getTruthyPaths(checkboxes);
+        const sortingFields = sortingFieldsArray.join(',');
 
         await onAppliedFilters(filtersForApi, sortingFields);
     };
@@ -144,26 +206,26 @@ const MainTable: React.FC<MainTableProps> = ({
                 <tr>
                     <th>
                         X<br/>
-                        <input type="checkbox" name="coordinatesX" checked={checkboxes.coordinatesX}
+                        <input type="checkbox" name="coordinates.x" checked={checkboxes.coordinates?.x || false}
                                onChange={handleCheckboxChange}/>
                         <br/>
-                        <input type="text" name="coordinatesX" value={filters.coordinatesX}
+                        <input type="text" name="coordinates.x" value={filters.coordinates?.x || ''}
                                onChange={handleFilterChange}/>
                     </th>
                     <th>
                         Y<br/>
-                        <input type="checkbox" name="coordinatesY" checked={checkboxes.coordinatesY}
+                        <input type="checkbox" name="coordinates.y" checked={checkboxes.coordinates?.y || false}
                                onChange={handleCheckboxChange}/>
                         <br/>
-                        <input type="text" name="coordinatesY" value={filters.coordinatesY}
+                        <input type="text" name="coordinates.y" value={filters.coordinates?.y || ''}
                                onChange={handleFilterChange}/>
                     </th>
                     <th>
                         Имя<br/>
-                        <input type="checkbox" name="fromName" checked={checkboxes.fromName}
+                        <input type="checkbox" name="from.name" checked={checkboxes.from?.name || false}
                                onChange={handleCheckboxChange}/>
                         <br/>
-                        <select name="fromName" value={filters.fromName} onChange={handleFilterChange}>
+                        <select name="from.name" value={filters.from?.name || ''} onChange={handleFilterChange}>
                             <option value="">Выберите название</option>
                             {uniqueFromNames.map(name => (
                                 <option key={name} value={name}>{name}</option>
@@ -172,28 +234,31 @@ const MainTable: React.FC<MainTableProps> = ({
                     </th>
                     <th>
                         X<br/>
-                        <input type="checkbox" name="fromX" checked={checkboxes.fromX} onChange={handleCheckboxChange}/>
+                        <input type="checkbox" name="from.x" checked={checkboxes.from?.x || false}
+                               onChange={handleCheckboxChange}/>
                         <br/>
-                        <input type="text" name="fromX" value={filters.fromX} onChange={handleFilterChange}/>
+                        <input type="text" name="from.x" value={filters.from?.x || ''} onChange={handleFilterChange}/>
                     </th>
                     <th>
                         Y<br/>
-                        <input type="checkbox" name="fromY" checked={checkboxes.fromY} onChange={handleCheckboxChange}/>
+                        <input type="checkbox" name="from.y" checked={checkboxes.from?.y || false}
+                               onChange={handleCheckboxChange}/>
                         <br/>
-                        <input type="text" name="fromY" value={filters.fromY} onChange={handleFilterChange}/>
+                        <input type="text" name="from.y" value={filters.from?.y || ''} onChange={handleFilterChange}/>
                     </th>
                     <th>
                         Z<br/>
-                        <input type="checkbox" name="fromZ" checked={checkboxes.fromZ} onChange={handleCheckboxChange}/>
+                        <input type="checkbox" name="from.z" checked={checkboxes.from?.z || false}
+                               onChange={handleCheckboxChange}/>
                         <br/>
-                        <input type="text" name="fromZ" value={filters.fromZ} onChange={handleFilterChange}/>
+                        <input type="text" name="from.z" value={filters.from?.z || ''} onChange={handleFilterChange}/>
                     </th>
                     <th>
                         Имя<br/>
-                        <input type="checkbox" name="toName" checked={checkboxes.toName}
+                        <input type="checkbox" name="to.name" checked={checkboxes.to?.name || false}
                                onChange={handleCheckboxChange}/>
                         <br/>
-                        <select name="toName" value={filters.toName} onChange={handleFilterChange}>
+                        <select name="to.name" value={filters.to?.name || ''} onChange={handleFilterChange}>
                             <option value="">Выберите название</option>
                             {uniqueToNames.map(name => (
                                 <option key={name} value={name}>{name}</option>
@@ -202,27 +267,30 @@ const MainTable: React.FC<MainTableProps> = ({
                     </th>
                     <th>
                         X<br/>
-                        <input type="checkbox" name="toX" checked={checkboxes.toX} onChange={handleCheckboxChange}/>
+                        <input type="checkbox" name="to.x" checked={checkboxes.to?.x || false}
+                               onChange={handleCheckboxChange}/>
                         <br/>
-                        <input type="text" name="toX" value={filters.toX} onChange={handleFilterChange}/>
+                        <input type="text" name="to.x" value={filters.to?.x || ''} onChange={handleFilterChange}/>
                     </th>
                     <th>
                         Y<br/>
-                        <input type="checkbox" name="toY" checked={checkboxes.toY} onChange={handleCheckboxChange}/>
+                        <input type="checkbox" name="to.y" checked={checkboxes.to?.y || false}
+                               onChange={handleCheckboxChange}/>
                         <br/>
-                        <input type="text" name="toY" value={filters.toY} onChange={handleFilterChange}/>
+                        <input type="text" name="to.y" value={filters.to?.y || ''} onChange={handleFilterChange}/>
                     </th>
                     <th>
                         Z<br/>
-                        <input type="checkbox" name="toZ" checked={checkboxes.toZ} onChange={handleCheckboxChange}/>
+                        <input type="checkbox" name="to.z" checked={checkboxes.to?.z || false}
+                               onChange={handleCheckboxChange}/>
                         <br/>
-                        <input type="text" name="toZ" value={filters.toZ} onChange={handleFilterChange}/>
+                        <input type="text" name="to.z" value={filters.to?.z || ''} onChange={handleFilterChange}/>
                     </th>
                 </tr>
                 </thead>
                 <tbody>
                 {routes.map((route) => (
-                    <tr key={route.id}> {/* Use route.id as the key */}
+                    <tr key={route.id}>
                         <td>{route.id}</td>
                         <td>{route.id}</td>
                         <td>{route.name}</td>
