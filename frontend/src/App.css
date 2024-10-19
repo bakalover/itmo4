@@ -41,3 +41,10 @@ button {
   height: 50px;
   width: 200px;
 }
+
+input[type="checkbox"] {
+  background-color:  red;
+}
+input {
+  width: 50%;
+}
