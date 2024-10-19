@@ -7,7 +7,11 @@ interface MainTableProps {
     error: string | null;
     onEditRoute: (route: Route) => void;
     onDeleteRoute: (id: number) => void;
-    onAppliedFilters: (filters: string, sortingFields: string) => Promise<void>;
+    onAppliedFilters: (filters: string, sortingFields: string) => Promise<void>,
+    numberOfElements: number,
+    totalElements: number,
+    totalPages: number
+
 }
 
 const MainTable: React.FC<MainTableProps> = ({
@@ -16,7 +20,10 @@ const MainTable: React.FC<MainTableProps> = ({
                                                  error,
                                                  onEditRoute,
                                                  onDeleteRoute,
-                                                 onAppliedFilters
+                                                 onAppliedFilters,
+                                                 numberOfElements,
+                                                 totalElements,
+                                                 totalPages
                                              }) => {
     const [filters, setFilters] = useState({
         id: '',

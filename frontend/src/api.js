@@ -14,14 +14,30 @@ export const fetchMinRoute = async () => {
     }
 };
 
-export const getRoutes = async (filters = '', sortingFields = '') => {
+export const getRoutes = async (filters = '', sortingFields = '', page = 0, size = 10) => {
     console.log("Filters:", filters);
     console.log("Sorting fields:", sortingFields);
+    console.log("Page:", page);
+    console.log("Size:", size);
+
+    // Validation for page and size
+    if (!Number.isInteger(page) || page < 0) {
+        console.error("Page must be a non-negative integer");
+        throw new Error("Page must be a non-negative integer");
+    }
+
+    if (!Number.isInteger(size) || size < 1) {
+        console.error("Size must be a positive integer");
+        throw new Error("Size must be a positive integer");
+    }
 
     try {
         let url = `${CORE_URL}`;
 
         const queryParams = [];
+
+        queryParams.push(`page=${page}`);
+        queryParams.push(`size=${size}`);
 
         if (filters) {
             queryParams.push(`filter=${encodeURIComponent(filters)}`);
@@ -30,6 +46,7 @@ export const getRoutes = async (filters = '', sortingFields = '') => {
         if (sortingFields) {
             queryParams.push(`sort=${encodeURIComponent(sortingFields)}`);
         }
+
 
         if (queryParams.length > 0) {
             url += `?${queryParams.join('&')}`;

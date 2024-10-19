@@ -20,6 +20,9 @@ function App() {
     const [error, setError] = useState<string | null>(null);
     const [editingRoute, setEditingRoute] = useState<Route | null>(null);
     const [selectedAction, setSelectedAction] = useState<string | null>(null);
+    const [numberOfElements, setNumberOfElements] = useState<number>(0);
+    const [totalElements, setTotalElements] = useState<number>(0);
+    const [totalPages, setTotalPages] = useState<number>(0);
 
     const actions: { [key: string]: string } = {
         addRoute: 'Добавить новый маршрут в хранилище',
@@ -32,13 +35,16 @@ function App() {
         fetchRoutes();
     }, []);
 
-    const fetchRoutes = async (filters?: string, sortingFields?: string) => {
+    const fetchRoutes = async (filters?: string, sortingFields?: string, page?: number, size?: number) => {
         setLoading(true);
         setError(null);
         try {
-            const response: ApiResponse = await getRoutes(filters, sortingFields);
+            const response: ApiResponse = await getRoutes(filters, sortingFields, page, size);
             if (response) {
                 setRoutes(response.routes);
+                setNumberOfElements(response.numberOfElements);
+                setTotalElements(response.totalElements);
+                setTotalPages(response.totalPages);
             }
         } catch (err) {
             setError(getErrorMessage(err));
@@ -110,7 +116,6 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                {/* Conditionally render the MainTable based on whether a route is being edited or an action is selected */}
                 {!editingRoute && !selectedAction && (
                     <MainTable
                         routes={routes}
@@ -119,20 +124,20 @@ function App() {
                         onEditRoute={handleEditRoute}
                         onDeleteRoute={handleDeleteRoute}
                         onAppliedFilters={fetchRoutes}
+                        numberOfElements={numberOfElements}
+                        totalElements={totalElements}
+                        totalPages={totalPages}
                     />
                 )}
 
-                {/* Render the selected action content */}
                 {(editingRoute || selectedAction) && renderContent()}
 
-                {/* Render the menu and Back button when an action is selected or a route is being edited */}
                 {(editingRoute || selectedAction) && (
                     <button onClick={handleBackButtonClick} style={{ marginTop: '20px' }}>
                         Назад
                     </button>
                 )}
 
-                {/* Render the action buttons only when the main table is visible */}
                 {!editingRoute && !selectedAction && (
                     <div style={{ textAlign: 'center', marginTop: '50px' }} className="menu">
                         <div>
