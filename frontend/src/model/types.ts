@@ -21,9 +21,16 @@ export interface Route {
     distance: number;
 }
 
+export interface SimpleRoute {
+    from: string;
+    to: string;
+    distance: number;
+}
+
 export interface ApiResponse {
     routes: Route[];
     totalElements: number;
     totalPages: number;
     numberOfElements: number;
 }
+

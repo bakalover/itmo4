@@ -1,28 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { updateRouteById } from '../api';
+import {Route} from "../model/types";
 
-interface Route {
-    id: number;
-    name: string;
-    coordinates: {
-        x: number;
-        y: number;
-    };
-    creationDate: string;
-    from: {
-        x: number;
-        y: number;
-        z: number;
-        name: string;
-    };
-    to: {
-        x: number;
-        y: number;
-        z: number;
-        name: string;
-    };
-    distance: number;
-}
 
 interface State {
     route: Route;

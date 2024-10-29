@@ -1,34 +1,8 @@
 import React, { useState } from 'react';
 import {addRoute, addRoutesWithId, getRoutes} from '../api';
+import {Route} from "../model/types";
+import {SimpleRoute} from "../model/types";
 
-interface Route {
-    id: number;
-    name: string;
-    coordinates: {
-        x: number;
-        y: number;
-    };
-    creationDate: string;
-    from: {
-        x: number;
-        y: number;
-        z: number;
-        name: string;
-    };
-    to: {
-        x: number;
-        y: number;
-        z: number;
-        name: string;
-    };
-    distance: number;
-}
-
-interface SimpleRoute {
-    from: string;
-    to: string;
-    distance: number;
-}
 
 interface State {
     isSimple: boolean;

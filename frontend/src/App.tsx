@@ -7,7 +7,7 @@ import GetRouteWithDistance from './sub-pages/GetRouteWithDistance';
 import GetRoutesBetweenLocation from './sub-pages/GetRoutesBetweenLocation';
 import EditRoute from "./sub-pages/EditRoute";
 import MainTable from './sub-pages/MainTable';
-import { Route, ApiResponse } from './types';
+import { Route, ApiResponse } from './model/types';
 
 function getErrorMessage(error: unknown) {
     if (error instanceof Error) return error.message;
