@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{stdin, Read, Result, Write};
 use std::path::Path;
@@ -21,15 +22,6 @@ fn vigenere_encrypt(text: &str, key: &str) -> String {
             let key_char = key.chars().nth(i % key_len).unwrap();
             if let Some(key_index) = find_char_position(key_char) {
                 let new_index = (text_index + key_index) % ALPHABET.chars().count();
-                println!(
-                    "{},{},{},{},{}",
-                    c,
-                    text_index,
-                    key_index,
-                    new_index,
-                    ALPHABET.chars().nth(new_index).unwrap()
-                );
-
                 encrypted.push(ALPHABET.chars().nth(new_index).unwrap());
             } else {
                 encrypted.push(c);
@@ -52,14 +44,6 @@ fn vigenere_decrypt(text: &str, key: &str) -> String {
             if let Some(key_index) = find_char_position(key_char) {
                 let new_index =
                     (text_index + ALPHABET.chars().count() - key_index) % ALPHABET.chars().count();
-                println!(
-                    "{},{},{},{},{}",
-                    c,
-                    text_index,
-                    key_index,
-                    new_index,
-                    ALPHABET.chars().nth(new_index).unwrap()
-                );
                 decrypted.push(ALPHABET.chars().nth(new_index).unwrap());
             } else {
                 decrypted.push(c);
@@ -81,6 +65,7 @@ fn encrypt_file(input_path: &Path, output_path: &Path, key: &str) -> Result<()> 
 
     let mut output_file = File::create(output_path)?;
     output_file.write_all(encrypted_text.as_bytes())?;
+    print_analyze(&encrypted_text);
 
     Ok(())
 }
@@ -94,7 +79,7 @@ fn decrypt_file(input_path: &Path, output_path: &Path, key: &str) -> Result<()> 
 
     let mut output_file = File::create(output_path)?;
     output_file.write_all(decrypted_text.as_bytes())?;
-
+    print_analyze(&decrypted_text);
     Ok(())
 }
 
@@ -103,6 +88,19 @@ fn read_input(prompt: &str) -> Result<String> {
     let mut input = String::new();
     stdin().read_line(&mut input)?;
     Ok(input.trim().to_string())
+}
+
+fn print_analyze(data: &str) {
+    let mut map: HashMap<char, u32> = HashMap::new();
+    data.chars().for_each(|c| {
+        *map.entry(c).or_insert(0) += 1;
+    });
+    let mut sorted_entries: Vec<_> = map.iter().collect();
+    sorted_entries.sort_by(|a, b| b.1.cmp(a.1));
+    println!("Анализ");
+    for (key, value) in sorted_entries {
+        println!("Символ: {}, Суммарная частота: {}", key, value);
+    }
 }
 
 fn main() -> Result<()> {
