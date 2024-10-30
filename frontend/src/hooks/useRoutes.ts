@@ -38,7 +38,7 @@ export function useRoutes() {
         setError(null);
         try {
             await deleteRouteById(id);
-            fetchRoutes();
+            await fetchRoutes();
         } catch (err) {
             setError('Failed to delete route');
         } finally {

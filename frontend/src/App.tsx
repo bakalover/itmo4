@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import './App.css';
-import { useRoutes } from './hooks/useRoutes';
+import {useRoutes} from './hooks/useRoutes';
 import AddRoute from './components/AddRoute';
 import GetMinRoute from './components/GetMinRoute';
 import GetRouteWithDistance from './components/GetRouteWithDistance';
@@ -8,10 +8,10 @@ import GetRoutesBetweenLocation from './components/GetRoutesBetweenLocation';
 import EditRoute from './components/EditRoute';
 import MainTable from './components/MainTable';
 import ActionMenu from './components/ActionMenu';
-import { Route } from './model/types';
+import {Route} from './model/types';
 
 function App() {
-    const { routes, loading, error, numberOfElements, totalElements, totalPages, fetchRoutes, deleteRoute } = useRoutes();
+    const {routes, loading, error, numberOfElements, totalElements, totalPages, fetchRoutes, deleteRoute} = useRoutes();
     const [editingRoute, setEditingRoute] = useState<Route | null>(null);
     const [selectedAction, setSelectedAction] = useState<string | null>(null);
 
@@ -36,18 +36,18 @@ function App() {
 
     const renderContent = () => {
         if (editingRoute) {
-            return <EditRoute route={editingRoute} onSave={handleSaveEdit} onCancel={handleCancelEdit} />;
+            return <EditRoute route={editingRoute} onSave={handleSaveEdit} onCancel={handleCancelEdit}/>;
         }
 
         switch (selectedAction) {
             case 'addRoute':
-                return <AddRoute />;
+                return <AddRoute/>;
             case 'getMinRoute':
-                return <GetMinRoute />;
+                return <GetMinRoute/>;
             case 'getRouteWithDistance':
-                return <GetRouteWithDistance />;
+                return <GetRouteWithDistance/>;
             case 'getRoutesBetweenLocation':
-                return <GetRoutesBetweenLocation />;
+                return <GetRoutesBetweenLocation/>;
             default:
                 return null;
         }
@@ -74,12 +74,12 @@ function App() {
                 {(editingRoute || selectedAction) && renderContent()}
 
                 {(editingRoute || selectedAction) && (
-                    <button onClick={handleBackButtonClick} style={{ marginTop: '20px' }}>
+                    <button onClick={handleBackButtonClick} style={{marginTop: '20px'}}>
                         Назад
                     </button>
                 )}
 
-                {!editingRoute && !selectedAction && <ActionMenu actions={actions} onActionSelect={setSelectedAction} />}
+                {!editingRoute && !selectedAction && <ActionMenu actions={actions} onActionSelect={setSelectedAction}/>}
             </header>
         </div>
     );

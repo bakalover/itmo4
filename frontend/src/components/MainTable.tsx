@@ -389,8 +389,6 @@ const MainTable: React.FC<MainTableProps> = ({
                 ))}
                 </tbody>
             </table>
-
-            {/* Add a button to apply filters and sorting */}
             <div style={{marginTop: '20px', textAlign: 'center'}}>
                 <button onClick={applyFiltersAndSort}>Применить фильтры и сортировку</button>
             </div>

@@ -1,109 +1,44 @@
-import React, { useState } from 'react';
-import {addRoute, addRoutesWithId, getRoutes} from '../api';
-import {Route} from "../model/types";
-import {SimpleRoute} from "../model/types";
-
+// src/components/AddRoute.tsx
+import React, {useState} from 'react';
+import {addRoute, addRoutesWithId} from '../api';
+import {Route, SimpleRoute} from "../model/types";
+import {RenderInput} from './RenderInput';
 
 interface State {
     isSimple: boolean;
-    routes: Route[];
-    newRoute: SimpleRoute;
-    detailedRoute: Omit<Route, 'id' | 'creationDate'>;
+    route: Omit<Route, 'id' | 'creationDate'>;
+    simpleRoute: SimpleRoute;
 }
 
 const initialState: State = {
     isSimple: false,
-    routes: [],
-    newRoute: { from: '', to: '', distance: 0 },
-    detailedRoute: {
-        name: '',
-        coordinates: { x: 0, y: 0 },
-        from: { x: 0, y: 0, z: 0, name: '' },
-        to: { x: 0, y: 0, z: 0, name: '' },
-        distance: 0,
+    route: {
+        name: 'Москва-Красноярск',
+        coordinates: {x: 100, y: 200},
+        from: {x: 10, y: 20, z: 30, name: 'Москва'},
+        to: {x: 150, y: 250, z: 350, name: 'Красноярск'},
+        distance: 5432,
     },
+    simpleRoute: {from: 'Москва', to: 'Красноярск', distance: 5437},
 };
 
 const AddRoute: React.FC = () => {
-    const [state, setState] = useState(initialState);
-
-    const fetchRoutes = async () => {
-        try {
-            const response = await getRoutes();
-            setState((prevState) => ({ ...prevState, routes: response }));
-        } catch (error) {
-            console.error('Error fetching routes:', error);
-        }
-    };
+    const [state, setState] = useState<State>(initialState);
 
     const handleAddRoute = async () => {
         try {
             if (state.isSimple) {
-                await addRoutesWithId(state.newRoute.from, state.newRoute.to, state.newRoute.distance);
+                await addRoutesWithId(state.simpleRoute.from, state.simpleRoute.to, state.simpleRoute.distance);
             } else {
-                await addRoute(state.detailedRoute);
+                await addRoute(state.route);
             }
-            await fetchRoutes();
         } catch (error) {
             console.error('Error adding route:', error);
         }
     };
 
     const handleModeSwitch = () => {
-        setState((prevState) => ({ ...prevState, isSimple: !prevState.isSimple }));
-    };
-
-    const handleSimpleRouteChange = (field: keyof SimpleRoute, value: string | number) => {
-        setState((prevState) => ({ ...prevState, newRoute: { ...prevState.newRoute, [field]: value } }));
-    };
-
-    const handleDetailedRouteChange = (field: 'name' | 'distance', value: string | number) => {
-        setState((prevState) => ({
-            ...prevState,
-            detailedRoute: {
-                ...prevState.detailedRoute,
-                [field]: value,
-            },
-        }));
-    };
-
-    const handleCoordinatesChange = (field: keyof Route['coordinates'], value: number) => {
-        setState((prevState) => ({
-            ...prevState,
-            detailedRoute: {
-                ...prevState.detailedRoute,
-                coordinates: {
-                    ...prevState.detailedRoute.coordinates,
-                    [field]: value,
-                },
-            },
-        }));
-    };
-
-    const handleFromChange = (field: keyof Route['from'], value: string | number) => {
-        setState((prevState) => ({
-            ...prevState,
-            detailedRoute: {
-                ...prevState.detailedRoute,
-                from: {
-                    ...prevState.detailedRoute.from,
-                    [field]: value,
-                },
-            },
-        }));
-    };
-
-    const handleToChange = (field: keyof Route['to'], value: string | number) => {
-        setState((prevState) => ({
-            ...prevState,
-            detailedRoute: {
-                ...prevState.detailedRoute,
-                to: {
-                    ...prevState.detailedRoute.to,
-                    [field]: value,
-                },
-            },
-        }));
+        setState((prevState) => ({...prevState, isSimple: !prevState.isSimple}));
     };
 
     return (
@@ -112,145 +47,35 @@ const AddRoute: React.FC = () => {
             <button onClick={handleModeSwitch}>
                 Переключить режим ввода
             </button>
-            <br />
+            <br/>
             {state.isSimple ? (
-                <div>
-                    <label htmlFor="route-source">Id начальной точки маршрута</label>
-                    <br />
-                    <input
-                        id="route-source"
-                        type="text"
-                        placeholder="От"
-                        value={state.newRoute.from}
-                        onChange={(e) => handleSimpleRouteChange('from', e.target.value)}
-                    />
-                    <br />
-                    <label htmlFor="route-destination">Id конечной точки маршрута:</label>
-                    <br />
-                    <input
-                        id="route-destination"
-                        type="text"
-                        placeholder="До"
-                        value={state.newRoute.to}
-                        onChange={(e) => handleSimpleRouteChange('to', e.target.value)}
-                    />
-                    <br />
-                    <label htmlFor="distance">Длина маршрута</label>
-                    <br />
-                    <input
-                        id="distance"
-                        type="number"
-                        placeholder="1"
-                        value={state.newRoute.distance}
-                        onChange={(e) => handleSimpleRouteChange('distance', e.target.valueAsNumber)}
-                    />
-                </div>
+                <>
+                    <RenderInput label="Id начальной точки маршрута" path="simpleRoute.from" state={state}
+                                 setState={setState}/>
+                    <RenderInput label="Id конечной точки маршрута" path="simpleRoute.to" state={state}
+                                 setState={setState}/>
+                    <RenderInput label="Длина маршрута" path="simpleRoute.distance" state={state} setState={setState}
+                                 type="number"/>
+                </>
             ) : (
-                <div>
-                    <label htmlFor="route-name">Название маршрута</label>
-                    <br />
-                    <input
-                        id="route-name"
-                        type="text"
-                        placeholder="Москва-Питер"
-                        value={state.detailedRoute.name}
-                        onChange={(e) => handleDetailedRouteChange('name', e.target.value)}
-                    />
-                    <br />
+                <>
+                    <RenderInput label="Название маршрута" path="route.name" state={state} setState={setState}/>
                     <p>Координаты</p>
-                    <label htmlFor="coordinates-x">X</label>
-                    <input
-                        id="coordinates-x"
-                        type="number"
-                        placeholder="X"
-                        value={state.detailedRoute.coordinates.x}
-                        onChange={(e) => handleCoordinatesChange('x', e.target.valueAsNumber)}
-                    />
-                    <label htmlFor="coordinates-y">Y</label>
-                    <input
-                        id="coordinates-y"
-                        type="number"
-                        placeholder="Y"
-                        value={state.detailedRoute.coordinates.y}
-                        onChange={(e) => handleCoordinatesChange('y', e.target.valueAsNumber)}
-                    />
+                    <RenderInput label="X" path="route.coordinates.x" state={state} setState={setState} type="number"/>
+                    <RenderInput label="Y" path="route.coordinates.y" state={state} setState={setState} type="number"/>
                     <h3>Начальная точка</h3>
-                    <label htmlFor="from-name">Название</label>
-                    <br />
-                    <input
-                        id="from-name"
-                        type="text"
-                        placeholder="Москва"
-                        value={state.detailedRoute.from.name}
-                        onChange={(e) => handleFromChange('name', e.target.value)}
-                    />
-                    <br />
-                    <p>Координаты</p>
-                    <label htmlFor="from-x"> X</label>
-                    <input
-                        id="from-x"
-                        type="number"
-                        value={state.detailedRoute.from.x}
-                        onChange={(e) => handleFromChange('x', e.target.valueAsNumber)}
-                    />
-                    <label htmlFor="from-y"> Y</label>
-                    <input
-                        id="from-y"
-                        type="number"
-                        value={state.detailedRoute.from.y}
-                        onChange={(e) => handleFromChange('y', e.target.valueAsNumber)}
-                    />
-                    <label htmlFor="from-z"> Z</label>
-                    <input
-                        id="from-z"
-                        type="number"
-                        value={state.detailedRoute.from.z}
-                        onChange={(e) => handleFromChange('z', e.target.valueAsNumber)}
-                    />
+                    <RenderInput label="Название" path="route.from.name" state={state} setState={setState}/>
+                    <RenderInput label="X" path="route.from.x" state={state} setState={setState} type="number"/>
+                    <RenderInput label="Y" path="route.from.y" state={state} setState={setState} type="number"/>
+                    <RenderInput label="Z" path="route.from.z" state={state} setState={setState} type="number"/>
                     <h3>Конечная точка</h3>
-                    <label htmlFor="to-name">Название</label>
-                    <br />
-                    <input
-                        id="to-name"
-                        type="text"
-                        placeholder="Санкт-Петербург"
-                        value={state.detailedRoute.to.name}
-                        onChange={(e) => handleToChange('name', e.target.value)}
-                    />
-                    <br />
-                    <p>Координаты</p>
-                    <label htmlFor="to-x"> X</label>
-                    <input
-                        id="to-x"
-                        type="number"
-                        value={state.detailedRoute.to.x}
-                        onChange={(e) => handleToChange('x', e.target.valueAsNumber)}
-                    />
-                    <label htmlFor="to-y"> Y</label>
-                    <input
-                        id="to-y"
-                        type="number"
-                        value={state.detailedRoute.to.y}
-                        onChange={(e) => handleToChange('y', e.target.valueAsNumber)}
-                    />
-                    <label htmlFor="to-z"> Z</label>
-                    <input
-                        id="to-z"
-                        type="number"
-                        value={state.detailedRoute.to.z}
-                        onChange={(e) => handleToChange('z', e.target.valueAsNumber)}
-                    />
-                    <br />
-                    <label htmlFor="distance">Длина маршрута</label>
-                    <br />
-                    <input
-                        id="distance"
-                        type="number"
-                        placeholder="700"
-                        value={state.detailedRoute.distance}
-                        onChange={(e) => handleDetailedRouteChange('distance', e.target.valueAsNumber)}
-                    />
-                </div>
+                    <RenderInput label="Название" path="route.to.name" state={state} setState={setState}/>
+                    <RenderInput label="X" path="route.to.x" state={state} setState={setState} type="number"/>
+                    <RenderInput label="Y" path="route.to.y" state={state} setState={setState} type="number"/>
+                    <RenderInput label="Z" path="route.to.z" state={state} setState={setState} type="number"/>
+                    <RenderInput label="Длина маршрута" path="route.distance" state={state} setState={setState}
+                                 type="number"/>
+                </>
             )}
             <button onClick={handleAddRoute}>Добавить</button>
         </div>

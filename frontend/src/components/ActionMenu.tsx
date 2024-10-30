@@ -5,8 +5,8 @@ interface ActionMenuProps {
     onActionSelect: (action: string) => void;
 }
 
-const ActionMenu: React.FC<ActionMenuProps> = ({ actions, onActionSelect }) => (
-    <div style={{ textAlign: 'center', marginTop: '50px' }} className="menu">
+const ActionMenu: React.FC<ActionMenuProps> = ({actions, onActionSelect}) => (
+    <div style={{textAlign: 'center', marginTop: '50px'}} className="menu">
         {Object.entries(actions).map(([key, label]) => (
             <button key={key} onClick={() => onActionSelect(key)}>
                 {label}

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { fetchMinRoute } from '../api';
-import { Route} from "../model/types";
+import React, {useEffect, useState} from 'react';
+import {fetchMinRoute} from '../api';
+import {Route} from "../model/types";
 
 
 const GetMinRoute: React.FC = () => {
