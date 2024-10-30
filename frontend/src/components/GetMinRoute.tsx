@@ -1,28 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { fetchMinRoute } from '../api';
+import React, {useEffect, useState} from 'react';
+import {fetchMinRoute} from '../api';
+import {Route} from "../model/types";
 
-interface Route {
-    id: number;
-    name: string;
-    coordinates: {
-        x: number;
-        y: number;
-    };
-    creationDate: string;
-    from: {
-        x: number;
-        y: number;
-        z: number;
-        name: string;
-    };
-    to: {
-        x: number;
-        y: number;
-        z: number;
-        name: string;
-    };
-    distance: number;
-}
 
 const GetMinRoute: React.FC = () => {
     const [route, setRoute] = useState<Route | null>(null);

@@ -1,86 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState} from 'react';
 import './App.css';
-import { deleteRouteById, getRoutes } from './api';
-import AddRoute from './sub-pages/AddRoute';
-import GetMinRoute from './sub-pages/GetMinRoute';
-import GetRouteWithDistance from './sub-pages/GetRouteWithDistance';
-import GetRoutesBetweenLocation from './sub-pages/GetRoutesBetweenLocation';
-import EditRoute from "./sub-pages/EditRoute";
-import MainTable from './sub-pages/MainTable';
-import { Route, ApiResponse } from './types';
-
-function getErrorMessage(error: unknown) {
-    if (error instanceof Error) return error.message;
-    return String(error);
-}
+import {useRoutes} from './hooks/useRoutes';
+import AddRoute from './components/AddRoute';
+import GetMinRoute from './components/GetMinRoute';
+import GetRouteWithDistance from './components/GetRouteWithDistance';
+import GetRoutesBetweenLocation from './components/GetRoutesBetweenLocation';
+import EditRoute from './components/EditRoute';
+import MainTable from './components/MainTable';
+import ActionMenu from './components/ActionMenu';
+import {Route} from './model/types';
 
 function App() {
-    const [routes, setRoutes] = useState<Route[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+    const {routes, loading, error, numberOfElements, totalElements, totalPages, fetchRoutes, deleteRoute} = useRoutes();
     const [editingRoute, setEditingRoute] = useState<Route | null>(null);
     const [selectedAction, setSelectedAction] = useState<string | null>(null);
-    const [numberOfElements, setNumberOfElements] = useState<number>(0);
-    const [totalElements, setTotalElements] = useState<number>(0);
-    const [totalPages, setTotalPages] = useState<number>(0);
 
-    const actions: { [key: string]: string } = {
+    const actions = {
         addRoute: 'Добавить новый маршрут в хранилище',
         getMinRoute: 'Получить минимальный маршрут',
         getRouteWithDistance: 'Получить маршрут с расстоянием',
         getRoutesBetweenLocation: 'Получить маршруты между локациями',
     };
 
-    useEffect(() => {
-        fetchRoutes();
-    }, []);
-
-    const fetchRoutes = async (filters?: string, sortingFields?: string, size?: number, page?: number) => {
-        setLoading(true);
-        setError(null);
-        try {
-            const response: ApiResponse = await getRoutes(filters, sortingFields, page, size);
-            if (response) {
-                setRoutes(response.routes);
-                setNumberOfElements(response.numberOfElements);
-                setTotalElements(response.totalElements);
-                setTotalPages(response.totalPages);
-            }
-        } catch (err) {
-            setError(getErrorMessage(err));
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleEditRoute = (route: Route) => {
-        setEditingRoute(route);
-    };
-
-    const handleCancelEdit = () => {
-        setEditingRoute(null);
-    };
-
+    const handleEditRoute = (route: Route) => setEditingRoute(route);
+    const handleCancelEdit = () => setEditingRoute(null);
     const handleSaveEdit = () => {
         fetchRoutes();
         setEditingRoute(null);
-    };
-
-    const handleDeleteRoute = async (id: number) => {
-        setLoading(true);
-        setError(null);
-        try {
-            await deleteRouteById(id);
-            fetchRoutes();
-        } catch (err) {
-            setError('Failed to delete route');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleButtonClick = (action: keyof typeof actions) => {
-        setSelectedAction(action as string);
     };
 
     const handleBackButtonClick = () => {
@@ -88,30 +34,20 @@ function App() {
         setEditingRoute(null);
     };
 
-    const handlePageChange = () => {
-
-    }
-
     const renderContent = () => {
         if (editingRoute) {
-            return (
-                <EditRoute
-                    route={editingRoute}
-                    onSave={handleSaveEdit}
-                    onCancel={handleCancelEdit}
-                />
-            );
+            return <EditRoute route={editingRoute} onSave={handleSaveEdit} onCancel={handleCancelEdit}/>;
         }
 
         switch (selectedAction) {
             case 'addRoute':
-                return <AddRoute />;
+                return <AddRoute/>;
             case 'getMinRoute':
-                return <GetMinRoute />;
+                return <GetMinRoute/>;
             case 'getRouteWithDistance':
-                return <GetRouteWithDistance />;
+                return <GetRouteWithDistance/>;
             case 'getRoutesBetweenLocation':
-                return <GetRoutesBetweenLocation />;
+                return <GetRoutesBetweenLocation/>;
             default:
                 return null;
         }
@@ -126,7 +62,7 @@ function App() {
                         loading={loading}
                         error={error}
                         onEditRoute={handleEditRoute}
-                        onDeleteRoute={handleDeleteRoute}
+                        onDeleteRoute={deleteRoute}
                         onAppliedFilters={fetchRoutes}
                         numberOfElements={numberOfElements}
                         totalElements={totalElements}
@@ -138,22 +74,12 @@ function App() {
                 {(editingRoute || selectedAction) && renderContent()}
 
                 {(editingRoute || selectedAction) && (
-                    <button onClick={handleBackButtonClick} style={{ marginTop: '20px' }}>
+                    <button onClick={handleBackButtonClick} style={{marginTop: '20px'}}>
                         Назад
                     </button>
                 )}
 
-                {!editingRoute && !selectedAction && (
-                    <div style={{ textAlign: 'center', marginTop: '50px' }} className="menu">
-                        <div>
-                            {Object.keys(actions).map((key) => (
-                                <button key={key} onClick={() => handleButtonClick(key as keyof typeof actions)}>
-                                    {actions[key]}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                )}
+                {!editingRoute && !selectedAction && <ActionMenu actions={actions} onActionSelect={setSelectedAction}/>}
             </header>
         </div>
     );

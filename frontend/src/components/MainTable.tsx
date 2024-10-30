@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Route} from '../types';
+import {Route} from '../model/types';
 
 interface MainTableProps {
     routes: Route[];
@@ -267,7 +267,7 @@ const MainTable: React.FC<MainTableProps> = ({
                 <button onClick={handleNextPage}>Следующая</button>
                 <button onClick={handleGoToPage}>Перейти к странице</button>
             </div>
-
+            <p>Выберите чекбокс у элемента, если хотите добавить его в сортировку</p>
             <table>
                 <thead>
                 <tr>
@@ -453,8 +453,6 @@ const MainTable: React.FC<MainTableProps> = ({
                 ))}
                 </tbody>
             </table>
-
-            {/* Add a button to apply filters and sorting */}
             <div style={{marginTop: '20px', textAlign: 'center'}}>
                 <button onClick={applyFiltersAndSort}>Применить фильтры и сортировку</button>
             </div>
