@@ -434,10 +434,13 @@ const MainTable: React.FC<MainTableProps> = ({
                         <td>{route.coordinates.y}</td>
                         <td>{route.creationDate}</td>
                         <td>{route.from.name}</td>
+                        <td>{route.from.id}</td>
+
                         <td>{route.from.x}</td>
                         <td>{route.from.y}</td>
                         <td>{route.from.z}</td>
                         <td>{route.to.name}</td>
+                        <td>{route.to.id}</td>
                         <td>{route.to.x}</td>
                         <td>{route.to.y}</td>
                         <td>{route.to.z}</td>

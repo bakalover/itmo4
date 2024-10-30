@@ -192,6 +192,7 @@ const EditRoute: React.FC<{ route: Route; onSave: () => void; onCancel: () => vo
                 value={state.route.distance}
                 onChange={(e) => handleDistanceChange(e.target.valueAsNumber)}
             />
+            <br/>
             <button onClick={handleSave}>Сохранить</button>
             <button onClick={onCancel}>Отмена</button>
         </div>
