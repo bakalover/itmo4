@@ -89,8 +89,8 @@ const MainTable: React.FC<MainTableProps> = ({
         const names = Array.from(new Set(routes.map(route => route.name)));
         const fromNames = Array.from(new Set(routes.map(route => route.from.name)));
         const toNames = Array.from(new Set(routes.map(route => route.to.name)));
-        const fromIds = Array.from(new Set(routes.map(route => route.from.id.toString())));
-        const toIds = Array.from(new Set(routes.map(route => route.to.id.toString())));
+        const fromIds = Array.from(new Set(routes.map(route => (route.from.id !== null ? route.from.id.toString() : "null"))));
+        const toIds = Array.from(new Set(routes.map(route => (route.to.id !== null ? route.to.id.toString() : "null"))));
 
         setUniqueIds(ids);
         setUniqueNames(names);

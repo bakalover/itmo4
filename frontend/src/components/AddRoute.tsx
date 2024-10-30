@@ -15,8 +15,8 @@ const initialState: State = {
     route: {
         name: 'Москва-Красноярск',
         coordinates: {x: 100, y: 200},
-        from: {x: 10, y: 20, z: 30, name: 'Москва'},
-        to: {x: 150, y: 250, z: 350, name: 'Красноярск'},
+        from: {id: null, x: 10, y: 20, z: 30, name: 'Москва'},
+        to: {id: null, x: 150, y: 250, z: 350, name: 'Красноярск'},
         distance: 5432,
     },
     simpleRoute: {from: 'Москва', to: 'Красноярск', distance: 5437},
