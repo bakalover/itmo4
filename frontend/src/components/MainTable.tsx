@@ -103,7 +103,7 @@ const MainTable: React.FC<MainTableProps> = ({
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const {name, value} = e.target;
-        console.log(name,value)
+        console.log(name, value)
         setFilters(prevFilters => {
             const newFilters = {...prevFilters};
             const keys = name.split('.');
@@ -156,12 +156,12 @@ const MainTable: React.FC<MainTableProps> = ({
             if (typeof value === 'object' && value !== null) {
                 for (const subKey in value) {
                     const subValue = value[subKey as keyof typeof value];
-                    if (subValue !== '' && subValue!== " ") {
+                    if (subValue !== '' && subValue !== " ") {
                         console.log(filtersArray)
                         filtersArray.push(`${key}.${subKey}:${subValue}`);
                     }
                 }
-            } else if (value !== '' && value!== " ") {
+            } else if (value !== '' && value !== " ") {
                 filtersArray.push(`${key}:${value}`);
             }
         }
@@ -194,7 +194,7 @@ const MainTable: React.FC<MainTableProps> = ({
         }
     };
 
-    const onPageChangeButtonClicked= async() => {
+    const onPageChangeButtonClicked = async () => {
         const filters = await getFiltersForAPI();
         const sorting = await getSortingForApi()
         await onPageChanged(filters, sorting, pageSize, currentPage)
@@ -241,221 +241,239 @@ const MainTable: React.FC<MainTableProps> = ({
             <h2>Маршруты</h2>
             {loading && <p>Загрузка...</p>}
             {error && <p>{error}</p>}
+            {!loading && !error &&
+                (
+                    <div>
+                        <div style={{marginTop: '20px', textAlign: 'center'}}>
+                            <p>Размер страницы</p>
+                            <input
+                                type="number"
+                                value={pageSize}
+                                onChange={handlePageSizeChange}
+                                min={1}
+                                max={totalElements}
+                            />
+                            <button onClick={onPageChangeButtonClicked}>Изменить размер страницы</button>
+                            <br/>
+                            <p>Текущая </p>
+                            <input
+                                type="number"
+                                value={currentPage}
+                                onChange={handlePageChange}
+                                min={1}
+                                max={totalPages}
+                            />
 
-            <div style={{marginTop: '20px', textAlign: 'center'}}>
-                <p>Размер страницы</p>
-                <input
-                    type="number"
-                    value={pageSize}
-                    onChange={handlePageSizeChange}
-                    min={1}
-                    max={totalElements}
-                />
-                <button onClick={onPageChangeButtonClicked}>Изменить размер страницы</button>
-                <br/>
-                <p>Текущая </p>
-                <input
-                    type="number"
-                    value={currentPage}
-                    onChange={handlePageChange}
-                    min={1}
-                    max={totalPages}
-                />
+                            <br/>
+                            <button onClick={handlePreviousPage}>Предыдущая</button>
+                            <button onClick={handleNextPage}>Следующая</button>
+                            <button onClick={handleGoToPage}>Перейти к странице</button>
+                        </div>
+                        <p>Выберите чекбокс у элемента, если хотите добавить его в сортировку</p>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th rowSpan={2}>Номер</th>
+                                <th rowSpan={2}>
+                                    ID<br/>
+                                    <input type="checkbox" name="id" checked={checkboxes.id}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <select name="id" value={filters.id} onChange={handleFilterChange}>
+                                        <option value="">Выберите ID</option>
+                                        {uniqueIds.map(id => (
+                                            <option key={id} value={id}>{id}</option>
+                                        ))}
+                                    </select>
+                                </th>
+                                <th rowSpan={2}>
+                                    Название<br/>
+                                    <input type="checkbox" name="name" checked={checkboxes.name}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <select name="name" value={filters.name} onChange={handleFilterChange}>
+                                        <option value="">Выберите название</option>
+                                        {uniqueNames.map(name => (
+                                            <option key={name} value={name}>{name}</option>
+                                        ))}
+                                    </select>
+                                </th>
+                                <th colSpan={2}>Координаты</th>
+                                <th rowSpan={2}>
+                                    Дата создания<br/>
+                                    <input type="checkbox" name="creationDate" checked={checkboxes.creationDate}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <input type="text" name="creationDate" value={filters.creationDate}
+                                           onChange={handleFilterChange}/>
+                                </th>
+                                <th colSpan={5}>Откуда</th>
+                                <th colSpan={5}>Куда</th>
+                                <th rowSpan={2}>
+                                    Расстояние<br/>
+                                    <input type="checkbox" name="distance" checked={checkboxes.distance}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <input type="text" name="distance" value={filters.distance}
+                                           onChange={handleFilterChange}/>
+                                </th>
+                                <th rowSpan={2}></th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    X<br/>
+                                    <input type="checkbox" name="coordinates.x"
+                                           checked={checkboxes.coordinates?.x || false}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <input type="text" name="coordinates.x" value={filters.coordinates?.x || ''}
+                                           onChange={handleFilterChange}/>
+                                </th>
+                                <th>
+                                    Y<br/>
+                                    <input type="checkbox" name="coordinates.y"
+                                           checked={checkboxes.coordinates?.y || false}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <input type="text" name="coordinates.y" value={filters.coordinates?.y || ''}
+                                           onChange={handleFilterChange}/>
+                                </th>
+                                <th>
+                                    Имя<br/>
+                                    <input type="checkbox" name="from.name" checked={checkboxes.from?.name || false}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <select name="from.name" value={filters.from?.name || ''}
+                                            onChange={handleFilterChange}>
+                                        <option value="">Выберите имя</option>
+                                        {uniqueFromNames.map(name => (
+                                            <option key={name} value={name}>{name}</option>
+                                        ))}
+                                    </select>
+                                </th>
+                                <th>
+                                    id<br/>
+                                    <input type="checkbox" name="from.id" checked={checkboxes.from?.id || false}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <select name="from.id" value={filters.from?.id || 0} onChange={handleFilterChange}>
+                                        <option value="">Выберите id</option>
+                                        {uniqueFromIds.map(name => (
+                                            <option key={name} value={name}>{name}</option>
+                                        ))}
+                                    </select>
+                                </th>
+                                <th>
+                                    X<br/>
+                                    <input type="checkbox" name="from.x" checked={checkboxes.from?.x || false}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <input type="text" name="from.x" value={filters.from?.x || ''}
+                                           onChange={handleFilterChange}/>
+                                </th>
+                                <th>
+                                    Y<br/>
+                                    <input type="checkbox" name="from.y" checked={checkboxes.from?.y || false}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <input type="text" name="from.y" value={filters.from?.y || ''}
+                                           onChange={handleFilterChange}/>
+                                </th>
+                                <th>
+                                    Z<br/>
+                                    <input type="checkbox" name="from.z" checked={checkboxes.from?.z || false}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <input type="text" name="from.z" value={filters.from?.z || ''}
+                                           onChange={handleFilterChange}/>
+                                </th>
+                                <th>
+                                    Имя<br/>
+                                    <input type="checkbox" name="to.name" checked={checkboxes.to?.name || false}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <select name="to.name" value={filters.to?.name || ''} onChange={handleFilterChange}>
+                                        <option value="">Выберите имя</option>
+                                        {uniqueToNames.map(name => (
+                                            <option key={name} value={name}>{name}</option>
+                                        ))}
+                                    </select>
+                                </th>
+                                <th>
+                                    id<br/>
+                                    <input type="checkbox" name="to.id" checked={checkboxes.to?.id || false}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <select name="to.id" value={filters.to?.id || 0} onChange={handleFilterChange}>
+                                        <option value="">Выберите id</option>
+                                        {uniqueToIds.map(name => (
+                                            <option key={name} value={name}>{name}</option>
+                                        ))}
+                                    </select>
+                                </th>
+                                <th>
 
-                <br/>
-                <button onClick={handlePreviousPage}>Предыдущая</button>
-                <button onClick={handleNextPage}>Следующая</button>
-                <button onClick={handleGoToPage}>Перейти к странице</button>
-            </div>
-            <p>Выберите чекбокс у элемента, если хотите добавить его в сортировку</p>
-            <table>
-                <thead>
-                <tr>
-                    <th rowSpan={2}>Номер</th>
-                    <th rowSpan={2}>
-                        ID<br/>
-                        <input type="checkbox" name="id" checked={checkboxes.id} onChange={handleCheckboxChange}/>
-                        <br/>
-                        <select name="id" value={filters.id} onChange={handleFilterChange}>
-                            <option value="">Выберите ID</option>
-                            {uniqueIds.map(id => (
-                                <option key={id} value={id}>{id}</option>
-                            ))}
-                        </select>
-                    </th>
-                    <th rowSpan={2}>
-                        Название<br/>
-                        <input type="checkbox" name="name" checked={checkboxes.name} onChange={handleCheckboxChange}/>
-                        <br/>
-                        <select name="name" value={filters.name} onChange={handleFilterChange}>
-                            <option value="">Выберите название</option>
-                            {uniqueNames.map(name => (
-                                <option key={name} value={name}>{name}</option>
-                            ))}
-                        </select>
-                    </th>
-                    <th colSpan={2}>Координаты</th>
-                    <th rowSpan={2}>
-                        Дата создания<br/>
-                        <input type="checkbox" name="creationDate" checked={checkboxes.creationDate}
-                               onChange={handleCheckboxChange}/>
-                        <br/>
-                        <input type="text" name="creationDate" value={filters.creationDate}
-                               onChange={handleFilterChange}/>
-                    </th>
-                    <th colSpan={5}>Откуда</th>
-                    <th colSpan={5}>Куда</th>
-                    <th rowSpan={2}>
-                        Расстояние<br/>
-                        <input type="checkbox" name="distance" checked={checkboxes.distance}
-                               onChange={handleCheckboxChange}/>
-                        <br/>
-                        <input type="text" name="distance" value={filters.distance} onChange={handleFilterChange}/>
-                    </th>
-                    <th rowSpan={2}></th>
-                </tr>
-                <tr>
-                    <th>
-                        X<br/>
-                        <input type="checkbox" name="coordinates.x" checked={checkboxes.coordinates?.x || false}
-                               onChange={handleCheckboxChange}/>
-                        <br/>
-                        <input type="text" name="coordinates.x" value={filters.coordinates?.x || ''}
-                               onChange={handleFilterChange}/>
-                    </th>
-                    <th>
-                        Y<br/>
-                        <input type="checkbox" name="coordinates.y" checked={checkboxes.coordinates?.y || false}
-                               onChange={handleCheckboxChange}/>
-                        <br/>
-                        <input type="text" name="coordinates.y" value={filters.coordinates?.y || ''}
-                               onChange={handleFilterChange}/>
-                    </th>
-                    <th>
-                        Имя<br/>
-                        <input type="checkbox" name="from.name" checked={checkboxes.from?.name || false}
-                               onChange={handleCheckboxChange}/>
-                        <br/>
-                        <select name="from.name" value={filters.from?.name || ''} onChange={handleFilterChange}>
-                            <option value="">Выберите имя</option>
-                            {uniqueFromNames.map(name => (
-                                <option key={name} value={name}>{name}</option>
-                            ))}
-                        </select>
-                    </th>
-                    <th>
-                        id<br/>
-                        <input type="checkbox" name="from.id" checked={checkboxes.from?.id || false}
-                               onChange={handleCheckboxChange}/>
-                        <br/>
-                        <select name="from.id" value={filters.from?.id || 0} onChange={handleFilterChange}>
-                            <option value="">Выберите id</option>
-                            {uniqueFromIds.map(name => (
-                                <option key={name} value={name}>{name}</option>
-                            ))}
-                        </select>
-                    </th>
-                    <th>
-                        X<br/>
-                        <input type="checkbox" name="from.x" checked={checkboxes.from?.x || false}
-                               onChange={handleCheckboxChange}/>
-                        <br/>
-                        <input type="text" name="from.x" value={filters.from?.x || ''} onChange={handleFilterChange}/>
-                    </th>
-                    <th>
-                        Y<br/>
-                        <input type="checkbox" name="from.y" checked={checkboxes.from?.y || false}
-                               onChange={handleCheckboxChange}/>
-                        <br/>
-                        <input type="text" name="from.y" value={filters.from?.y || ''} onChange={handleFilterChange}/>
-                    </th>
-                    <th>
-                        Z<br/>
-                        <input type="checkbox" name="from.z" checked={checkboxes.from?.z || false}
-                               onChange={handleCheckboxChange}/>
-                        <br/>
-                        <input type="text" name="from.z" value={filters.from?.z || ''} onChange={handleFilterChange}/>
-                    </th>
-                    <th>
-                        Имя<br/>
-                        <input type="checkbox" name="to.name" checked={checkboxes.to?.name || false}
-                               onChange={handleCheckboxChange}/>
-                        <br/>
-                        <select name="to.name" value={filters.to?.name || ''} onChange={handleFilterChange}>
-                            <option value="">Выберите имя</option>
-                            {uniqueToNames.map(name => (
-                                <option key={name} value={name}>{name}</option>
-                            ))}
-                        </select>
-                    </th>
-                    <th>
-                        id<br/>
-                        <input type="checkbox" name="to.id" checked={checkboxes.to?.id || false}
-                               onChange={handleCheckboxChange}/>
-                        <br/>
-                        <select name="to.id" value={filters.to?.id || 0} onChange={handleFilterChange}>
-                            <option value="">Выберите id</option>
-                            {uniqueToIds.map(name => (
-                                <option key={name} value={name}>{name}</option>
-                            ))}
-                        </select>
-                    </th>
-                    <th>
+                                    X<br/>
+                                    <input type="checkbox" name="to.x" checked={checkboxes.to?.x || false}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <input type="text" name="to.x" value={filters.to?.x || ''}
+                                           onChange={handleFilterChange}/>
+                                </th>
+                                <th>
+                                    Y<br/>
+                                    <input type="checkbox" name="to.y" checked={checkboxes.to?.y || false}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <input type="text" name="to.y" value={filters.to?.y || ''}
+                                           onChange={handleFilterChange}/>
+                                </th>
+                                <th>
+                                    Z<br/>
+                                    <input type="checkbox" name="to.z" checked={checkboxes.to?.z || false}
+                                           onChange={handleCheckboxChange}/>
+                                    <br/>
+                                    <input type="text" name="to.z" value={filters.to?.z || ''}
+                                           onChange={handleFilterChange}/>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {routes.map((route) => (
+                                <tr key={route.id}>
+                                    <td>{route.id}</td>
+                                    <td>{route.id}</td>
+                                    <td>{route.name}</td>
+                                    <td>{route.coordinates.x}</td>
+                                    <td>{route.coordinates.y}</td>
+                                    <td>{route.creationDate}</td>
+                                    <td>{route.from.name}</td>
+                                    <td>{route.from.id}</td>
 
-                        X<br/>
-                        <input type="checkbox" name="to.x" checked={checkboxes.to?.x || false}
-                               onChange={handleCheckboxChange}/>
-                        <br/>
-                        <input type="text" name="to.x" value={filters.to?.x || ''} onChange={handleFilterChange}/>
-                    </th>
-                    <th>
-                        Y<br/>
-                        <input type="checkbox" name="to.y" checked={checkboxes.to?.y || false}
-                               onChange={handleCheckboxChange}/>
-                        <br/>
-                        <input type="text" name="to.y" value={filters.to?.y || ''} onChange={handleFilterChange}/>
-                    </th>
-                    <th>
-                        Z<br/>
-                        <input type="checkbox" name="to.z" checked={checkboxes.to?.z || false}
-                               onChange={handleCheckboxChange}/>
-                        <br/>
-                        <input type="text" name="to.z" value={filters.to?.z || ''} onChange={handleFilterChange}/>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                {routes.map((route) => (
-                    <tr key={route.id}>
-                        <td>{route.id}</td>
-                        <td>{route.id}</td>
-                        <td>{route.name}</td>
-                        <td>{route.coordinates.x}</td>
-                        <td>{route.coordinates.y}</td>
-                        <td>{route.creationDate}</td>
-                        <td>{route.from.name}</td>
-                        <td>{route.from.id}</td>
+                                    <td>{route.from.x}</td>
+                                    <td>{route.from.y}</td>
+                                    <td>{route.from.z}</td>
+                                    <td>{route.to.name}</td>
+                                    <td>{route.to.id}</td>
+                                    <td>{route.to.x}</td>
+                                    <td>{route.to.y}</td>
+                                    <td>{route.to.z}</td>
+                                    <td>{route.distance}</td>
+                                    <td>
+                                        <button onClick={() => onEditRoute(route)}>Подробнее</button>
+                                        <button onClick={() => onDeleteRoute(route.id)}>Удалить</button>
+                                    </td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                        <div style={{marginTop: '20px', textAlign: 'center'}}>
+                            <button onClick={applyFiltersAndSort}>Применить фильтры и сортировку</button>
+                        </div>
+                    </div>
+                )
+            }
 
-                        <td>{route.from.x}</td>
-                        <td>{route.from.y}</td>
-                        <td>{route.from.z}</td>
-                        <td>{route.to.name}</td>
-                        <td>{route.to.id}</td>
-                        <td>{route.to.x}</td>
-                        <td>{route.to.y}</td>
-                        <td>{route.to.z}</td>
-                        <td>{route.distance}</td>
-                        <td>
-                            <button onClick={() => onEditRoute(route)}>Подробнее</button>
-                            <button onClick={() => onDeleteRoute(route.id)}>Удалить</button>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-            <div style={{marginTop: '20px', textAlign: 'center'}}>
-                <button onClick={applyFiltersAndSort}>Применить фильтры и сортировку</button>
-            </div>
         </div>
     );
 };
