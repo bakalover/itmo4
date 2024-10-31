@@ -52,12 +52,15 @@ const GetMinRoute: React.FC = () => {
                         x: {route.from.x?.toString()}, y: {route.from.y}, z: {route.from.z}, name: {route.from.name}
                     </td>
                 </tr>
-                <tr>
-                    <th>To</th>
-                    <td>
-                        x: {route.to.x?.toString()}, y: {route.to.y}, z: {route.to.z}, name: {route.to.name}
-                    </td>
-                </tr>
+                {route.to !== null && (
+                    <tr>
+                        <th>To</th>
+                        <td>
+                            x: {route.to.x?.toString()}, y: {route.to.y}, z: {route.to.z}, name: {route.to.name}
+                        </td>
+                    </tr>
+                )}
+
                 <tr>
                     <th>Distance</th>
                     <td>{route.distance.toString()}</td>

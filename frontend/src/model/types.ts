@@ -19,7 +19,7 @@ export interface Route {
         y: number;
         z: number;
         name: string;
-    };
+    } | null;
     distance: bigint;
 }
 

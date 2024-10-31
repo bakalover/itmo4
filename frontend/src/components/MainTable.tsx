@@ -88,9 +88,9 @@ const MainTable: React.FC<MainTableProps> = ({
         const ids = Array.from(new Set(routes.map(route => route.id.toString())));
         const names = Array.from(new Set(routes.map(route => route.name)));
         const fromNames = Array.from(new Set(routes.map(route => route.from.name)));
-        const toNames = Array.from(new Set(routes.map(route => route.to.name)));
+        const toNames = Array.from(new Set(routes.map(route => (route.to == null ? '' : route.to.name))));
         const fromIds = Array.from(new Set(routes.map(route => (route.from.id !== null ? route.from.id.toString() : "null"))));
-        const toIds = Array.from(new Set(routes.map(route => (route.to.id !== null ? route.to.id.toString() : "null"))));
+        const toIds = Array.from(new Set(routes.map(route => (route.to !== null && route.to.id !== null ? route.to.id.toString() : "null"))));
 
         setUniqueIds(ids);
         setUniqueNames(names);
@@ -453,11 +453,11 @@ const MainTable: React.FC<MainTableProps> = ({
                                     <td>{route.from.x?.toString()}</td>
                                     <td>{route.from.y}</td>
                                     <td>{route.from.z}</td>
-                                    <td>{route.to.name}</td>
-                                    <td>{route.to.id}</td>
-                                    <td>{route.to.x?.toString()}</td>
-                                    <td>{route.to.y}</td>
-                                    <td>{route.to.z}</td>
+                                    <td>{route.to?.name}</td>
+                                    <td>{route.to?.id}</td>
+                                    <td>{route.to?.x?.toString()}</td>
+                                    <td>{route.to?.y}</td>
+                                    <td>{route.to?.z}</td>
                                     <td>{route.distance.toString()}</td>
                                     <td>
                                         <button onClick={() => onEditRoute(route)}>Подробнее</button>
