@@ -31,21 +31,21 @@ const EditRoute: React.FC<{ route: Route; onSave: () => void; onCancel: () => vo
     return (
         <div>
             <h2>Редактировать маршрут</h2>
-            <RenderInput label="Название маршрута" path="route.name" state={state} setState={setState}/>
-            <p>Координаты</p>
-            <RenderInput label="X" path="route.coordinates.x" state={state} setState={setState} type="number"/>
-            <RenderInput label="Y" path="route.coordinates.y" state={state} setState={setState} type="number"/>
-            <h3>Начальная точка</h3>
-            <RenderInput label="Название" path="route.from.name" state={state} setState={setState}/>
-            <RenderInput label="X" path="route.from.x" state={state} setState={setState} type="number"/>
-            <RenderInput label="Y" path="route.from.y" state={state} setState={setState} type="number"/>
-            <RenderInput label="Z" path="route.from.z" state={state} setState={setState} type="number"/>
-            <h3>Конечная точка</h3>
-            <RenderInput label="Название" path="route.to.name" state={state} setState={setState}/>
-            <RenderInput label="X" path="route.to.x" state={state} setState={setState} type="number"/>
-            <RenderInput label="Y" path="route.to.y" state={state} setState={setState} type="number"/>
-            <RenderInput label="Z" path="route.to.z" state={state} setState={setState} type="number"/>
-            <RenderInput label="Длина маршрута" path="route.distance" state={state} setState={setState} type="number"/>
+            {/*<RenderInput label="Название маршрута" path="route.name" state={state} setState={setState}/>*/}
+            {/*<p>Координаты</p>*/}
+            {/*<RenderInput label="X" path="route.coordinates.x" state={state} setState={setState} type="number"/>*/}
+            {/*<RenderInput label="Y" path="route.coordinates.y" state={state} setState={setState} type="number"/>*/}
+            {/*<h3>Начальная точка</h3>*/}
+            {/*<RenderInput label="Название" path="route.from.name" state={state} setState={setState}/>*/}
+            {/*<RenderInput label="X" path="route.from.x" state={state} setState={setState} type="number"/>*/}
+            {/*<RenderInput label="Y" path="route.from.y" state={state} setState={setState} type="number"/>*/}
+            {/*<RenderInput label="Z" path="route.from.z" state={state} setState={setState} type="number"/>*/}
+            {/*<h3>Конечная точка</h3>*/}
+            {/*<RenderInput label="Название" path="route.to.name" state={state} setState={setState}/>*/}
+            {/*<RenderInput label="X" path="route.to.x" state={state} setState={setState} type="number"/>*/}
+            {/*<RenderInput label="Y" path="route.to.y" state={state} setState={setState} type="number"/>*/}
+            {/*<RenderInput label="Z" path="route.to.z" state={state} setState={setState} type="number"/>*/}
+            {/*<RenderInput label="Длина маршрута" path="route.distance" state={state} setState={setState} type="number"/>*/}
             <button onClick={handleSave}>Сохранить</button>
             <button onClick={onCancel}>Отмена</button>
         </div>

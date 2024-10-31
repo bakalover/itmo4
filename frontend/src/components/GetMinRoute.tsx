@@ -39,7 +39,7 @@ const GetMinRoute: React.FC = () => {
                 <tr>
                     <th>Coordinates</th>
                     <td>
-                        x: {route.coordinates.x}, y: {route.coordinates.y}
+                        x: {route.coordinates.x?.toString()}, y: {route.coordinates.y}
                     </td>
                 </tr>
                 <tr>
@@ -49,18 +49,18 @@ const GetMinRoute: React.FC = () => {
                 <tr>
                     <th>From</th>
                     <td>
-                        x: {route.from.x}, y: {route.from.y}, z: {route.from.z}, name: {route.from.name}
+                        x: {route.from.x?.toString()}, y: {route.from.y}, z: {route.from.z}, name: {route.from.name}
                     </td>
                 </tr>
                 <tr>
                     <th>To</th>
                     <td>
-                        x: {route.to.x}, y: {route.to.y}, z: {route.to.z}, name: {route.to.name}
+                        x: {route.to.x?.toString()}, y: {route.to.y}, z: {route.to.z}, name: {route.to.name}
                     </td>
                 </tr>
                 <tr>
                     <th>Distance</th>
-                    <td>{route.distance}</td>
+                    <td>{route.distance.toString()}</td>
                 </tr>
                 </tbody>
             </table>

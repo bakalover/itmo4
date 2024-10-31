@@ -72,7 +72,6 @@ function App() {
                 )}
 
                 {(editingRoute || selectedAction) && renderContent()}
-
                 {(editingRoute || selectedAction) && (
                     <button onClick={handleBackButtonClick} style={{marginTop: '20px'}}>
                         Назад

@@ -2,30 +2,30 @@ export interface Route {
     id: number;
     name: string;
     coordinates: {
-        x: number;
+        x: bigint | null;
         y: number;
     };
     creationDate: string;
     from: {
         id: number | null;
-        x: number;
+        x: bigint | null;
         y: number;
         z: number;
         name: string;
     };
     to: {
         id: number | null;
-        x: number;
+        x: bigint | null;
         y: number;
         z: number;
         name: string;
     };
-    distance: number;
+    distance: bigint;
 }
 
 export interface SimpleRoute {
-    from: string;
-    to: string;
+    from: number;
+    to: number;
     distance: number;
 }
 

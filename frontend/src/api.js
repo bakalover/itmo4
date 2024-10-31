@@ -90,32 +90,27 @@ export const addRoutesWithId = async (idTo, idFrom, distance) => {
         const response = await fetch(`${NAVIGATOR_URL}/route/add/${idFrom}/${idTo}/${distance}`, {
             method: 'POST'
         });
-        if (!response.ok) throw new Error('Маршрут не найден!');
-        return response;
+        if (response.ok) return response;
+        else throw Error('AAA')
     } catch (error) {
         console.error('Error adding route with IDs:', error);
         throw error;
     }
-
 }
 
 export const addRoute = async (route) => {
-    try {
-        console.log("going to add", route)
-        const response = await fetch(CORE_URL, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(route),
-        });
-        if (!response.ok) {
-            throw new Error('Failed to add route');
-        }
-    } catch (error) {
-        console.error('Error adding route:', error);
-        throw error;
-    }
+    console.log("going to add", route)
+    const response = await fetch(CORE_URL, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(route),
+    });
+    if (response.statusCode === 200) return response;
+    else if (response.statusCode === 400) throw new Error('Некорректные входные данные: ' + await response.text());
+    else if (response.statusCode === 409) throw new Error('Маршрут с id = ' + route.id.toString() + 'уже существует');
+    else throw new Error('Внутренняя ошибка сервера!');
 };
 
 export const updateRouteById = async (id, route) => {

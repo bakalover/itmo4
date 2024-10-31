@@ -15,7 +15,7 @@ button {
   background-color: #61dafb;
 }
 
-table {
+.mainTable table {
   border-collapse: collapse; /* Убираем двойные границы */
   width: 70%; /* Занимаем всю ширину */
   margin-left: 10%;
@@ -47,4 +47,42 @@ input[type="checkbox"] {
 }
 th input {
   width: 50%;
+}
+
+table.addRoute{
+  width: 50%;
+  margin: auto;
+  background-color: lightcyan;
+}
+
+td.addRoute {
+  padding: 0; /* Маленький margin вокруг содержимого ячеек */
+  margin: 0;
+  border: none; /* Убираем границы ячеек */
+}
+tr.addRoute{
+  margin: 0;
+}
+
+p.addRoute {
+  font-size: 14px; /* Размер шрифта для <p> внутри таблицы */
+  margin: 0;
+}
+
+button.addRoute{
+  width: 200px;
+  height: 50px;
+}
+h3{
+  padding: 0;
+  margin: 0;
+}
+label{
+  font-weight: bold;
+}
+input.bad{
+  background-color: lightpink;
+}
+small.bad {
+  color: darkred;
 }

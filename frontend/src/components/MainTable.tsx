@@ -444,21 +444,21 @@ const MainTable: React.FC<MainTableProps> = ({
                                     <td>{route.id}</td>
                                     <td>{route.id}</td>
                                     <td>{route.name}</td>
-                                    <td>{route.coordinates.x}</td>
+                                    <td>{route.coordinates.x?.toString()}</td>
                                     <td>{route.coordinates.y}</td>
                                     <td>{route.creationDate}</td>
                                     <td>{route.from.name}</td>
                                     <td>{route.from.id}</td>
 
-                                    <td>{route.from.x}</td>
+                                    <td>{route.from.x?.toString()}</td>
                                     <td>{route.from.y}</td>
                                     <td>{route.from.z}</td>
                                     <td>{route.to.name}</td>
                                     <td>{route.to.id}</td>
-                                    <td>{route.to.x}</td>
+                                    <td>{route.to.x?.toString()}</td>
                                     <td>{route.to.y}</td>
                                     <td>{route.to.z}</td>
-                                    <td>{route.distance}</td>
+                                    <td>{route.distance.toString()}</td>
                                     <td>
                                         <button onClick={() => onEditRoute(route)}>Подробнее</button>
                                         <button onClick={() => onDeleteRoute(route.id)}>Удалить</button>
