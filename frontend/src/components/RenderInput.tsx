@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { inputConstraints } from '../constants/fieldConstraints';
+import React, {useState} from 'react';
+import {inputConstraints} from '../constants/fieldConstraints';
 
 interface RenderInputProps {
     label: string;
@@ -7,73 +7,130 @@ interface RenderInputProps {
     state: any;
     setState: React.Dispatch<React.SetStateAction<any>>;
     type?: "text" | "number" | "bigint";
-    inline: boolean
+    inline: boolean;
 }
 
-export const RenderInput: React.FC<RenderInputProps> = ({ label, path, state, setState, type = "text", inline = false }) => {
+export const RenderInput: React.FC<RenderInputProps> = ({
+                                                            label,
+                                                            path,
+                                                            state,
+                                                            setState,
+                                                            type = "text",
+                                                            inline = false
+                                                        }) => {
     const keys = path.split('.');
     let value = state as any;
-    const [correct, setCorrect] = useState(true); // Make correct a state variable
+    const [correct, setCorrect] = useState(true);
+    const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
     for (const key of keys) {
         value = value[key];
     }
 
-    const { min, max } = inputConstraints[path] || {};
+    const {min, max, nullable, blankable, inputComment} = inputConstraints[path] || {};
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let inputValue: number | string | null;
-        if (type === "number") inputValue = e.target.valueAsNumber;
-        else inputValue = e.target.value;
-
-        let isValid = true; // Use a temporary variable for validation
-
-        if (type === "number" && inputValue !== undefined && inputValue !== null && !isNaN(inputValue as number) && (BigInt(inputValue) >= min && BigInt(inputValue) <= max)) {
-            isValid = true;
-        } else {
-            isValid = false;
-        }
-
-        if(isNaN(inputValue as number)){
-            inputValue = '';
-            isValid = false;
-        }
-
-        setCorrect(isValid); // Update the correct state
-
-        setState((prevState: any) => {
-            let updatedState = { ...prevState };
+    function setNewState(newValue: any) {
+        console.log("changing state ", newValue)
+        return setState((prevState: any) => {
+            let updatedState = {...prevState};
             let current = updatedState as any;
             for (let i = 0; i < keys.length - 1; i++) {
                 current = current[keys[i]];
             }
-            current[keys[keys.length - 1]] = inputValue;
+            if (typeof newValue === 'bigint') {
+                console.log('aa')
+                newValue = newValue.toString()
+            } else console.log(typeof newValue)
+            current[keys[keys.length - 1]] = newValue;
             return updatedState;
         });
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.type === 'checkbox') {
+            setIsCheckboxChecked(e.target.checked);
+            if (e.target.checked) {
+                setCorrect(true);
+                setNewState(null);
+            } else {
+                setCorrect(false);
+                setNewState('');
+            }
+        } else {
+            let inputValue: number | bigint | string | null;
+            let isValid = true;
+            console.log("change event")
+
+            if (type === "number") {
+                inputValue = e.target.valueAsNumber;
+                isValid = (inputValue !== undefined && inputValue !== null && !isNaN(inputValue as number) && (inputValue >= Number(min) && inputValue <= Number(max)));
+                if (isNaN(inputValue as number)) {
+                    inputValue = null;
+                    if (nullable) isValid = false;
+                }
+            } else if (type === "bigint") {
+                inputValue = e.target.value;
+                if (inputValue.length === 0) inputValue = null
+                else {
+                    try {
+                        inputValue = BigInt(inputValue)
+                    } catch (e) {
+                        return
+                    }
+                }
+                console.log(inputValue)
+
+                isValid = (inputValue !== undefined && inputValue !== null && min !== undefined && max !== undefined && BigInt(inputValue) >= min && BigInt(inputValue) <= max);
+                if(inputValue === null) isValid = nullable;
+            } else if (type === "text") {
+                inputValue = e.target.value;
+                if (inputValue.length === 0 && !blankable) isValid = false;
+            } else { //should be impossible
+                inputValue = ''
+            }
+
+            setNewState(inputValue);
+            setCorrect(isValid);
+        }
     };
 
     let validationText: string;
-    const barrierConst = -1000
-    if (type === "number")
-        if (min <= -barrierConst) validationText = "Введите целое число типа long"
-        else validationText = `Введите число не меньше ${min}`;
-    else
-        validationText = "Введите строку. Значение не может быть пустым."
+    const barrierConst = -1000;
+    if (type === "number" || type === "bigint") {
+        if (min !== undefined && min <= -barrierConst) validationText = `Введите ${inputComment} число.`;
+        else if (min !== undefined) validationText = `Введите ${inputComment} число не меньше ${min}.`;
+        else validationText = '';
+        if (nullable !== undefined && nullable) validationText += '\nОставьте поле пустым, чтобы не заполнять значение (null).';
+    } else {
+        validationText = "Введите строку. Значение" + (!blankable ? " не " : " ") + "может быть пустым.";
+        if (nullable !== undefined && nullable) validationText += '\nОтметьте чекбокс, чтобы не заполнять значение (null).';
+    }
+
+    const inputDisabled = isCheckboxChecked && type === "text" && nullable !== undefined && nullable;
+
     return (
         <>
-            {!correct && <p>Invalid input!!</p>} {/* Now this will work correctly */}
-            {correct && <p>input is ok</p>}
-            {!inline && (<div><label htmlFor={path}>{label}</label><br /></div>)}
-            <small>{validationText}</small>
-            <br />
+            {!correct && <span><small className='bad'>Некорректное значение</small><br/></span>}
+            {!inline && (<div><label htmlFor={path}>{label}</label><br/></div>)}
+            {!(validationText.length === 0) && <small>{validationText}</small>}
+            <br/>
             {inline && <label htmlFor={path}>{label}: </label>}
-            <input className={correct ? 'ok' : 'bad'}
+            <input
+                className={correct ? 'ok' : 'bad'}
                 id={path}
                 type={type}
-                value={value}
+                value={(type === 'bigint' ? value?.toString() : value)}
                 onChange={handleChange}
+                disabled={inputDisabled}
             />
-            <br />
+            {type === "text" && nullable !== undefined && nullable && (
+                <input
+                    type={"checkbox"}
+                    checked={isCheckboxChecked}
+                    onChange={handleChange}
+                />
+            )}
+            <br/>
         </>
     );
 };

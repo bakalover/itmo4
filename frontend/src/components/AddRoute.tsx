@@ -93,7 +93,7 @@ const AddRoute: React.FC = () => {
                         <tbody>
                         <tr>
                             <td colSpan={2}>
-                                <RenderInput label="Название маршрута" path="route.name" state={state}
+                                <RenderInput label="Название маршрута" path="route.name" state={state} type="text"
                                              setState={setState} inline={false} />
                             </td>
                         </tr>
@@ -105,7 +105,7 @@ const AddRoute: React.FC = () => {
                         <tr>
                             <td>
                                 <RenderInput label="X" path="route.coordinates.x" state={state} setState={setState}
-                                             type="number" inline={true} />
+                                             type="bigint" inline={true} />
                             </td>
                             <td>
                                 <RenderInput label="Y" path="route.coordinates.y" state={state} setState={setState}
@@ -117,7 +117,7 @@ const AddRoute: React.FC = () => {
                                 <h3>Начальная точка</h3>
                                 <RenderInput label="Название" path="route.from.name" state={state} setState={setState} inline={false} />
                                 <RenderInput label="X" path="route.from.x" state={state} setState={setState}
-                                             type="number" inline={true} />
+                                             type="bigint" inline={true} />
                                 <RenderInput label="Y" path="route.from.y" state={state} setState={setState}
                                              type="number" inline={true} />
                                 <RenderInput label="Z" path="route.from.z" state={state} setState={setState}
@@ -128,7 +128,7 @@ const AddRoute: React.FC = () => {
                                 <RenderInput label="Название" path="route.to.name" state={state} setState={setState}
                                              inline={false} />
                                 <RenderInput label="X" path="route.to.x" state={state} setState={setState}
-                                             type="number" inline={true} />
+                                             type="bigint" inline={true} />
                                 <RenderInput label="Y" path="route.to.y" state={state} setState={setState}
                                              type="number" inline={true} />
                                 <RenderInput label="Z" path="route.to.z" state={state} setState={setState}
@@ -139,7 +139,7 @@ const AddRoute: React.FC = () => {
                             <td colSpan={2}>
                                 <RenderInput label="Длина маршрута" path="route.distance" state={state}
                                              setState={setState}
-                                             type="number" inline={false} />
+                                             type="bigint" inline={false} />
                             </td>
                         </tr>
                         </tbody>
