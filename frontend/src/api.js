@@ -98,6 +98,15 @@ export const addRoutesWithId = async (idTo, idFrom, distance) => {
     }
 }
 
+const serializeBigInt = (obj) => {
+    return JSON.stringify(obj, (key, value) =>
+        typeof value === 'bigint'
+            ? value.toString()
+            : value
+    );
+};
+
+
 export const addRoute = async (route) => {
     console.log("going to add", route)
     const response = await fetch(CORE_URL, {
@@ -105,7 +114,7 @@ export const addRoute = async (route) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(route),
+        body: serializeBigInt(route),
     });
     if (response.statusCode === 200) return response;
     else if (response.statusCode === 400) throw new Error('Некорректные входные данные: ' + await response.text());
@@ -128,7 +137,7 @@ export const updateRouteById = async (id, route) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(updatedRoute),
+            body: serializeBigInt(updatedRoute),
         });
         if (!response.ok) {
             throw new Error('Failed to update route');
