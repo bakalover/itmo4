@@ -53,6 +53,9 @@ public class RestAPI extends Application {
         routes = all;
         if (filters != null) {
             routes = Filter.applyFilters(routes, Filter.tryParseFilters(filters));
+            if (routes.isEmpty()) {
+                return Response.status(Status.NOT_FOUND).entity("No routes after filter apply").build();
+            }
         }
         if (sort != null && routes.size() > 1) {
             var sorts = Filter.tryParseSort(sort);
