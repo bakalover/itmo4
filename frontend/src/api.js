@@ -107,86 +107,59 @@ export const updateRouteById = async (id, route) => {
     else serverError();
 };
 
+export const addRoutesWithId = async (idTo, idFrom, distance) => {
+    console.log("going to add", idTo, idFrom, distance)
+    const response = await fetch(`${NAVIGATOR_URL}/route/add/${idFrom}/${idTo}/${distance}`, {
+        method: 'POST'
+    });
+    if (response.status === 201) return response;
+    else if (response.status === 400) throw new Error('Некорректные параметры запроса: ' + await response.text());
+    else serverError();
+}
+
 export const fetchMinRoute = async () => {
-    try {
-        const response = await fetch(`${CORE_URL}/min-id`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return await response.json();
-    } catch (err) {
-        console.error(err);
-        throw err;
+    const response = await fetch(`${CORE_URL}/min-id`);
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
     }
+    return await response.json();
+
 };
 
 export const getRouteById = async (id) => {
-    try {
-        const response = await fetch(`${CORE_URL}/${id}`);
-        if (!response.ok) {
+    const response = await fetch(`${CORE_URL}/${id}`);
+    if (!response.ok) {
 
-        }
-        return await response.json();
-    } catch (error) {
-        console.error('Error fetching route by ID:', error);
-        throw error;
     }
+    return await response.json();
 };
-
-export const addRoutesWithId = async (idTo, idFrom, distance) => {
-    console.log("going to add", idTo, idFrom, distance)
-    try {
-        const response = await fetch(`${NAVIGATOR_URL}/route/add/${idFrom}/${idTo}/${distance}`, {
-            method: 'POST'
-        });
-        if (response.ok) return response;
-        else throw Error('AAA')
-    } catch (error) {
-        console.error('Error adding route with IDs:', error);
-        throw error;
-    }
-}
 
 
 export const getRoutesWithDistanceGreater = async (distance) => {
-    try {
-        const response = await fetch(`${CORE_URL}/distance/greater/${distance}`);
+    const response = await fetch(`${CORE_URL}/distance/greater/${distance}`);
 
-        if (!response.ok) {
-            throw new Error("Маршрутов с большим чем заданным расстоянием нет");
-        }
-        return await response.json();
-    } catch (error) {
-        console.log("greater distance route find error:", error);
-        throw error;
+    if (!response.ok) {
+        throw new Error("Маршрутов с большим чем заданным расстоянием нет");
     }
+    return await response.json();
 };
 
 export const getRoutesWithDistanceCount = async (distance) => {
-    try {
-        const response = await fetch(`${CORE_URL}/distance/count/${distance}`);
+    const response = await fetch(`${CORE_URL}/distance/count/${distance}`);
 
-        if (!response.ok) {
-            throw new Error("Маршрутов с заданным расстоянием нет");
-        }
-        return response;
-    } catch (error) {
-        console.log("equal route find error:", error);
-        throw error; // Rethrow the error for further handling if needed
+    if (!response.ok) {
+        throw new Error("Маршрутов с заданным расстоянием нет");
     }
+    return response;
 };
 
 
 export const deleteRouteById = async (id) => {
-    try {
-        const response = await fetch(`${CORE_URL}/${id}`, {
-            method: 'DELETE',
-        });
-        if (!response.ok) {
-            throw new Error('Failed to delete route');
-        }
-    } catch (error) {
-        console.error('Error deleting route:', error);
-        throw error;
-    }
+    const response = await fetch(`${CORE_URL}/${id}`, {
+        method: 'DELETE',
+    });
+    if (response.status === 204) return response;
+    else if (response.status === 400) throw new Error(`Некорректное значение id=${id}`)
+    else if (response.status === 404) throw new Error(`Маршрут с id=${id} не найден`)
+    else serverError();
 };
