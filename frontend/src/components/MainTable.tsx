@@ -241,7 +241,6 @@ const MainTable: React.FC<MainTableProps> = ({
             <h3>Список текущих маршрутов</h3>
             {loading && <p>Загрузка...</p>}
             {error && <p>{error}</p>}
-            {!error && !loading &&
                 <div>
                     <div style={{marginTop: '20px', textAlign: 'center'}}>
                         <p>Размер страницы</p>
@@ -303,6 +302,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                 <input type="checkbox" name="creationDate" checked={checkboxes.creationDate}
                                        onChange={handleCheckboxChange}/>
                                 <br/>
+
                                 <input type="text" name="creationDate" value={filters.creationDate}
                                        onChange={handleFilterChange}/>
                             </th>
@@ -470,7 +470,7 @@ const MainTable: React.FC<MainTableProps> = ({
                         <button onClick={applyFiltersAndSort}>Применить фильтры и сортировку</button>
                     </div>
                 </div>
-            }
+
 
         </div>
     );
