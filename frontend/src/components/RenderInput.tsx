@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {inputConstraints} from '../constants/fieldConstraints';
+import React, { useState } from 'react';
+import { inputConstraints } from '../constants/fieldConstraints';
 
 interface RenderInputProps {
     label: string;

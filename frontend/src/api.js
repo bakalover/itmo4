@@ -1,5 +1,5 @@
 const CORE_URL = "https://localhost:35443/routes";
-const NAVIGATOR_URL = "http://localhost:8080/navigator";
+const NAVIGATOR_URL = "https://localhost:34443/navigator";
 
 function serverError() {
   throw new Error("Внутренняя ошибка сервера!");
@@ -59,7 +59,7 @@ export const getRoutes = async (
   if (!response.ok) {
     if (response.status === 404)
       throw new Error(
-        "Список маршрутов пуст! Добавьте первый маршрут, чтобы он отобразился в таблице",
+        "Список маршрутов пуст",
       );
     else if (response.status === 400)
       throw new Error(`Переданы некоррекные параметры: ${response.statusText}`);

@@ -6,16 +6,16 @@ import { getErrorMessage } from "../utils/getErrorMessage";
 
 interface State {
   routes: Route[];
-  from: bigint;
-  to: bigint;
+  from: number;
+  to: number;
   isError: boolean;
   errorMessage: string;
 }
 
 const initialState: State = {
   routes: [],
-  from: BigInt(1),
-  to: BigInt(2),
+  from: 1,
+  to: 2,
   isError: false,
   errorMessage: "",
 };
@@ -61,7 +61,7 @@ const GetRoutesBetweenLocation: React.FC = () => {
         path="from"
         state={routesState}
         setState={setState}
-        type="bigint"
+        type="number"
         inline={false}
         filter={false}
       />
@@ -74,7 +74,7 @@ const GetRoutesBetweenLocation: React.FC = () => {
         path="to"
         state={routesState}
         setState={setState}
-        type="bigint"
+        type="number"
         inline={false}
         filter={false}
       />

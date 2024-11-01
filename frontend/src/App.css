@@ -15,7 +15,8 @@ button {
     background-color: #61dafb;
 }
 
-th, td {
+th,
+td {
     border: 1px solid black; /* Добавляем границу каждой ячейке */
     padding: 8px; /* Добавляем отступы */
 }
@@ -25,8 +26,8 @@ th {
 }
 
 button {
-    margin: 10px;
-    height: 30px;
+    /* margin: 10px; */
+    height: 60px;
     width: 150px;
     border-radius: 10px;
 }
@@ -39,7 +40,6 @@ button {
 input[type="checkbox"] {
     background-color: red;
 }
-
 
 table.addRoute {
     width: 50%;
@@ -99,7 +99,8 @@ p.success {
     margin-left: 10%;
 }
 
-.Pagination table td, th {
+.Pagination table td,
+th {
     padding: 0;
     margin: 0;
     background-color: lightcyan;
@@ -152,7 +153,6 @@ button.nav {
     padding: 0;
 }
 
-
 .mainTable table th input {
     width: 50%;
 }
@@ -160,4 +160,3 @@ button.nav {
 .datetime {
     all: unset;
 }
-
