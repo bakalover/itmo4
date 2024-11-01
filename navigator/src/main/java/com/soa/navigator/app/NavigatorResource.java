@@ -73,7 +73,7 @@ public class NavigatorResource {
 
         var routesRequest = target
             .path("/")
-            .queryParam("filter", "from.id:" + idFrom + "," + "to.id:" + idTo)
+            .queryParam("filter", "from.id_eq_" + idFrom + "," + "to.id_eq_" + idTo)
             .queryParam("sort", orderBy)
             .request(MediaType.APPLICATION_JSON);
         try {
@@ -176,7 +176,7 @@ public class NavigatorResource {
         // First, make a request with 'from.id'
         Response response = target
             .path("/")
-            .queryParam("filter", "from.id:" + id)
+            .queryParam("filter", "from.id_eq_" + id)
             .request(MediaType.APPLICATION_JSON)
             .get();
 
@@ -207,7 +207,7 @@ public class NavigatorResource {
     private Location findLocationByToId(Long id) {
         Response response = target
             .path("/")
-            .queryParam("filter", "to.id:" + id)
+            .queryParam("filter", "to.id_eq_" + id)
             .request(MediaType.APPLICATION_JSON)
             .get();
 
