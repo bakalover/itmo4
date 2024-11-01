@@ -15,7 +15,7 @@ export function useRoutes() {
         fetchRoutes();
     }, []);
 
-    const fetchRoutes = async (filters?: string, sortingFields?: string, page?: number, size?: number) => {
+    const fetchRoutes = async (filters?: string, sortingFields?: string, size?: number, page?: number) => {
         setLoading(true);
         setError(null);
         try {
