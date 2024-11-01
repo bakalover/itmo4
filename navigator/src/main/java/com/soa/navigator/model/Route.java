@@ -4,32 +4,30 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-
 import lombok.Data;
 
 @Data
 public class Route {
-	@NotNull
-	@Positive(message ="Id should be positive integer!")
-	private Long id;
 
-	@NotNull
-	@NotBlank
-	private String name;
+    @NotNull
+    @Positive(message = "Id should be positive integer!")
+    private Long id;
 
-	@NotNull
-	private Coordinates coordinates;
+    @NotNull
+    @NotBlank
+    private String name;
 
-	@NotNull
-	private String creationDate;
+    @NotNull
+    private Coordinates coordinates;
 
-	@NotNull
-	private Location from;
+    private String creationDate;
 
-	@NotNull
-	private Location to;
+    @NotNull(message = "from location is null")
+    private Location from;
 
-	@NotNull
-	@DecimalMin(value = "2", message = "distance should be greater 1")
-	private Integer distance;
+    private Location to;
+
+    @NotNull(message = "distance is null")
+    @DecimalMin(value = "2", message = "distance should be greater 1")
+    private Integer distance;
 }

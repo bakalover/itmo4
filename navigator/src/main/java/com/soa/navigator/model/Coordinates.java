@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Coordinates {
 
-    @NotNull
     @DecimalMin(value = "-868", message = "x should be greater thatn -868")
     private Integer x;
 
+    @NotNull(message = "coordinates.x is not provided")
     @DecimalMin(value = "-355", message = "y should be greater thatn -355")
     private Integer y;
 }

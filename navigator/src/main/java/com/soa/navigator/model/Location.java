@@ -10,13 +10,13 @@ public class Location {
     @NotNull
     private Long id;
 
-    @NotNull
+    @NotNull(message = "location.x is not provided")
     private Double x;
 
-    @NotNull
+    @NotNull(message = "location.y is not provided")
     private Integer y;
 
-    @NotNull
+    @NotNull(message = "location.z is not provided")
     private Float z;
 
     @NullableNotBlank

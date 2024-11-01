@@ -22,7 +22,7 @@ import java.util.List;
 @Path("navigator")
 public class NavigatorResource {
 
-    private final String coreServerUrl = "http://localhost:35080/routes";
+    private final String coreServerUrl = "https://localhost:35443/routes";
     private final Client client = ClientBuilder.newClient();
     private final WebTarget target = client.target(coreServerUrl);
 
@@ -79,6 +79,7 @@ public class NavigatorResource {
         try {
             routesResponse = routesRequest.get();
         } catch (ProcessingException e) {
+            e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .entity("Could not perform request to service\nTry later")
                 .build();
@@ -163,6 +164,7 @@ public class NavigatorResource {
                 .put(Entity.entity(route, MediaType.APPLICATION_JSON));
         } catch (ProcessingException | WebApplicationException e) {
             // Handle any unexpected exceptions
+            e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .entity("Could not perform action\nTry later")
                 .build();
