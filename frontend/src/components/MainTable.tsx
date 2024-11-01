@@ -241,8 +241,7 @@ const MainTable: React.FC<MainTableProps> = ({
             <h2>Маршруты</h2>
             {loading && <p>Загрузка...</p>}
             {error && <p>{error}</p>}
-            {!loading && !error &&
-                (
+
                     <div>
                         <div style={{marginTop: '20px', textAlign: 'center'}}>
                             <p>Размер страницы</p>
@@ -270,7 +269,7 @@ const MainTable: React.FC<MainTableProps> = ({
                             <button onClick={handleGoToPage}>Перейти к странице</button>
                         </div>
                         <p>Выберите чекбокс у элемента, если хотите добавить его в сортировку</p>
-                        <table>
+                        <table className={'mainTable'}>
                             <thead>
                             <tr>
                                 <th rowSpan={2}>Номер</th>
@@ -471,8 +470,7 @@ const MainTable: React.FC<MainTableProps> = ({
                             <button onClick={applyFiltersAndSort}>Применить фильтры и сортировку</button>
                         </div>
                     </div>
-                )
-            }
+
 
         </div>
     );

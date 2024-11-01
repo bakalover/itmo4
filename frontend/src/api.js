@@ -116,10 +116,12 @@ export const addRoute = async (route) => {
         },
         body: serializeBigInt(route),
     });
-    if (response.statusCode === 200) return response;
-    else if (response.statusCode === 400) throw new Error('Некорректные входные данные: ' + await response.text());
-    else if (response.statusCode === 409) throw new Error('Маршрут с id = ' + route.id.toString() + 'уже существует');
-    else throw new Error('Внутренняя ошибка сервера!');
+    if (response.status === 200) return response;
+    else if (response.status === 400) throw new Error('Некорректные входные данные: ' + await response.text());
+    else if (response.status === 409) throw new Error('Маршрут с id = ' + route.id.toString() + 'уже существует');
+    else {
+        throw new Error('Внутренняя ошибка сервера!')
+    }
 };
 
 export const updateRouteById = async (id, route) => {

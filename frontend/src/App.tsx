@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import './App.css';
 import {useRoutes} from './hooks/useRoutes';
-import AddRoute from './components/AddRoute';
-import GetMinRoute from './components/GetMinRoute';
-import GetRouteWithDistance from './components/GetRouteWithDistance';
-import GetRoutesBetweenLocation from './components/GetRoutesBetweenLocation';
-import EditRoute from './components/EditRoute';
+import AddRoute from './sub-modules/AddRoute';
+import GetMinRoute from './sub-modules/GetMinRoute';
+import GetRouteWithDistance from './sub-modules/GetRouteWithDistance';
+import GetRoutesBetweenLocation from './sub-modules/GetRoutesBetweenLocation';
+import EditRoute from './sub-modules/EditRoute';
 import MainTable from './components/MainTable';
 import ActionMenu from './components/ActionMenu';
 import {Route} from './model/types';
@@ -26,7 +26,7 @@ function App() {
     const handleCancelEdit = () => setEditingRoute(null);
     const handleSaveEdit = () => {
         fetchRoutes();
-        setEditingRoute(null);
+        //setEditingRoute(null);
     };
 
     const handleBackButtonClick = () => {

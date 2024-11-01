@@ -15,7 +15,7 @@ button {
   background-color: #61dafb;
 }
 
-.mainTable table {
+table.mainTable {
   border-collapse: collapse; /* Убираем двойные границы */
   width: 70%; /* Занимаем всю ширину */
   margin-left: 10%;
@@ -85,4 +85,7 @@ input.bad{
 }
 small.bad {
   color: darkred;
+}
+p.success {
+  color: darkgreen;
 }
