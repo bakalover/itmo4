@@ -41,17 +41,16 @@ public class Route {
 		creationDate = new Date().toString();
 	}
 
-	@NotNull
+	@NotNull(message = "from location is null")
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "from_id")
 	private Location from;
 
-	@NotNull
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "to_id")
 	private Location to;
 
-	@NotNull
+	@NotNull(message = "distance is null")
 	@DecimalMin(value = "1", message = "distance should be greater 1")
 	private Integer distance;
 }

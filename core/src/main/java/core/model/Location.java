@@ -20,13 +20,13 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "location.x not provided")
     private Double x;
 
-    @NotNull
+    @NotNull(message = "location.y not provided")
     private Integer y;
 
-    @NotNull
+    @NotNull(message = "location.z not provided")
     private Float z;
 
     @NullableNotBlank
