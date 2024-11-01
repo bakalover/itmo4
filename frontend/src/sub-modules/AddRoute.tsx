@@ -24,7 +24,7 @@ const initialState: State = {
         to: {id: null, x: BigInt(150), y: 250, z: 350, name: 'Красноярск'},
         distance: BigInt(5432),
     },
-    simpleRoute: {from: 1, to: 2, distance: 5437},
+    simpleRoute: {from: 1, to: 2, distance: BigInt(5432)},
     errorMessage: '',
     isErrorThrown: false,
     isLoading: false,
@@ -92,7 +92,7 @@ const AddRoute: React.FC = () => {
                     <RenderInput label="Id конечной точки маршрута" path="simpleRoute.to" state={state}
                                  setState={setState} inline={false}/>
                     <RenderInput label="Длина маршрута" path="simpleRoute.distance" state={state} setState={setState}
-                                 type="number" inline={false}/>
+                                 type="bigint" inline={false}/>
                 </>
             ) : (
                <RouteForm state={state} setState={setState}></RouteForm>

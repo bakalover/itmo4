@@ -56,6 +56,8 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
+                <h2>Маршруты</h2>
+                {!editingRoute && !selectedAction && <ActionMenu actions={actions} onActionSelect={setSelectedAction}/>}
                 {!editingRoute && !selectedAction && (
                     <MainTable
                         routes={routes}
@@ -78,7 +80,6 @@ function App() {
                     </button>
                 )}
 
-                {!editingRoute && !selectedAction && <ActionMenu actions={actions} onActionSelect={setSelectedAction}/>}
             </header>
         </div>
     );

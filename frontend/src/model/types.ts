@@ -26,7 +26,7 @@ export interface Route {
 export interface SimpleRoute {
     from: number;
     to: number;
-    distance: number;
+    distance: bigint;
 }
 
 export interface ApiResponse {

@@ -54,4 +54,7 @@ export const inputConstraints: {
         max: BigInt(2 ** 63 - 1)
     },
     'route.distance': {inputComment: "целое 64-битное", nullable: true, min: BigInt(2), max: BigInt(2 ** 63 - 1)},
+    'simpleRoute.from' : {inputComment: "целое 32-битное", nullable: false, min: BigInt(1), max: BigInt(2 ** 31 - 1)},
+    'simpleRoute.to' : {inputComment: "целое 32-битное", nullable: false, min: BigInt(1), max: BigInt(2 ** 31 - 1)},
+    'simpleRoute.distance' : {inputComment: "целое 64-битное", nullable: false, min: BigInt(2), max: BigInt(2 ** 63 - 1)}
 };

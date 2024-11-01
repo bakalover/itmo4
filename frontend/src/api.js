@@ -1,17 +1,16 @@
 const CORE_URL = 'https://localhost:35443/routes';
 const NAVIGATOR_URL = 'http://desktop-6saablk:8080/navigator-1.0-SNAPSHOT/navigator';
 
-export const fetchMinRoute = async () => {
-    try {
-        const response = await fetch(`${CORE_URL}/min-id`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return await response.json();
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
+function serverError() {
+    throw new Error('Внутренняя ошибка сервера!')
+}
+
+const serializeBigInt = (obj) => {
+    return JSON.stringify(obj, (key, value) =>
+        typeof value === 'bigint'
+            ? value.toString()
+            : value
+    );
 };
 
 export const getRoutes = async (filters = '', sortingFields = '', page = 0, size = 10) => {
@@ -71,6 +70,56 @@ export const getRoutes = async (filters = '', sortingFields = '', page = 0, size
     }
 };
 
+export const addRoute = async (route) => {
+    console.log("going to add", route)
+    const response = await fetch(CORE_URL, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: serializeBigInt(route),
+    });
+    if (response.status === 200) return response;
+    else if (response.status === 400) throw new Error('Некорректные входные данные: ' + await response.text());
+    else if (response.status === 409) throw new Error('Маршрут с id = ' + route.id.toString() + 'уже существует');
+    else serverError();
+};
+
+export const updateRouteById = async (id, route) => {
+    console.log(id);
+    console.log(route);
+
+    const updatedRoute = {...route};
+
+    delete updatedRoute.from.id;
+    delete updatedRoute.to.id;
+
+    const response = await fetch(`${CORE_URL}/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: serializeBigInt(updatedRoute),
+    });
+    if (response.status === 200) return response;
+    else if (response.status === 400) throw new Error("Некорректные данные");
+    else if (response.status === 404) throw new Error(`Маршрут с id = ${id} не найден`);
+    else serverError();
+};
+
+export const fetchMinRoute = async () => {
+    try {
+        const response = await fetch(`${CORE_URL}/min-id`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
 export const getRouteById = async (id) => {
     try {
         const response = await fetch(`${CORE_URL}/${id}`);
@@ -98,58 +147,6 @@ export const addRoutesWithId = async (idTo, idFrom, distance) => {
     }
 }
 
-const serializeBigInt = (obj) => {
-    return JSON.stringify(obj, (key, value) =>
-        typeof value === 'bigint'
-            ? value.toString()
-            : value
-    );
-};
-
-
-export const addRoute = async (route) => {
-    console.log("going to add", route)
-    const response = await fetch(CORE_URL, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: serializeBigInt(route),
-    });
-    if (response.status === 200) return response;
-    else if (response.status === 400) throw new Error('Некорректные входные данные: ' + await response.text());
-    else if (response.status === 409) throw new Error('Маршрут с id = ' + route.id.toString() + 'уже существует');
-    else {
-        throw new Error('Внутренняя ошибка сервера!')
-    }
-};
-
-export const updateRouteById = async (id, route) => {
-    try {
-        console.log(id);
-        console.log(route);
-
-        const updatedRoute = {...route};
-
-        delete updatedRoute.from.id;
-        delete updatedRoute.to.id;
-
-        const response = await fetch(`${CORE_URL}/${id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: serializeBigInt(updatedRoute),
-        });
-        if (!response.ok) {
-            throw new Error('Failed to update route');
-        }
-        return response
-    } catch (error) {
-        console.error('Error updating route:', error);
-        throw error;
-    }
-};
 
 export const getRoutesWithDistanceGreater = async (distance) => {
     try {
