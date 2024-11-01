@@ -1,152 +1,163 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+    height: 40vmin;
+    pointer-events: none;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
 button {
-  background-color: #61dafb;
+    background-color: #61dafb;
 }
 
 th, td {
-  border: 1px solid black; /* Добавляем границу каждой ячейке */
-  padding: 8px; /* Добавляем отступы */
+    border: 1px solid black; /* Добавляем границу каждой ячейке */
+    padding: 8px; /* Добавляем отступы */
 }
 
 th {
-  background-color: #f2f2f2; /* Задаем фон заголовка */
+    background-color: #f2f2f2; /* Задаем фон заголовка */
 }
 
 button {
-  margin: 10px;
-  height: 30px;
-  width: 150px;
-  border-radius: 10px;
+    margin: 10px;
+    height: 30px;
+    width: 150px;
+    border-radius: 10px;
 }
 
 .menu button {
-  height: 50px;
-  width: 200px;
+    height: 50px;
+    width: 200px;
 }
 
 input[type="checkbox"] {
-  background-color:  red;
-}
-th input {
-  width: 50%;
+    background-color: red;
 }
 
-table.addRoute{
-  width: 50%;
-  margin: auto;
-  background-color: lightcyan;
+
+table.addRoute {
+    width: 50%;
+    margin: auto;
+    background-color: lightcyan;
 }
 
 td.addRoute {
-  padding: 0; /* Маленький margin вокруг содержимого ячеек */
-  margin: 0;
-  border: none; /* Убираем границы ячеек */
+    padding: 0; /* Маленький margin вокруг содержимого ячеек */
+    margin: 0;
+    border: none; /* Убираем границы ячеек */
 }
-tr.addRoute{
-  margin: 0;
+
+tr.addRoute {
+    margin: 0;
 }
 
 p.addRoute {
-  font-size: 14px; /* Размер шрифта для <p> внутри таблицы */
-  margin: 0;
+    font-size: 14px; /* Размер шрифта для <p> внутри таблицы */
+    margin: 0;
 }
 
-button.addRoute{
-  width: 200px;
-  height: 50px;
+button.addRoute {
+    width: 200px;
+    height: 50px;
 }
-h3{
-  padding: 0;
-  margin: 0;
+
+h3 {
+    padding: 0;
+    margin: 0;
 }
-label{
-  font-weight: bold;
+
+label {
+    font-weight: bold;
 }
-input.bad{
-  background-color: lightpink;
+
+input.bad {
+    background-color: lightpink;
+    margin: 0;
 }
+
 small.bad {
-  color: darkred;
+    color: darkred;
+    margin: 0;
 }
+
 p.success {
-  color: darkgreen;
+    color: darkgreen;
 }
 
 .Pagination {
-  margin: 0;
+    margin: 0;
 }
 
 .Pagination table {
-  width: 20%;
-  margin-left: 10%;
+    width: 20%;
+    margin-left: 10%;
 }
 
-.Pagination table td,th{
-  padding: 0;
-  margin: 0;
-  background-color: lightcyan;
+.Pagination table td, th {
+    padding: 0;
+    margin: 0;
+    background-color: lightcyan;
 }
 
-.Pagination table td p{
-  padding: 0;
-  margin: 0;
-  font-weight: normal;
+.Pagination table td p {
+    padding: 0;
+    margin: 0;
+    font-weight: normal;
 }
 
-.Pagination table th p{
-  padding: 0;
-  margin: 0;
-  font-weight: bold;
+.Pagination table th p {
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
 }
+
 .Pagination input {
-  width: 25%;
+    width: 25%;
 }
 
 .Pagination table td button {
-  padding: 0;
-  margin: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .Pagination button {
-  width: 80px;
-  height: 10%;
+    width: 80px;
+    height: 10%;
 }
 
 .Pagination h3 {
-  margin: 0;
+    margin: 0;
 }
 
 button.nav {
-  width: 30px;
-  border-radius: 0;
+    width: 30px;
+    border-radius: 0;
 }
 
-table.mainTable {
-  /*border-collapse: collapse; !* Убираем двойные границы *!*/
-  width: 70%; /* Занимаем всю ширину */
-  font-size: 13px;
-  margin: auto;
+.mainTable table {
+    /*border-collapse: collapse; !* Убираем двойные границы *!*/
+    width: 70%; /* Занимаем всю ширину */
+    font-size: 13px;
+    margin: auto;
 }
 
-table.mainTable tr{
-  margin: 0;
-  padding: 0;
+.mainTable table tr {
+    margin: 0;
+    padding: 0;
 }
 
-table.mainTable td{
-  margin: 0;
-  padding: 0;
+
+.mainTable table th input {
+    width: 50%;
+}
+
+.datetime {
+    all: unset;
 }
 

@@ -38,7 +38,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
                 <tr>
                     <td colSpan={2}>
                         <RenderInput label="Название маршрута" path="route.name" state={state} type="text"
-                                     setState={setState} inline={false}/>
+                                     setState={setState} inline={false} filter={false}/>
                     </td>
                 </tr>
                 <tr>
@@ -49,24 +49,24 @@ const RouteForm: React.FC<RouteFormProps> = ({
                 <tr>
                     <td>
                         <RenderInput label="X" path="route.coordinates.x" state={state} setState={setState}
-                                     type="bigint" inline={true}/>
+                                     type="bigint" inline={true} filter={false}/>
                     </td>
                     <td>
                         <RenderInput label="Y" path="route.coordinates.y" state={state} setState={setState}
-                                     type="number" inline={true}/>
+                                     type="number" inline={true} filter={false}/>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <h3>Начальная точка</h3>
                         <RenderInput label="Название" path="route.from.name" state={state} setState={setState}
-                                     inline={false}/>
+                                     inline={false} filter={false}/>
                         <RenderInput label="X" path="route.from.x" state={state} setState={setState}
-                                     type="bigint" inline={true}/>
+                                     type="bigint" inline={true} filter={false}/>
                         <RenderInput label="Y" path="route.from.y" state={state} setState={setState}
-                                     type="number" inline={true}/>
+                                     type="number" inline={true} filter={false}/>
                         <RenderInput label="Z" path="route.from.z" state={state} setState={setState}
-                                     type="number" inline={true}/>
+                                     type="number" inline={true} filter={false}/>
                     </td>
                     <td>
                         <h3>Конечная точка</h3>
@@ -79,13 +79,13 @@ const RouteForm: React.FC<RouteFormProps> = ({
                         />
                         {!isIdToNull && (<span><RenderInput label="Название" path="route.to.name" state={state}
                                                             setState={setState}
-                                                            inline={false}/>
+                                                            inline={false} filter={false}/>
                                 <RenderInput label="X" path="route.to.x" state={state} setState={setState}
-                                             type="bigint" inline={true}/>
+                                             type="bigint" inline={true} filter={false}/>
                                 <RenderInput label="Y" path="route.to.y" state={state} setState={setState}
-                                             type="number" inline={true}/>
+                                             type="number" inline={true} filter={false}/>
                                 <RenderInput label="Z" path="route.to.z" state={state} setState={setState}
-                                             type="number" inline={true}/></span>)}
+                                             type="number" inline={true} filter={false}/></span>)}
 
                     </td>
                 </tr>
@@ -93,7 +93,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
                     <td colSpan={2}>
                         <RenderInput label="Длина маршрута" path="route.distance" state={state}
                                      setState={setState}
-                                     type="bigint" inline={false}/>
+                                     type="bigint" inline={false} filter={false}/>
                     </td>
                 </tr>
                 </tbody>

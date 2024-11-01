@@ -2,6 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Route} from '../model/types';
 import PaginationPanel from "./PaginationPanel";
 import paginationPanel from "./PaginationPanel";
+import {RenderInput} from "./RenderInput";
+import {RenderFilter} from "./RenderFilter";
+import DateTimePicker from 'react-datetime-picker'
 
 interface MainTableProps {
     routes: Route[];
@@ -30,28 +33,31 @@ const MainTable: React.FC<MainTableProps> = ({
                                                  onPageChanged,
                                              }) => {
     const [filters, setFilters] = useState({
-        id: '',
-        name: '',
-        coordinates: {
-            x: '',
-            y: ''
-        },
-        creationDate: '',
-        from: {
-            name: '',
-            id: ' ',
-            x: '',
-            y: '',
-            z: ''
-        },
-        to: {
-            id: '',
-            name: '',
-            x: '',
-            y: '',
-            z: ''
-        },
-        distance: ''
+        route: {
+            id: {val: '', type: '='},
+            name: {val: '', type: '='},
+            coordinates: {
+                x: {val: '', type: '='},
+                y: {val: '', type: '='}
+            },
+            creationDate: {val: '', type: '='},
+            from: {
+                name: {val: '', type: '='},
+                id: {val: '', type: '='},
+                x: {val: '', type: '='},
+                y: {val: '', type: '='},
+                z: {val: '', type: '='}
+            },
+            to: {
+                id: {val: '', type: '='},
+                name: {val: '', type: '='},
+                x: {val: '', type: '='},
+                y: {val: '', type: '='},
+                z: {val: '', type: '='}
+            },
+            distance: {val: '', type: '='}
+        }
+
     });
 
     const [checkboxes, setCheckboxes] = useState({
@@ -156,19 +162,21 @@ const MainTable: React.FC<MainTableProps> = ({
 
     const getFiltersForAPI = async () => {
         const filtersArray: string[] = [];
-
-        for (const key in filters) {
-            const value = filters[key as keyof typeof filters];
+        let route = filters['route']
+        for (const key in route) {
+            const value = route[key as keyof typeof route];
             if (typeof value === 'object' && value !== null) {
                 for (const subKey in value) {
+                    if (subKey == 'val' || subKey == 'type') continue;
                     const subValue = value[subKey as keyof typeof value];
-                    if (subValue !== '' && subValue !== " ") {
-                        console.log(filtersArray)
-                        filtersArray.push(`${key}.${subKey}:${subValue}`);
+                    if (subValue['val'] !== '' && subValue['val'] !== " ") {
+                        console.log('filters array is', filtersArray)
+                        if (subValue['type'] === '=') filtersArray.push(`${key}.${subKey}_eq_${subValue['val']}`);
+                        else if (subValue['type'] === '<') filtersArray.push(`${key}.${subKey}_lt_${subValue['val']}`);
+                        else if (subValue['type'] === '>') filtersArray.push(`${key}.${subKey}_gt_${subValue['val']}`);
+
                     }
                 }
-            } else if (value !== '' && value !== " ") {
-                filtersArray.push(`${key}:${value}`);
             }
         }
         return filtersArray.join(',');
@@ -183,6 +191,7 @@ const MainTable: React.FC<MainTableProps> = ({
     const applyFiltersAndSort = async () => {
         const filters = await getFiltersForAPI();
         const sorting = await getSortingForAPI();
+        console.log(filters, sorting)
         await onAppliedFilters(filters, sorting, pageSize, currentPage);
     };
 
@@ -198,9 +207,24 @@ const MainTable: React.FC<MainTableProps> = ({
             {loading && <p>Загрузка...</p>}
             {error && <p>{error}</p>}
             <PaginationPanel totalPages={totalPages} onPageChanged={pageChangeHandler}/>
-            <div>
+            <table style={{marginLeft: '10%'}}>
+                <tbody>
+                <tr>
+                    <th>
+                        Фильтрация
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <button onClick={applyFiltersAndSort}>Применить фильтры и сортировку</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div className={'mainTable'}>
                 <p>Выберите чекбокс у элемента, если хотите добавить его в сортировку</p>
-                <table className={'mainTable'}>
+                <table>
                     <thead>
                     <tr>
                         <th rowSpan={2}>Номер</th>
@@ -209,24 +233,17 @@ const MainTable: React.FC<MainTableProps> = ({
                             <input type="checkbox" name="id" checked={checkboxes.id}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-                            <select name="id" value={filters.id} onChange={handleFilterChange}>
-                                <option value="">Выберите ID</option>
-                                {uniqueIds.map(id => (
-                                    <option key={id} value={id}>{id}</option>
-                                ))}
-                            </select>
+                            <RenderFilter label={'ID'} path={'route.id'} state={filters} setState={setFilters}
+                                          inline={false} type={'number'}/>
                         </th>
                         <th rowSpan={2}>
                             Название<br/>
                             <input type="checkbox" name="name" checked={checkboxes.name}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-                            <select name="name" value={filters.name} onChange={handleFilterChange}>
-                                <option value="">Выберите название</option>
-                                {uniqueNames.map(name => (
-                                    <option key={name} value={name}>{name}</option>
-                                ))}
-                            </select>
+                            <RenderFilter label={'Название'} path={'route.name'} state={filters} setState={setFilters}
+                                          inline={false} type={'text'}/>
+
                         </th>
                         <th colSpan={2}>Координаты</th>
                         <th rowSpan={2}>
@@ -234,9 +251,6 @@ const MainTable: React.FC<MainTableProps> = ({
                             <input type="checkbox" name="creationDate" checked={checkboxes.creationDate}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-
-                            <input type="text" name="creationDate" value={filters.creationDate}
-                                   onChange={handleFilterChange}/>
                         </th>
                         <th colSpan={5}>Откуда</th>
                         <th colSpan={5}>Куда</th>
@@ -245,8 +259,10 @@ const MainTable: React.FC<MainTableProps> = ({
                             <input type="checkbox" name="distance" checked={checkboxes.distance}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-                            <input type="text" name="distance" value={filters.distance}
-                                   onChange={handleFilterChange}/>
+                            <RenderFilter label={'Расстояние'} path={'route.distance'} state={filters}
+                                          setState={setFilters}
+                                          inline={false} type={'bigint'}/>
+
                         </th>
                         <th rowSpan={2}></th>
                     </tr>
@@ -257,8 +273,9 @@ const MainTable: React.FC<MainTableProps> = ({
                                    checked={checkboxes.coordinates?.x || false}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-                            <input type="text" name="coordinates.x" value={filters.coordinates?.x || ''}
-                                   onChange={handleFilterChange}/>
+                            <RenderFilter label={'X'} path={'route.coordinates.x'} state={filters} setState={setFilters}
+                                          inline={false} type={'bigint'}/>
+
                         </th>
                         <th>
                             Y<br/>
@@ -266,81 +283,71 @@ const MainTable: React.FC<MainTableProps> = ({
                                    checked={checkboxes.coordinates?.y || false}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-                            <input type="text" name="coordinates.y" value={filters.coordinates?.y || ''}
-                                   onChange={handleFilterChange}/>
+                            <RenderFilter label={'Y'} path={'route.coordinates.y'} state={filters} setState={setFilters}
+                                          inline={false} type="number"/>
                         </th>
                         <th>
                             Имя<br/>
                             <input type="checkbox" name="from.name" checked={checkboxes.from?.name || false}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-                            <select name="from.name" value={filters.from?.name || ''}
-                                    onChange={handleFilterChange}>
-                                <option value="">Выберите имя</option>
-                                {uniqueFromNames.map(name => (
-                                    <option key={name} value={name}>{name}</option>
-                                ))}
-                            </select>
+                            <RenderFilter label={'Имя'} path={'route.from.name'} state={filters} setState={setFilters}
+                                          inline={false} type={'text'}/>
                         </th>
                         <th>
                             id<br/>
                             <input type="checkbox" name="from.id" checked={checkboxes.from?.id || false}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-                            <select name="from.id" value={filters.from?.id || 0} onChange={handleFilterChange}>
-                                <option value="">Выберите id</option>
-                                {uniqueFromIds.map(name => (
-                                    <option key={name} value={name}>{name}</option>
-                                ))}
-                            </select>
+                            <RenderFilter label={'id'} path={'route.from.id'} state={filters} setState={setFilters}
+                                          inline={false} type={'bigint'}/>
+
                         </th>
                         <th>
                             X<br/>
                             <input type="checkbox" name="from.x" checked={checkboxes.from?.x || false}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-                            <input type="text" name="from.x" value={filters.from?.x || ''}
-                                   onChange={handleFilterChange}/>
+                            <RenderFilter label={'X'} path={'route.from.x'} state={filters} setState={setFilters}
+                                          inline={false} type={"bigint"}/>
+
                         </th>
                         <th>
                             Y<br/>
                             <input type="checkbox" name="from.y" checked={checkboxes.from?.y || false}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-                            <input type="text" name="from.y" value={filters.from?.y || ''}
-                                   onChange={handleFilterChange}/>
+                            <RenderFilter label={'Y'} path={'route.from.y'} state={filters} setState={setFilters}
+                                          inline={false}/>
+
                         </th>
                         <th>
                             Z<br/>
                             <input type="checkbox" name="from.z" checked={checkboxes.from?.z || false}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-                            <input type="text" name="from.z" value={filters.from?.z || ''}
-                                   onChange={handleFilterChange}/>
+                            <RenderFilter label={'Z'} path={'route.from.z'} state={filters} setState={setFilters}
+                                          inline={false} type={'number'}/>
+
                         </th>
                         <th>
                             Имя<br/>
                             <input type="checkbox" name="to.name" checked={checkboxes.to?.name || false}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-                            <select name="to.name" value={filters.to?.name || ''} onChange={handleFilterChange}>
-                                <option value="">Выберите имя</option>
-                                {uniqueToNames.map(name => (
-                                    <option key={name} value={name}>{name}</option>
-                                ))}
-                            </select>
+                            <RenderFilter label={'Имя'} path={'route.to.name'} state={filters} setState={setFilters}
+                                          inline={false} type={'text'}/>
+
                         </th>
                         <th>
                             id<br/>
                             <input type="checkbox" name="to.id" checked={checkboxes.to?.id || false}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-                            <select name="to.id" value={filters.to?.id || 0} onChange={handleFilterChange}>
-                                <option value="">Выберите id</option>
-                                {uniqueToIds.map(name => (
-                                    <option key={name} value={name}>{name}</option>
-                                ))}
-                            </select>
+                            <RenderFilter label={'id'} path={'route.from.id'} state={filters} setState={setFilters}
+                                          inline={false} type={'bigint'}/>
+
+
                         </th>
                         <th>
 
@@ -348,24 +355,28 @@ const MainTable: React.FC<MainTableProps> = ({
                             <input type="checkbox" name="to.x" checked={checkboxes.to?.x || false}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-                            <input type="text" name="to.x" value={filters.to?.x || ''}
-                                   onChange={handleFilterChange}/>
+                            <RenderFilter label={'X'} path={'route.to.x'} state={filters} setState={setFilters}
+                                          inline={false} type={"bigint"}/>
+
+
                         </th>
                         <th>
                             Y<br/>
                             <input type="checkbox" name="to.y" checked={checkboxes.to?.y || false}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-                            <input type="text" name="to.y" value={filters.to?.y || ''}
-                                   onChange={handleFilterChange}/>
+                            <RenderFilter label={'Y'} path={'route.to.y'} state={filters} setState={setFilters}
+                                          inline={false}/>
+
                         </th>
                         <th>
                             Z<br/>
                             <input type="checkbox" name="to.z" checked={checkboxes.to?.z || false}
                                    onChange={handleCheckboxChange}/>
                             <br/>
-                            <input type="text" name="to.z" value={filters.to?.z || ''}
-                                   onChange={handleFilterChange}/>
+                            <RenderFilter label={'Z'} path={'route.to.z'} state={filters} setState={setFilters}
+                                          inline={false} type={'number'}/>
+
                         </th>
                     </tr>
                     </thead>
@@ -398,12 +409,7 @@ const MainTable: React.FC<MainTableProps> = ({
                     ))}
                     </tbody>
                 </table>
-                <div style={{marginTop: '20px', textAlign: 'center'}}>
-                    <button onClick={applyFiltersAndSort}>Применить фильтры и сортировку</button>
-                </div>
             </div>
-
-
         </div>
     );
 };

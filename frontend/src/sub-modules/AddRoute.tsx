@@ -88,11 +88,11 @@ const AddRoute: React.FC = () => {
             {state.isSimple ? (
                 <>
                     <RenderInput label="Id начальной точки маршрута" path="simpleRoute.from" state={state}
-                                 setState={setState} inline={false}/>
+                                 setState={setState} inline={false} filter={false}/>
                     <RenderInput label="Id конечной точки маршрута" path="simpleRoute.to" state={state}
-                                 setState={setState} inline={false}/>
+                                 setState={setState} inline={false} filter={false}/>
                     <RenderInput label="Длина маршрута" path="simpleRoute.distance" state={state} setState={setState}
-                                 type="bigint" inline={false}/>
+                                 type="bigint" inline={false} filter={false}/>
                 </>
             ) : (
                <RouteForm state={state} setState={setState}></RouteForm>

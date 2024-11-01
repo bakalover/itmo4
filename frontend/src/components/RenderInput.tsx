@@ -8,6 +8,7 @@ interface RenderInputProps {
     setState: React.Dispatch<React.SetStateAction<any>>;
     type?: "text" | "number" | "bigint";
     inline: boolean;
+    filter: boolean;
 }
 
 export const RenderInput: React.FC<RenderInputProps> = ({
@@ -16,7 +17,8 @@ export const RenderInput: React.FC<RenderInputProps> = ({
                                                             state,
                                                             setState,
                                                             type = "text",
-                                                            inline = false
+                                                            inline = false,
+                                                            filter = false
                                                         }) => {
     const keys = path.split('.');
     let value = state as any;
@@ -29,7 +31,17 @@ export const RenderInput: React.FC<RenderInputProps> = ({
         value = value[key];
     }
 
-    const {min, max, nullable, blankable, inputComment} = inputConstraints[path] || {};
+    let {
+        min,
+        max,
+        nullable,
+        blankable,
+        inputComment
+    } = (filter ? (inputConstraints[path.substring(0, path.lastIndexOf('.'))] || {}) : (inputConstraints[path] || {}));
+    if (filter) {
+        nullable = true;
+        blankable = true;
+    }
 
     function processNull() {
         if (type === 'bigint' || type === 'number') return ''
@@ -38,6 +50,9 @@ export const RenderInput: React.FC<RenderInputProps> = ({
 
     function setNewState(newValue: any) {
         console.log("changing state ", newValue)
+        console.log("testing filters now!")
+        console.log(state)
+        console.log(min + ' ' + max)
         return setState((prevState: any) => {
             let updatedState = {...prevState};
             let current = updatedState as any;
@@ -65,14 +80,16 @@ export const RenderInput: React.FC<RenderInputProps> = ({
         } else {
             let inputValue: number | bigint | string | null;
             let isValid = true;
-            console.log("change event")
+            console.log("change event type of: " + type)
 
             if (type === "number") {
                 inputValue = e.target.valueAsNumber;
+                console.log("as number is " + inputValue)
                 isValid = (inputValue !== undefined && inputValue !== null && !isNaN(inputValue as number) && (inputValue >= Number(min) && inputValue <= Number(max)));
                 if (isNaN(inputValue as number)) {
+                    console.log("null here ", nullable, filter)
                     inputValue = null;
-                    if (nullable) isValid = false;
+                    isValid = nullable;
                 }
             } else if (type === "bigint") {
                 inputValue = e.target.value;
@@ -80,14 +97,12 @@ export const RenderInput: React.FC<RenderInputProps> = ({
                 else {
                     try {
                         inputValue = BigInt(inputValue)
+                        isValid = (inputValue !== undefined && inputValue !== null && min !== undefined && max !== undefined && BigInt(inputValue) >= min && BigInt(inputValue) <= max);
+                        if (inputValue === null) isValid = nullable;
                     } catch (e) {
-                        return
+                        isValid = false
                     }
                 }
-                console.log(inputValue)
-
-                isValid = (inputValue !== undefined && inputValue !== null && min !== undefined && max !== undefined && BigInt(inputValue) >= min && BigInt(inputValue) <= max);
-                if (inputValue === null) isValid = nullable;
             } else if (type === "text") {
                 inputValue = e.target.value;
                 if (inputValue.length === 0 && !blankable) isValid = false;
@@ -105,16 +120,18 @@ export const RenderInput: React.FC<RenderInputProps> = ({
     if (type === "number" || type === "bigint") {
         if (min !== undefined && min <= barrierConst) {
             validationText = `Введите ${inputComment} число.`;
-        }
-        else if (min !== undefined) {
-            // console.log(min, -barrierConst)
+        } else if (min !== undefined) {
             validationText = `Введите ${inputComment} число не меньше ${min}.`;
-        }
-        else validationText = '';
-        if (nullable !== undefined && nullable) validationText += '\nОставьте поле пустым, чтобы не заполнять значение.';
+        } else validationText = '';
+        if (nullable !== undefined && nullable && !filter) validationText += '\nОставьте поле пустым, чтобы не заполнять значение.';
     } else {
         validationText = "Введите строку. Значение" + (!blankable ? " не " : " ") + "может быть пустым.";
-        if (nullable !== undefined && nullable) validationText += '\nОтметьте чекбокс, чтобы не заполнять значение.';
+        if (nullable !== undefined && nullable && !filter) validationText += '\nОтметьте чекбокс, чтобы не заполнять значение.';
+    }
+    if (filter) {
+        validationText = '';
+        label = '';
+        inline = true;
     }
 
     const inputDisabled = isCheckboxChecked && type === "text" && nullable !== undefined && nullable;
@@ -125,7 +142,7 @@ export const RenderInput: React.FC<RenderInputProps> = ({
             {!inline && (<div><label htmlFor={path}>{label}</label>{!nullable ? '*' : ''}<br/></div>)}
             {!(validationText.length === 0) && <small>{validationText}</small>}
             <br/>
-            {inline && <label htmlFor={path}>{label}{!nullable ? '*' : ''}: </label>}
+            {inline && <label htmlFor={path}>{label}{!nullable ? '*' : ''} </label>}
             {!isCheckboxChecked &&
                 (<input
                     className={correct ? 'ok' : 'bad'}
@@ -136,8 +153,8 @@ export const RenderInput: React.FC<RenderInputProps> = ({
                     disabled={inputDisabled}
                     // placeholder={label}
                 />)}
-                {isCheckboxChecked && <small><b>Не заполнять</b></small>}
-            {type === "text" && nullable !== undefined && nullable && (
+            {isCheckboxChecked && <small><b>Не заполнять</b></small>}
+            {type === "text" && nullable !== undefined && nullable && !filter && (
                 <input
                     type={"checkbox"}
                     checked={isCheckboxChecked}
