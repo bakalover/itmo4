@@ -150,18 +150,32 @@ const MainTable: React.FC<MainTableProps> = ({
         for (const key in route) {
             const value = route[key as keyof typeof route];
             if (typeof value === "object" && value !== null) {
+                console.log('will be checked: ', key, value)
                 for (const subKey in value) {
-                    if (subKey === "val" || subKey === "type") continue;
-                    const subValue = value[subKey as keyof typeof value];
-                    if (subValue["val"] !== "" && subValue["val"] !== " ") {
-                        console.log("filters array is", filtersArray);
-                        if (subValue["type"] === "=")
-                            filtersArray.push(`${key}.${subKey}_eq_${subValue["val"]}`);
-                        else if (subValue["type"] === "<")
-                            filtersArray.push(`${key}.${subKey}_lt_${subValue["val"]}`);
-                        else if (subValue["type"] === ">")
-                            filtersArray.push(`${key}.${subKey}_gt_${subValue["val"]}`);
+                    let subValue: any;
+                    if (subKey === "val" || subKey === "type") {
+                        subValue = value;
+                        if (subValue["val"] !== "" && subValue["val"] !== " ") {
+                            if (subValue["type"] === "=")
+                                filtersArray.push(`${key}._eq_${subValue["val"]}`);
+                            else if (subValue["type"] === "<")
+                                filtersArray.push(`${key}.$_lt_${subValue["val"]}`);
+                            else if (subValue["type"] === ">")
+                                filtersArray.push(`${key}.$_gt_${subValue["val"]}`);
+                        }
+                    } else {
+                        subValue = value[subKey as keyof typeof value];
+                        if (subValue["val"] !== "" && subValue["val"] !== " ") {
+                            console.log("filters array is", filtersArray);
+                            if (subValue["type"] === "=")
+                                filtersArray.push(`${key}.${subKey}_eq_${subValue["val"]}`);
+                            else if (subValue["type"] === "<")
+                                filtersArray.push(`${key}.${subKey}_lt_${subValue["val"]}`);
+                            else if (subValue["type"] === ">")
+                                filtersArray.push(`${key}.${subKey}_gt_${subValue["val"]}`);
+                        }
                     }
+
                 }
             }
         }
