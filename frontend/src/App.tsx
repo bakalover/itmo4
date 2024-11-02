@@ -11,9 +11,10 @@ import ActionMenu from './components/ActionMenu';
 import {Route} from './model/types';
 
 function App() {
-    const {routes, loading, error, numberOfElements, totalElements, totalPages, fetchRoutes, deleteRoute} = useRoutes();
+    const {routes, loading, error, numberOfElements, totalElements, totalPages, fetchRoutes, deleteRoute, message} = useRoutes();
     const [editingRoute, setEditingRoute] = useState<Route | null>(null);
     const [selectedAction, setSelectedAction] = useState<string | null>(null);
+    const [infoMessage, setInfoMessage] = useState(message);
 
     const actions = {
         addRoute: 'Добавить новый маршрут в хранилище',
@@ -22,8 +23,19 @@ function App() {
         getRoutesBetweenLocation: 'Получить маршруты между локациями',
     };
 
-    const handleEditRoute = (route: Route) => setEditingRoute(route);
+    const handleActionSelect= (action : string) => {
+        console.log("setting an action")
+        //setInfoMessage(null);
+        setSelectedAction(action)
+
+    }
+    const handleEditRoute = (route: Route) => {
+        console.log("edit route")
+        //setInfoMessage(null)
+        setEditingRoute(route);
+    }
     const handleCancelEdit = () => setEditingRoute(null);
+
     const handleTableContentChange = () => {
         fetchRoutes();
     };
@@ -56,7 +68,7 @@ function App() {
         <div className="App">
             <header className="App-header">
                 <h2>Маршруты</h2>
-                {!editingRoute && !selectedAction && <ActionMenu actions={actions} onActionSelect={setSelectedAction}/>}
+                {!editingRoute && !selectedAction && <ActionMenu actions={actions} onActionSelect={handleActionSelect}/>}
                 {!editingRoute && !selectedAction && (
                     <MainTable
                         routes={routes}
@@ -69,6 +81,7 @@ function App() {
                         totalElements={totalElements}
                         totalPages={totalPages}
                         onPageChanged={fetchRoutes}
+                        message={infoMessage}
                     />
                 )}
 

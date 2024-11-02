@@ -10,6 +10,7 @@ export function useRoutes() {
     const [numberOfElements, setNumberOfElements] = useState<number>(0);
     const [totalElements, setTotalElements] = useState<number>(0);
     const [totalPages, setTotalPages] = useState<number>(0);
+    const [message, setMessage] = useState<string | null>(null);
 
     useEffect(() => {
         fetchRoutes();
@@ -37,8 +38,10 @@ export function useRoutes() {
         setLoading(true);
         setError(null);
         try {
+            setMessage('Маршрут успешно удален')
             await deleteRouteById(id);
             await fetchRoutes();
+            console.log("message is ", message)
         } catch (err) {
             setError('Failed to delete route');
         } finally {
@@ -55,5 +58,6 @@ export function useRoutes() {
         totalPages,
         fetchRoutes,
         deleteRoute,
+        message
     };
 }
