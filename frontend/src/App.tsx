@@ -24,9 +24,8 @@ function App() {
 
     const handleEditRoute = (route: Route) => setEditingRoute(route);
     const handleCancelEdit = () => setEditingRoute(null);
-    const handleSaveEdit = () => {
+    const handleTableContentChange = () => {
         fetchRoutes();
-        //setEditingRoute(null);
     };
 
     const handleBackButtonClick = () => {
@@ -36,12 +35,12 @@ function App() {
 
     const renderContent = () => {
         if (editingRoute) {
-            return <EditRoute route={editingRoute} onSave={handleSaveEdit} onCancel={handleCancelEdit}/>;
+            return <EditRoute route={editingRoute} onSave={handleTableContentChange} onCancel={handleCancelEdit}/>;
         }
 
         switch (selectedAction) {
             case 'addRoute':
-                return <AddRoute/>;
+                return <AddRoute onAddRoute={handleTableContentChange}/>;
             case 'getMinRoute':
                 return <GetMinRoute/>;
             case 'getRouteWithDistance':

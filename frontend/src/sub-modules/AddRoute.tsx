@@ -15,6 +15,11 @@ interface State {
     isSuccessAdd: boolean;
 }
 
+interface AddRouteProps {
+    onAddRoute: () => void;
+
+}
+
 const initialState: State = {
     isSimple: false,
     route: {
@@ -28,10 +33,10 @@ const initialState: State = {
     errorMessage: '',
     isErrorThrown: false,
     isLoading: false,
-    isSuccessAdd: false
+    isSuccessAdd: false,
 };
 
-const AddRoute: React.FC = () => {
+const AddRoute: React.FC<AddRouteProps> = ({onAddRoute}) => {
     const [state, setState] = useState<State>(initialState);
 
     const handleAddRoute = async () => {
@@ -44,8 +49,10 @@ const AddRoute: React.FC = () => {
 
             if (state.isSimple) {
                 await addRoutesWithId(state.simpleRoute.from, state.simpleRoute.to, state.simpleRoute.distance);
+                onAddRoute()
             } else {
                 await addRoute(state.route);
+                onAddRoute()
             }
 
             setState((prevState) => ({
