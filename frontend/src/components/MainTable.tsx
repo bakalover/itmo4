@@ -92,47 +92,6 @@ const MainTable: React.FC<MainTableProps> = ({
         distance: false,
     });
 
-    const [uniqueIds, setUniqueIds] = useState<string[]>([]);
-    const [uniqueNames, setUniqueNames] = useState<string[]>([]);
-    const [uniqueFromNames, setUniqueFromNames] = useState<string[]>([]);
-    const [uniqueToNames, setUniqueToNames] = useState<string[]>([]);
-    const [uniqueFromIds, setUniqueFromIds] = useState<string[]>([]);
-    const [uniqueToIds, setUniqueToIds] = useState<string[]>([]);
-
-    useEffect(() => {
-        const ids = Array.from(new Set(routes.map((route) => route.id.toString())));
-        const names = Array.from(new Set(routes.map((route) => route.name)));
-        const fromNames = Array.from(
-            new Set(routes.map((route) => route.from.name)),
-        );
-        const toNames = Array.from(
-            new Set(routes.map((route) => (route.to == null ? "" : route.to.name))),
-        );
-        const fromIds = Array.from(
-            new Set(
-                routes.map((route) =>
-                    route.from.id !== null ? route.from.id.toString() : "null",
-                ),
-            ),
-        );
-        const toIds = Array.from(
-            new Set(
-                routes.map((route) =>
-                    route.to !== null && route.to.id !== null
-                        ? route.to.id.toString()
-                        : "null",
-                ),
-            ),
-        );
-
-        setUniqueIds(ids);
-        setUniqueNames(names);
-        setUniqueFromNames(fromNames);
-        setUniqueToNames(toNames);
-        setUniqueFromIds(fromIds);
-        setUniqueToIds(toIds);
-    }, [routes]);
-
     const [pageSize, setPageSize] = useState(10); // размер страницы
     const [currentPage, setCurrentPage] = useState(1); // текущая страница
 
@@ -222,6 +181,8 @@ const MainTable: React.FC<MainTableProps> = ({
     };
 
     const pageChangeHandler = async (pageSize: number, currentPage: number) => {
+        setPageSize(pageSize);
+        setCurrentPage(currentPage)
         const filters = await getFiltersForAPI();
         const sorting = await getSortingForAPI();
         await onPageChanged(filters, sorting, pageSize, currentPage);
@@ -556,9 +517,9 @@ const MainTable: React.FC<MainTableProps> = ({
                     {/*  */}
                     {!error && (
                         <tbody>
-                        {routes.map((route) => (
+                        {routes.map((route, index) => (
                             <tr key={route.id}>
-                                <td>{route.id}</td>
+                                <td>{index + 1}</td>
                                 <td>{route.id}</td>
                                 <td>{route.name}</td>
                                 <td>{route.coordinates.x?.toString()}</td>
