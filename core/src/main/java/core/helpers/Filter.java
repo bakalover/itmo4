@@ -195,7 +195,6 @@ public class Filter {
                     );
                 }
 
-                // Black magik
                 result = ((Comparable) lastField1.get(current1)).compareTo(
                         lastField2.get(current2)
                     );
@@ -248,11 +247,18 @@ public class Filter {
         List<Route> input,
         List<Comparator<Route>> fs
     ) {
-        var resultStream = input.stream();
-        for (Comparator<Route> f : fs) {
-            resultStream = resultStream.sorted(f);
+        if (fs.isEmpty()) {
+            return input;
         }
-        return resultStream.collect(Collectors.toList());
+        // Black type magik
+        var combinedComparator = fs
+            .stream()
+            .reduce(Comparator::thenComparing)
+            .get(); //safe
+        return input
+            .stream()
+            .sorted(combinedComparator)
+            .collect(Collectors.toList());
     }
 
     public static List<Predicate<Route>> withoutFilters() {
