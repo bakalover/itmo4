@@ -1,6 +1,6 @@
 use std::{
     fs::File,
-    io::{Read, Result},
+    io::{Read, Result, Write},
 };
 
 const IP: [u8; 64] = [
@@ -180,37 +180,85 @@ fn string_to_u64_blocks(input: &str) -> Vec<u64> {
     blocks
 }
 
-fn u64_blocks_to_string(blocks: &[u64]) -> String {
-    let mut bytes = Vec::new();
+fn read_input(prompt: &str) -> Result<String> {
+    println!("{}", prompt);
+    let mut input = String::new();
+    std::io::stdin().read_line(&mut input)?;
+    Ok(input.trim().to_string())
+}
 
-    for &block in blocks {
-        for i in 0..8 {
-            let byte = ((block >> (i * 8)) & 0xFF) as u8;
-            bytes.push(byte);
+fn read_hex_key() -> Result<u64> {
+    let hex_key: u64;
+    loop {
+        let key = read_input("Введите ключ - 8 байт в HEX формате")?;
+        if key.len() != 16 {
+            println!("Неверная длина ключа");
+            continue;
         }
+        match u64::from_str_radix(key.as_str(), 16) {
+            Ok(num) => {
+                hex_key = num;
+                break;
+            }
+            Err(_) => {
+                println!("Неправильный формат ключа");
+                continue;
+            }
+        };
     }
-
-    // Convert the byte array back to a string, ignoring any trailing null bytes
-    let string = String::from_utf8(bytes).expect("Invalid UTF-8 sequence");
-    string
+    Ok(hex_key)
 }
 
 fn main() -> Result<()> {
-    let key: u64 = 0x133457799BBCDFF1;
-    let mut input_file = File::open("input.txt")?;
-    let mut input_text = String::new();
-    input_file.read_to_string(&mut input_text)?;
-    let encrypted: Vec<u64> = string_to_u64_blocks(&input_text)
-        .iter()
-        .map(|block| des_encrypt(block.clone(), key))
-        .collect();
-    let decrypted: Vec<u64> = encrypted
-        .iter()
-        .map(|block| des_decrypt(block.clone(), key))
-        .collect();
-    println!(
-        "Decrypted Plaintext: {}",
-        u64_blocks_to_string(decrypted.as_slice())
-    );
+    loop {
+        match read_input("1 - Зашифровать\n2 - Расшифровать")?.as_str() {
+            "1" => {
+                let hex_key = read_hex_key()?;
+                let mut input_file = File::open("input.txt")?;
+                let mut input_text = String::new();
+                input_file.read_to_string(&mut input_text)?;
+                let encrypted: Vec<u64> = string_to_u64_blocks(&input_text)
+                    .iter()
+                    .map(|block| des_encrypt(block.clone(), hex_key))
+                    .collect();
+                let mut output_file = File::create("encrypted.txt")?;
+                output_file.write(
+                    encrypted
+                        .iter()
+                        .flat_map(|value| value.to_ne_bytes())
+                        .collect::<Vec<u8>>()
+                        .as_slice(),
+                )?;
+                println!("Файл успешно зашифрован!");
+                break;
+            }
+            "2" => {
+                let hex_key = read_hex_key()?;
+                let mut readed_from_file = Vec::<u8>::new();
+                File::open("encrypted.txt")?.read_to_end(&mut readed_from_file)?;
+                let decrypted: Vec<u64> = readed_from_file
+                    .chunks_exact(8)
+                    .map(|chunk| u64::from_ne_bytes(chunk.try_into().unwrap()))
+                    .collect::<Vec<u64>>()
+                    .iter()
+                    .map(|block| des_decrypt(block.clone(), hex_key))
+                    .collect();
+                let mut output_file_decrypted = File::create("decrypted.txt")?;
+                output_file_decrypted.write(
+                    decrypted
+                        .iter()
+                        .flat_map(|value| value.to_ne_bytes())
+                        .collect::<Vec<u8>>()
+                        .as_slice(),
+                )?;
+                println!("Файл успешно расшифрован!");
+                break;
+            }
+            _ => {
+                println!("Неизвестная опция");
+                continue;
+            }
+        }
+    }
     Ok(())
 }
