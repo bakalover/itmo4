@@ -1,4 +1,4 @@
-package com.com.soa.navigator.app;
+package com.soa.navigator.app;
 
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
