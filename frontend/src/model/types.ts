@@ -23,6 +23,31 @@ export interface UserRoute {
   distance: bigint;
 }
 
+export interface RouteBoolean {
+    id: boolean,
+    name: boolean,
+    coordinates: {
+        x: boolean,
+        y: boolean,
+    },
+    creationDate: boolean,
+    from: {
+        id: boolean,
+        name: boolean,
+        x: boolean,
+        y: boolean,
+        z: boolean,
+    },
+    to: {
+        id: boolean,
+        name: boolean,
+        x: boolean,
+        y: boolean,
+        z: boolean,
+    },
+    distance: boolean,
+}
+
 export interface SimpleRoute {
   from: number;
   to: number;

@@ -22,6 +22,10 @@ export const RenderFilter: React.FC<RenderFilterProps> = ({
                                                               inline = false
                                                           }) => {
 
+    const handleFilterCorrectionChange = (path : string, value : boolean) => {
+        console.log('filter changed correction, but it doesnt matter')
+    }
+
     const keys = (path + '.type').split('.');
     let value = state as any;
 
@@ -63,6 +67,7 @@ export const RenderFilter: React.FC<RenderFilterProps> = ({
       inline={inline}
       type={type}
       filter={true}
+      onCorrectnessChange={handleFilterCorrectionChange}
   />
         </span>
 

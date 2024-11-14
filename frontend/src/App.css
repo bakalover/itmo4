@@ -90,6 +90,7 @@ small.bad {
     margin: 0;
 }
 
+
 p.success {
     color: darkgreen;
 }
@@ -149,7 +150,7 @@ button.nav {
     /*border-collapse: collapse; !* Убираем двойные границы *!*/
     width: 70%; /* Занимаем всю ширину */
     font-size: 13px;
-    margin: auto;
+    margin-left: 10%;
 }
 
 .mainTable table tr {
@@ -163,4 +164,8 @@ button.nav {
 
 .datetime {
     all: unset;
+}
+aside {
+    float:left;
+    margin: 0;
 }

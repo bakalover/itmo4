@@ -27,8 +27,17 @@ const GetRoutesBetweenLocation: React.FC = () => {
   const handleBack = () => {
     navigate("/");
   };
+  const [startCorrectness, setStartCorrectness] = useState(true);
+  const [endCorrectness, setEndCorrectness] = useState(true);
+  const [distanceCorrectness, setDistanceCorrectness] = useState(true);
 
-  const handleGetRoutesBeetwenLocations = async () => {
+  const handleCorrectnessChange = (path : string, value :boolean) => {
+      if (path == "to") setStartCorrectness(value);
+      if (path == "from") setEndCorrectness(value);
+      if (path == "distance") setDistanceCorrectness(value);
+  }
+
+  const handleGetRoutesBetweenLocations = async () => {
     try {
       const newRoutes: UserRoute[] = await getRouteBeetweenLocations(
         routesState?.from,
@@ -69,6 +78,7 @@ const GetRoutesBetweenLocation: React.FC = () => {
         type="number"
         inline={false}
         filter={false}
+        onCorrectnessChange={handleCorrectnessChange}
       />
       <br />
       {/* <label htmlFor="route-destination">Id конечной точки маршрута:</label> */}
@@ -82,9 +92,12 @@ const GetRoutesBetweenLocation: React.FC = () => {
         type="number"
         inline={false}
         filter={false}
+        onCorrectnessChange={handleCorrectnessChange}
       />
       <br />
-      <button onClick={handleGetRoutesBeetwenLocations}>Получить</button>
+      <button onClick={handleGetRoutesBetweenLocations}
+              className={(!startCorrectness || !endCorrectness) ? 'bad' : 'ok'}
+      >Получить</button>
       <div
         style={{ textAlign: "center", marginTop: "50px", marginLeft: "250px" }}
       >

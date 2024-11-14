@@ -30,6 +30,11 @@ const GetRoutesWithDistance: React.FC = () => {
   const handleBack = () => {
     navigate("/");
   };
+  const [correctDistance, setCorrectDistance] = useState(true);
+
+  const handleDistanceCorrectnessChange = (path : string, value : boolean) => {
+    setCorrectDistance(correctDistance)
+  }
 
   const handleCreater = async () => {
     try {
@@ -99,6 +104,7 @@ const GetRoutesWithDistance: React.FC = () => {
         type="bigint"
         inline={false}
         filter={false}
+        onCorrectnessChange={handleDistanceCorrectnessChange}
       />
       <button onClick={handleCreater}>
         Получить с дистанцией больше заданной
