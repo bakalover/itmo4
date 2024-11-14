@@ -1,7 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {RenderInput} from "./RenderInput";
-import {Simulate} from "react-dom/test-utils";
-import change = Simulate.change;
+
 
 interface RenderFilterProps {
     label: string;
@@ -9,7 +8,6 @@ interface RenderFilterProps {
     state: any;
     setState: React.Dispatch<React.SetStateAction<any>>;
     inline: boolean;
-    type?: "text" | "number" | "bigint";
 
 }
 
@@ -18,7 +16,6 @@ export const RenderFilter: React.FC<RenderFilterProps> = ({
                                                               path,
                                                               state,
                                                               setState,
-                                                              type,
                                                               inline = false
                                                           }) => {
 
@@ -65,7 +62,6 @@ export const RenderFilter: React.FC<RenderFilterProps> = ({
       state={state}
       setState={setState}
       inline={inline}
-      type={type}
       filter={true}
       onCorrectnessChange={handleFilterCorrectionChange}
   />

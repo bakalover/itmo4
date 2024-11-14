@@ -13,19 +13,55 @@ export function parseObjectAndGetAllValues(currentObject: any): any[] {
     return values;
 }
 
-export function parseObjectAndSetValue(currentObject: any, valuePath: string, newValue: any) {
-    console.log('Object was: ', JSON.stringify(currentObject, null, 2));
+export function parseObjectAndGenerateTemplate(currentObject: any, defaultValue: any): any {
+    if (defaultValue !== true) console.log('template is: ', currentObject)
+    let templateObject: any = {}
+    for (const key in currentObject) {
+        if (currentObject.hasOwnProperty(key)) {
+            if (typeof currentObject[key] === 'object' && currentObject[key] !== null) {
+                templateObject[key] = parseObjectAndGenerateTemplate(currentObject[key], defaultValue);
+            } else {
+                templateObject[key] = defaultValue;
+            }
+        } else {
+            console.log('cur obj: ', currentObject, 'key: ', key)
+        }
+    }
+    return templateObject
+}
+
+
+export function parseObjectAndSetValue(currentObject: any, valuePath: string, newValue: any): any {
+    console.log('object was: ', currentObject)
+    const path = valuePath.split('.');
+    let parsed = currentObject;
+
+    for (let i = 0; i < path.length - 1; i++) {
+        const key = path[i];
+        if (!parsed[key] || typeof parsed[key] !== 'object') {
+            parsed[key] = {};
+        }
+        parsed = parsed[key];
+    }
+    const finalKey = path[path.length - 1];
+    parsed[finalKey] = newValue;
+    console.log('now object is: ', currentObject)
+    return currentObject;
+}
+
+export function parseObjectAndGetValue(currentObject: any, valuePath: string) {
+    //console.log('Object was: ', currentObject);
     const path = valuePath.split('.');
     let parsed = currentObject;
 
     for (let i = 0; i < path.length - 1; i++) {
         const key = path[i];
         if (!parsed[key]) {
-            console.error("Non-existing key!")
-            parsed[key] = {};
+            console.log('Found value is null')
+            return null
         }
         parsed = parsed[key];
     }
-    parsed[path[path.length - 1]] = newValue;
-    console.log('Now object is: ', JSON.stringify(currentObject, null, 2));
+    //console.log('Found value is: ', currentObject);
+    return parsed[path[path.length - 1]]
 }
