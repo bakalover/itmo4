@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { inputConstraints } from '../constants/fieldConstraints';
+import React, {useState} from 'react';
+import {inputConstraints} from '../constants/fieldConstraints';
 
 interface RenderInputProps {
     label: string;
@@ -9,6 +9,7 @@ interface RenderInputProps {
     type?: "text" | "number" | "bigint";
     inline: boolean;
     filter: boolean;
+    onCorrectnessChange: (path : string, valid: boolean) => void
 }
 
 export const RenderInput: React.FC<RenderInputProps> = ({
@@ -18,7 +19,8 @@ export const RenderInput: React.FC<RenderInputProps> = ({
                                                             setState,
                                                             type = "text",
                                                             inline = false,
-                                                            filter = false
+                                                            filter = false,
+                                                            onCorrectnessChange
                                                         }) => {
     const keys = path.split('.');
     let value = state as any;
@@ -43,16 +45,22 @@ export const RenderInput: React.FC<RenderInputProps> = ({
         blankable = true;
     }
 
+    function handleCorrectnessChange(value: boolean) {
+        setCorrect(value);
+        console.log('changed correctness of value')
+        onCorrectnessChange(path, value)
+    }
+
     function processNull() {
         if (type === 'bigint' || type === 'number') return ''
         else return null;
     }
 
     function setNewState(newValue: any) {
-        console.log("changing state ", newValue)
-        console.log("testing filters now!")
-        console.log(state)
-        console.log(min + ' ' + max)
+        // console.log("changing state ", newValue)
+        // console.log("testing filters now!")
+        // console.log(state)
+        // console.log(min + ' ' + max)
         return setState((prevState: any) => {
             let updatedState = {...prevState};
             let current = updatedState as any;
@@ -67,14 +75,14 @@ export const RenderInput: React.FC<RenderInputProps> = ({
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log("handle event")
+        // console.log("handle event")
         if (e.target.type === 'checkbox') {
             setIsCheckboxChecked(e.target.checked);
             if (e.target.checked) {
-                setCorrect(true);
+                handleCorrectnessChange(true);
                 setNewState(null);
             } else {
-                setCorrect(true);
+                handleCorrectnessChange(true);
                 setNewState('');
             }
         } else {
@@ -111,7 +119,7 @@ export const RenderInput: React.FC<RenderInputProps> = ({
             }
 
             setNewState(inputValue);
-            setCorrect(isValid);
+            handleCorrectnessChange(isValid);
         }
     };
 

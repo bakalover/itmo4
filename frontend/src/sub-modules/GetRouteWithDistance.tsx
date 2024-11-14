@@ -25,6 +25,11 @@ const initialState: State = {
 
 const GetRoutesWithDistance: React.FC = () => {
   const [routesState, setState] = useState<State>(initialState);
+  const [correctDistance, setCorrectDistance] = useState(true);
+
+  const handleDistanceCorrectnessChange = (path : string, value : boolean) => {
+    setCorrectDistance(correctDistance)
+  }
 
   const handleCreater = async () => {
     try {
@@ -94,6 +99,7 @@ const GetRoutesWithDistance: React.FC = () => {
         type="bigint"
         inline={false}
         filter={false}
+        onCorrectnessChange={handleDistanceCorrectnessChange}
       />
       <button onClick={handleCreater}>
         Получить с дистанцией больше заданной

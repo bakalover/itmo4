@@ -38,6 +38,7 @@ const initialState: State = {
 
 const AddRoute: React.FC<AddRouteProps> = ({onAddRoute}) => {
     const [state, setState] = useState<State>(initialState);
+    const [addButtonBlocked, setAddButtonBlocked] = useState(false)
 
     const handleAddRoute = async () => {
         try {
@@ -74,6 +75,15 @@ const AddRoute: React.FC<AddRouteProps> = ({onAddRoute}) => {
         }
     };
 
+    const onFormCorrectionChangeLocally = (path : string, value : boolean) => {
+        return true
+    }
+
+    const handleFormCorrectionChange = (value : boolean) => {
+        console.log('form correctness changed! Now it is: ', value)
+        setAddButtonBlocked(!value) //if false => block button
+    }
+
     const handleModeSwitch = () => {
         setState((prevState) => ({...prevState, isSimple: !prevState.isSimple}));
     };
@@ -88,21 +98,21 @@ const AddRoute: React.FC<AddRouteProps> = ({onAddRoute}) => {
             <button onClick={handleModeSwitch} className='addRoute'>
                 Переключить режим ввода
             </button>
-            <button onClick={handleAddRoute} className='addRoute'>Добавить</button>
+            <button onClick={handleAddRoute} disabled={addButtonBlocked}>Добавить</button>
 
             <br/>
             <p>Символом * помечены обязательные к заполнению поля</p>
             {state.isSimple ? (
                 <>
                     <RenderInput label="Id начальной точки маршрута" path="simpleRoute.from" state={state}
-                                 setState={setState} inline={false} filter={false}/>
+                                 setState={setState} inline={false} filter={false} onCorrectnessChange={onFormCorrectionChangeLocally}/>
                     <RenderInput label="Id конечной точки маршрута" path="simpleRoute.to" state={state}
-                                 setState={setState} inline={false} filter={false}/>
+                                 setState={setState} inline={false} filter={false} onCorrectnessChange={onFormCorrectionChangeLocally}/>
                     <RenderInput label="Длина маршрута" path="simpleRoute.distance" state={state} setState={setState}
-                                 type="bigint" inline={false} filter={false}/>
+                                 type="bigint" inline={false} filter={false} onCorrectnessChange={onFormCorrectionChangeLocally}/>
                 </>
             ) : (
-               <RouteForm state={state} setState={setState}></RouteForm>
+               <RouteForm state={state} setState={setState} onFormCorrectnessChange={handleFormCorrectionChange}></RouteForm>
             )}
         </div>
     );
