@@ -10,6 +10,7 @@
     "@types/node": "^16.18.112",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.0",
+    "js-big-decimal": "^2.1.0",
     "react": "^18.3.1",
     "react-datetime-picker": "^6.0.1",
     "react-dom": "^18.3.1",

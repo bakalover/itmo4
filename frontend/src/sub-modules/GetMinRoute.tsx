@@ -63,7 +63,7 @@ const GetMinRoute: React.FC = () => {
 
                 <tr>
                     <th>Distance</th>
-                    <td>{route.distance.toString()}</td>
+                    <td>{route.distance?.toString()}</td>
                 </tr>
                 </tbody>
             </table>
