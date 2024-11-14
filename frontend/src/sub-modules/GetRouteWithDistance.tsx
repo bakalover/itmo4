@@ -1,14 +1,15 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   getRoutesWithDistanceCount,
   getRoutesWithDistanceGreater,
 } from "../api";
 import { RenderInput } from "../components/RenderInput";
-import { Route } from "../model/types";
+import { UserRoute } from "../model/types";
 import { getErrorMessage } from "../utils/getErrorMessage";
 
 interface State {
-  routes: Route[];
+  routes: UserRoute[];
   distance: bigint;
   isError: boolean;
   count: number;
@@ -25,10 +26,14 @@ const initialState: State = {
 
 const GetRoutesWithDistance: React.FC = () => {
   const [routesState, setState] = useState<State>(initialState);
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate("/");
+  };
 
   const handleCreater = async () => {
     try {
-      const newRoutes: Route[] = await getRoutesWithDistanceGreater(
+      const newRoutes: UserRoute[] = await getRoutesWithDistanceGreater(
         routesState?.distance,
       );
       setState((prevState) => ({
@@ -146,6 +151,7 @@ const GetRoutesWithDistance: React.FC = () => {
           </tbody>
         </table>
       </div>
+      <button onClick={handleBack}>Назад</button>
     </div>
   );
 };

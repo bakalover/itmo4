@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getRouteBeetweenLocations } from "../api";
 import { RenderInput } from "../components/RenderInput";
-import { Route } from "../model/types";
+import { UserRoute } from "../model/types";
 import { getErrorMessage } from "../utils/getErrorMessage";
 
 interface State {
-  routes: Route[];
+  routes: UserRoute[];
   from: number;
   to: number;
   isError: boolean;
@@ -22,10 +23,14 @@ const initialState: State = {
 
 const GetRoutesBetweenLocation: React.FC = () => {
   const [routesState, setState] = useState<State>(initialState);
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate("/");
+  };
 
   const handleGetRoutesBeetwenLocations = async () => {
     try {
-      const newRoutes: Route[] = await getRouteBeetweenLocations(
+      const newRoutes: UserRoute[] = await getRouteBeetweenLocations(
         routesState?.from,
         routesState?.to,
       );
@@ -121,6 +126,7 @@ const GetRoutesBetweenLocation: React.FC = () => {
           </tbody>
         </table>
       </div>
+      <button onClick={handleBack}>Назад</button>
     </div>
   );
 };
