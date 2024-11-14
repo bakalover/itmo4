@@ -1,15 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {fetchMinRoute} from '../api';
-import {Route} from "../model/types";
+import {UserRoute} from "../model/types";
+import { useNavigate } from 'react-router-dom';
 
 
 const GetMinRoute: React.FC = () => {
-    const [route, setRoute] = useState<Route | null>(null);
-
+    const [route, setRoute] = useState<UserRoute | null>(null);
+    const navigate = useNavigate()
+    const handleBack = () => {
+      navigate("/");
+    };
     useEffect(() => {
         const loadMinRoute = async () => {
             try {
-                const data: Route = await fetchMinRoute();
+                const data: UserRoute = await fetchMinRoute();
                 setRoute(data);
             } catch (error) {
                 console.error('Error fetching min route:', error);
@@ -67,6 +71,9 @@ const GetMinRoute: React.FC = () => {
                 </tr>
                 </tbody>
             </table>
+            <button onClick={handleBack} className="addRoute">
+              Назад
+            </button>
         </div>
     );
 };

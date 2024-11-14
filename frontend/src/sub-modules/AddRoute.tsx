@@ -1,13 +1,14 @@
-import React, {useState} from 'react';
-import {addRoute, addRoutesWithId} from '../api';
-import {Route, SimpleRoute} from "../model/types";
-import {RenderInput} from '../components/RenderInput';
-import {getErrorMessage} from "../utils/getErrorMessage";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { addRoute, addRoutesWithId } from '../api';
+import { RenderInput } from '../components/RenderInput';
 import RouteForm from "../components/RouteForm";
+import { SimpleRoute, UserRoute } from "../model/types";
+import { getErrorMessage } from "../utils/getErrorMessage";
 
 interface State {
     isSimple: boolean;
-    route: Omit<Route, 'id' | 'creationDate'>;
+    route: Omit<UserRoute, 'id' | 'creationDate'>;
     simpleRoute: SimpleRoute;
     errorMessage: string;
     isErrorThrown: boolean;
@@ -39,6 +40,10 @@ const initialState: State = {
 const AddRoute: React.FC<AddRouteProps> = ({onAddRoute}) => {
     const [state, setState] = useState<State>(initialState);
     const [addButtonBlocked, setAddButtonBlocked] = useState(false)
+    const navigate = useNavigate()
+    const handleBack = () => {
+      navigate("/");
+    };
 
     const handleAddRoute = async () => {
         try {
@@ -114,6 +119,9 @@ const AddRoute: React.FC<AddRouteProps> = ({onAddRoute}) => {
             ) : (
                <RouteForm state={state} setState={setState} onFormCorrectnessChange={handleFormCorrectionChange}></RouteForm>
             )}
+          <button onClick={handleBack} className="addRoute">
+            Назад
+          </button>
         </div>
     );
 };

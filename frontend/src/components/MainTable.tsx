@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {Route} from "../model/types";
+import {UserRoute} from "../model/types";
 import PaginationPanel from "./PaginationPanel";
 import {RenderFilter} from "./RenderFilter";
 
 interface MainTableProps {
-    routes: Route[];
+    routes: UserRoute[];
     loading: boolean;
     error: string | null;
-    onEditRoute: (route: Route) => void;
+    onEditRoute: (route: UserRoute) => void;
     onDeleteRoute: (id: number) => void;
     onAppliedFilters: (
         filters: string,

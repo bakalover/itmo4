@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {RenderInput} from "./RenderInput";
-import {Route, RouteBoolean} from "../model/types";
+import {RouteBoolean} from "../model/types";
 import {rootCertificates} from "node:tls";
 import {parseObjectAndGetAllValues, parseObjectAndSetValue} from "../utils/objectParser";
 
