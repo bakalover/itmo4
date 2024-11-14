@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { getRoutes, deleteRouteById } from '../api';
-import { Route, ApiResponse } from '../model/types';
+import { useEffect, useState } from 'react';
+import { deleteRouteById, getRoutes } from '../api';
+import { ApiResponse, UserRoute } from '../model/types';
 import { getErrorMessage } from '../utils/getErrorMessage';
 
 export function useRoutes() {
-    const [routes, setRoutes] = useState<Route[]>([]);
+    const [routes, setRoutes] = useState<UserRoute[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [numberOfElements, setNumberOfElements] = useState<number>(0);

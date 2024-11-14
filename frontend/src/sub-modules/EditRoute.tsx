@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {updateRouteById} from '../api';
-import {Route} from "../model/types";
+import React, { useEffect, useState } from 'react';
+import { updateRouteById } from '../api';
 import RouteForm from "../components/RouteForm";
-import {getErrorMessage} from "../utils/getErrorMessage";
+import { UserRoute } from "../model/types";
+import { getErrorMessage } from "../utils/getErrorMessage";
 
 interface State {
-    route: Route;
+    route: UserRoute;
     errorMessage: string;
     isErrorThrown: boolean;
     isLoading: boolean;
@@ -14,7 +14,7 @@ interface State {
 
 
 
-const EditRoute: React.FC<{ route: Route; onSave: () => void; onCancel: () => void }> = ({
+const EditRoute: React.FC<{ route: UserRoute; onSave: () => void; onCancel: () => void }> = ({
                                                                                              route,
                                                                                              onSave,
                                                                                              onCancel,

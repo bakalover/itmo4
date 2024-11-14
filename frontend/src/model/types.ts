@@ -1,4 +1,4 @@
-export interface Route {
+export interface UserRoute {
     id: number;
     name: string;
     coordinates: {
@@ -55,9 +55,8 @@ export interface SimpleRoute {
 }
 
 export interface ApiResponse {
-    routes: Route[];
+    routes: UserRoute[];
     totalElements: number;
     totalPages: number;
     numberOfElements: number;
 }
-
