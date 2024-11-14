@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { updateRouteById } from '../api';
-import RouteForm from "../components/RouteForm";
-import { UserRoute } from "../model/types";
-import { getErrorMessage } from "../utils/getErrorMessage";
+import React, {useState, useEffect} from 'react';
+import {updateRouteById} from '../api';
+import {Route} from "../model/types";
+import FullRouteForm from "../components/forms/FullRouteForm";
+import {getErrorMessage} from "../utils/getErrorMessage";
 
 interface State {
     route: UserRoute;
@@ -13,7 +13,6 @@ interface State {
 }
 
 
-
 const EditRoute: React.FC<{ route: UserRoute; onSave: () => void; onCancel: () => void }> = ({
                                                                                              route,
                                                                                              onSave,
@@ -22,7 +21,7 @@ const EditRoute: React.FC<{ route: UserRoute; onSave: () => void; onCancel: () =
 
     const [editButtonBlocked, setEditButtonBlocked] = useState(false)
 
-    const handleFormCorrectionChange = (value : boolean) => {
+    const handleFormCorrectionChange = (value: boolean) => {
         setEditButtonBlocked(!value)
     }
     const initialState: State = {
@@ -76,9 +75,10 @@ const EditRoute: React.FC<{ route: UserRoute; onSave: () => void; onCancel: () =
             {state.isErrorThrown && <p><b>{state.errorMessage}</b></p>}
             {state.isSuccessEdit && <p className={'success'}><b>Маршрут успешно отредактирован!</b></p>}
             <h2>Редактировать маршрут</h2>
-            <button onClick={handleSave} className={editButtonBlocked ? 'bad' : 'ok'}>Сохранить</button>
+            <button onClick={handleSave} disabled={editButtonBlocked} >Сохранить</button>
             <button onClick={onCancel}>Отмена</button>
-            <RouteForm state={state} setState={setState} onFormCorrectnessChange={handleFormCorrectionChange}></RouteForm>
+            <FullRouteForm state={state} setState={setState}
+                           onFormCorrectnessChange={handleFormCorrectionChange}></FullRouteForm>
         </div>
     );
 };

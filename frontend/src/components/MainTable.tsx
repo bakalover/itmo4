@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {UserRoute} from "../model/types";
 import PaginationPanel from "./PaginationPanel";
-import {RenderFilter} from "./RenderFilter";
+import {RenderFilter} from "./renders/RenderFilter";
 
 interface MainTableProps {
     routes: UserRoute[];
@@ -209,12 +209,12 @@ const MainTable: React.FC<MainTableProps> = ({
             {error && <p>{error}</p>}{" "}
             {!loading && !error && <p className={'ok'}>{message === null ? '' : message}</p>}
 
-                <div className={'Pagination'}>
-                    <PaginationPanel
-                        totalPages={totalPages}
-                        onPageChanged={pageChangeHandler}
-                    />
-                </div>
+            <div className={'Pagination'}>
+                <PaginationPanel
+                    totalPages={totalPages}
+                    onPageChanged={pageChangeHandler}
+                />
+            </div>
 
             <div className={'Pagination'}>
                 <table>
@@ -232,23 +232,23 @@ const MainTable: React.FC<MainTableProps> = ({
                     </tbody>
                 </table>
             </div>
-    <div>
-        <p>
-            Выберите чекбокс у элемента, если хотите добавить его в сортировку
-        </p>
-        <div className={"mainTable"}>
-            <table>
-                <thead>
-                <tr>
-                    <th rowSpan={2}>Номер</th>
-                    <th rowSpan={2}>
-                        ID
-                        <br/>
-                        <input
-                            type="checkbox"
-                            name="id"
-                            checked={checkboxes.id}
-                            onChange={handleCheckboxChange}
+            <div>
+                <p>
+                    Выберите чекбокс у элемента, если хотите добавить его в сортировку
+                </p>
+                <div className={"mainTable"}>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th rowSpan={2}>Номер</th>
+                            <th rowSpan={2}>
+                                ID
+                                <br/>
+                                <input
+                                    type="checkbox"
+                                    name="id"
+                                    checked={checkboxes.id}
+                                    onChange={handleCheckboxChange}
                                 />
                                 <br/>
                                 <RenderFilter
@@ -257,7 +257,6 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
-                                    type={"number"}
                                 />
                             </th>
                             <th rowSpan={2}>
@@ -276,7 +275,6 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
-                                    type={"text"}
                                 />
                             </th>
                             <th colSpan={2}>Координаты</th>
@@ -309,7 +307,6 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
-                                    type={"bigint"}
                                 />
                             </th>
                             <th rowSpan={2}></th>
@@ -330,7 +327,6 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
-                                    type={"bigint"}
                                 />
                             </th>
                             <th>
@@ -348,7 +344,6 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
-                                    type="number"
                                 />
                             </th>
                             <th>
@@ -367,7 +362,6 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
-                                    type={"text"}
                                 />
                             </th>
                             <th>
@@ -386,7 +380,6 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
-                                    type={"bigint"}
                                 />
                             </th>
                             <th>
@@ -404,7 +397,6 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
-                                    type={"bigint"}
                                 />
                             </th>
                             <th>
@@ -439,7 +431,6 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
-                                    type={"number"}
                                 />
                             </th>
                             <th>
@@ -458,7 +449,6 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
-                                    type={"text"}
                                 />
                             </th>
                             <th>
@@ -477,7 +467,6 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
-                                    type={"bigint"}
                                 />
                             </th>
                             <th>
@@ -495,7 +484,6 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
-                                    type={"bigint"}
                                 />
                             </th>
                             <th>
@@ -530,7 +518,6 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
-                                    type={"number"}
                                 />
                             </th>
                         </tr>
@@ -557,7 +544,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     <td>{route.to?.x?.toString()}</td>
                                     <td>{route.to?.y}</td>
                                     <td>{route.to?.z}</td>
-                                    <td>{route.distance.toString()}</td>
+                                    <td>{route.distance?.toString()}</td>
                                     <td>
                                         <button onClick={() => onEditRoute(route)}>
                                             Подробнее
