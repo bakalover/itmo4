@@ -59,10 +59,10 @@ export const getRoutes = async (
   if (!response.ok) {
     if (response.status === 404)
       throw new Error(
-        "Список маршрутов пуст",
+        await response.text()
       );
     else if (response.status === 400)
-      throw new Error(`Переданы некоррекные параметры: ${response.statusText}`);
+      throw new Error(await response.text());
     else serverError();
   }
 
@@ -80,9 +80,9 @@ export const addRoute = async (route) => {
   });
   if (response.status === 200) return response;
   else if (response.status === 400)
-    throw new Error("Некорректные входные данные: " + (await response.text()));
+    throw new Error(await response.text());
   else if (response.status === 409)
-    throw new Error("Маршрут с id = " + route.id.toString() + "уже существует");
+    throw new Error(await response.text());
   else serverError();
 };
 
@@ -103,9 +103,9 @@ export const updateRouteById = async (id, route) => {
     body: serializeBigInt(updatedRoute),
   });
   if (response.status === 200) return response;
-  else if (response.status === 400) throw new Error("Некорректные данные");
+  else if (response.status === 400) throw new Error(await response.text());
   else if (response.status === 404)
-    throw new Error(`Маршрут с id = ${id} не найден`);
+    throw new Error(await response.text());
   else serverError();
 };
 
@@ -120,7 +120,7 @@ export const addRoutesWithId = async (idTo, idFrom, distance) => {
   if (response.status === 201) return response;
   else if (response.status === 400)
     throw new Error(
-      "Некорректные параметры запроса: " + (await response.text()),
+      await response.text()
     );
   else serverError();
 };
@@ -133,16 +133,16 @@ export const getRouteBeetweenLocations = async (idFrom, idTo) => {
   if (response.status === 200) return await response.json();
   else if (response.status === 400)
     throw new Error(
-      "Некорректные параметры запроса: " + (await response.text()),
+      await response.text()
     );
-  else if (response.status === 404) throw new Error("Маршруты не найдены ");
+  else if (response.status === 404) throw new Error(await response.text());
   else serverError();
 };
 
 export const fetchMinRoute = async () => {
   const response = await fetch(`${CORE_URL}/min-id`);
   if (response.status === 200) return await response.json();
-  else if (response.status === 404) throw Error("Коллекция пуста!");
+  else if (response.status === 404) throw Error(await response.text());
   else serverError();
 };
 
@@ -150,8 +150,8 @@ export const getRouteById = async (id) => {
   const response = await fetch(`${CORE_URL}/${id}`);
   if (response.status === 200) return await response.json();
   else if (response.status === 400)
-    throw Error("Некорректные параметры запроса: " + (await response.text()));
-  else if (response.status === 404) throw Error("Маршрут не найден");
+    throw Error(await response.text());
+  else if (response.status === 404) throw Error(await response.text());
   else serverError();
 };
 
@@ -160,8 +160,8 @@ export const getRoutesWithDistanceGreater = async (distance) => {
 
   if (response.status === 200) return await response.json();
   else if (response.status === 400)
-    throw Error("Некорректные параметры запроса: " + (await response.text()));
-  else if (response.status === 404) throw Error("Элементы не найдены");
+    throw Error(await response.text());
+  else if (response.status === 404) throw Error(await response.text());
   else serverError();
 };
 
@@ -170,8 +170,8 @@ export const getRoutesWithDistanceCount = async (distance) => {
 
   if (response.status === 200) return Number(await response.text());
   else if (response.status === 400)
-    throw Error("Некорректные параметры запроса: " + (await response.text()));
-  else if (response.status === 404) throw Error("Элементы не найдены");
+    throw Error(await response.text());
+  else if (response.status === 404) throw Error(await response.text());
   else serverError();
 };
 
@@ -181,8 +181,8 @@ export const deleteRouteById = async (id) => {
   });
   if (response.status === 200) return response;
   else if (response.status === 400)
-    throw new Error(`Некорректное значение id=${id}`);
+    throw new Error(await response.text());
   else if (response.status === 404)
-    throw new Error(`Маршрут с id=${id} не найден`);
+    throw new Error(await response.text());
   else serverError();
 };
