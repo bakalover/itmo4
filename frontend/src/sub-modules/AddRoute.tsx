@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import {addRoute, addRoutesWithId} from '../api';
-import {Route, SimpleRoute} from "../model/types";
+import {UserRoute, SimpleRoute} from "../model/types";
 import {getErrorMessage} from "../utils/getErrorMessage";
 import FullRouteForm from "../components/forms/FullRouteForm";
 import SimpleRouteForm from "../components/forms/SimpleRouteForm";
+import {useNavigate} from "react-router-dom";
 
 interface State {
     isSimple: boolean;
