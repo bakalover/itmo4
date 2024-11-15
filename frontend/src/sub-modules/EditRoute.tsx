@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {updateRouteById} from '../api';
-import {Route} from "../model/types";
+import {UserRoute} from "../model/types";
 import FullRouteForm from "../components/forms/FullRouteForm";
 import {getErrorMessage} from "../utils/getErrorMessage";
 

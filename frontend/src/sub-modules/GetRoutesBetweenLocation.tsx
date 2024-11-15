@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import {getRouteBeetweenLocations} from "../api";
-import {Route} from "../model/types";
+import {UserRoute} from "../model/types";
 import {getErrorMessage} from "../utils/getErrorMessage";
 import RoutesBetweenLocationsForm from "../components/forms/RoutesBetweenLocationsForm";
+import {useNavigate} from "react-router-dom";
 
 interface State {
     routes: UserRoute[];

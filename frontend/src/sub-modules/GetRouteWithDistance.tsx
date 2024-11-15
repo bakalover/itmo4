@@ -30,7 +30,8 @@ const GetRoutesWithDistance: React.FC = () => {
 
     const handleDistanceCorrectnessChange = (value: boolean) => {
         setCorrectDistance(value)
-    }const navigate = useNavigate();
+    }
+    const navigate = useNavigate();
   const handleBack = () => {
     navigate("/");
   };
