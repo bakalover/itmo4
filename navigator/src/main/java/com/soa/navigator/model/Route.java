@@ -27,7 +27,6 @@ public class Route {
 
     private Location to;
 
-    @NotNull(message = "distance is null")
     @DecimalMin(value = "2", message = "distance should be greater 1")
-    private Integer distance;
+    private long distance;
 }

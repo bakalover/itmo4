@@ -50,7 +50,6 @@ public class Route {
 	@JoinColumn(name = "to_id")
 	private Location to;
 
-	@NotNull(message = "distance is null")
 	@DecimalMin(value = "1", message = "distance should be greater 1")
-	private Integer distance;
+	private long distance;
 }

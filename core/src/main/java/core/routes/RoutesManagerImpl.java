@@ -132,13 +132,13 @@ public class RoutesManagerImpl implements RoutesManager {
     }
 
     @Override
-    public List<Route> distanceEqual(Integer searchD)
+    public List<Route> distanceEqual(long searchD)
         throws EntityNotFoundException {
-        return getRoutes(List.of(route -> route.getDistance().equals(searchD)));
+        return getRoutes(List.of(route -> route.getDistance()==searchD));
     }
 
     @Override
-    public List<Route> distanceGreater(Integer searchD)
+    public List<Route> distanceGreater(long searchD)
         throws EntityNotFoundException {
         return getRoutes(List.of(route -> route.getDistance() > searchD));
     }

@@ -96,7 +96,7 @@ public class RestAPI extends Application {
 
     @GET
     @Path("/distance/count/{value}")
-    public Response getRouteCount(@PathParam("value") int value) {
+    public Response getRouteCount(@PathParam("value") long value) {
         log.info("Get route with distance value: {}", value);
         return okWith(rm.distanceEqual(value).size());
     }
@@ -104,7 +104,7 @@ public class RestAPI extends Application {
     @GET
     @Path("/distance/greater/{value}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRouteAbove(@PathParam("value") int value) {
+    public Response getRouteAbove(@PathParam("value") long value) {
         log.info("Get route with distance value grater than: {}", value);
         return okWith(rm.distanceGreater(value));
     }

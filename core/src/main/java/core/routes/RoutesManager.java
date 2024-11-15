@@ -27,9 +27,9 @@ public interface RoutesManager {
         public Route minRoute()
                         throws EntityNotFoundException;
 
-        public List<Route> distanceEqual(Integer d)
+        public List<Route> distanceEqual(long d)
                         throws EntityNotFoundException;
 
-        public List<Route> distanceGreater(Integer d)
+        public List<Route> distanceGreater(long d)
                         throws EntityNotFoundException;
 }

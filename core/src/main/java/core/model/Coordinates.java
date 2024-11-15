@@ -17,7 +17,7 @@ public class Coordinates {
     private Long id;
 
     @Min(value = -868, message = "x should be greater than -868")
-    private Integer x;
+    private long x;
 
     @NotNull(message = "coordinates.y not provided")
     @Min(value = -355, message = "y should be greater than -355")
