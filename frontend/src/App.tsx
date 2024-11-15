@@ -21,14 +21,15 @@ function App() {
     fetchRoutes,
     deleteRoute,
     message,
+    getRouteId,
   } = useRoutes();
   const [editingRoute, setEditingRoute] = useState<UserRoute | null>(null);
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
   const [infoMessage, setInfoMessage] = useState(message);
-  const handleEditRoute = (route: UserRoute) => {
+  const handleEditRoute = async (id: number) => {
     console.log("edit route");
     //setInfoMessage(null)
-    setEditingRoute(route);
+    setEditingRoute(await getRouteId(id));
   };
   const handleCancelEdit = () => setEditingRoute(null);
 

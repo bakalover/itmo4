@@ -7,7 +7,7 @@ interface MainTableProps {
     routes: UserRoute[];
     loading: boolean;
     error: string | null;
-    onEditRoute: (route: UserRoute) => void;
+    onEditRoute: (routeId: number) => void;
     onDeleteRoute: (id: number) => void;
     onAppliedFilters: (
         filters: string,
@@ -559,7 +559,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     <td>{route.to?.z}</td>
                                     <td>{route.distance.toString()}</td>
                                     <td>
-                                        <button onClick={() => onEditRoute(route)}>
+                                        <button onClick={() => onEditRoute(route.id)}>
                                             Подробнее
                                         </button>
                                         <button onClick={() => onDeleteRoute(route.id)}>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { deleteRouteById, getRoutes } from '../api';
+import { deleteRouteById, getRouteById, getRoutes } from '../api';
 import { ApiResponse, UserRoute } from '../model/types';
 import { getErrorMessage } from '../utils/getErrorMessage';
 
@@ -49,6 +49,17 @@ export function useRoutes() {
         }
     };
 
+    const getRouteId = async (id: number):Promise<UserRoute|null> =>  {
+        try {
+          const route: UserRoute = await getRouteById(id);
+          return route;
+        } catch (err) {
+            setError('Failed to update route');
+        }
+      return null;
+    };
+
+
     return {
         routes,
         loading,
@@ -58,6 +69,7 @@ export function useRoutes() {
         totalPages,
         fetchRoutes,
         deleteRoute,
-        message
+        message,
+        getRouteId
     };
 }
