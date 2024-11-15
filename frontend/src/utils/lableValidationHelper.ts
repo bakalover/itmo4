@@ -26,7 +26,6 @@ const setTextValidationText = (val: string, curConst: FieldConstraints) => {
 }
 
 export function makeValidationLabel(curConst: FieldConstraints) {
-    console.log('nullable is: ', curConst.nullable)
     let validationText: string = '';
     if (curConst.dataType === "text") validationText = setTextValidationText(validationText, curConst);
     else {
