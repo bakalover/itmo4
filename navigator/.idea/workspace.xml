@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="450eda56-8719-4cdc-b30f-7e3bb7c02f80" name="Changes" comment="Fixed methods responce statuses">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/soa/navigator/app/NavigatorResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/soa/navigator/app/NavigatorResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../core/src/main/java/core/model/Route.java" beforeDir="false" afterPath="$PROJECT_DIR$/../core/src/main/java/core/model/Route.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/soa/navigator/model/Coordinates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/soa/navigator/model/Coordinates.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,12 +41,12 @@
     &quot;assignee&quot;: &quot;themyav&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/bakalover/itmo4&quot;,
-    &quot;accountId&quot;: &quot;0b29f82a-b442-45e0-a047-e9b73003c023&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/bakalover/itmo4.git",
+    "accountId": "490fe8a9-eb3d-4888-bb87-7bff98298389"
   }
-}</component>
+}]]></component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -70,7 +70,7 @@
     "Maven.navigator [clean].executor": "Run",
     "Maven.navigator [package].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "soa-navigator",
+    "git-widget-placeholder": "soa",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/myav/IdeaProjects/itmo4/navigator",
     "node.js.detected.package.eslint": "true",
@@ -114,6 +114,7 @@
       <workItem from="1728038073696" duration="829000" />
       <workItem from="1728057777155" duration="3890000" />
       <workItem from="1729262912702" duration="4906000" />
+      <workItem from="1731709671017" duration="313000" />
     </task>
     <task id="LOCAL-00001" summary="New jakarta.persistence library version">
       <option name="closed" value="true" />

@@ -1,6 +1,6 @@
 package com.soa.navigator.model;
 
-import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Coordinates {
 
-    @DecimalMin(value = "-868", message = "x should be greater thatn -868")
+    @Min(value = -868, message = "x should be greater than -868")
     private long x;
 
-    @NotNull(message = "coordinates.x is not provided")
-    @DecimalMin(value = "-355", message = "y should be greater thatn -355")
+    @NotNull(message = "coordinates.y not provided")
+    @Min(value = -355, message = "y should be greater than -355")
     private Integer y;
 }

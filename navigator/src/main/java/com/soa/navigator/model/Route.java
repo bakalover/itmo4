@@ -3,21 +3,19 @@ package com.soa.navigator.model;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import lombok.Data;
 
 @Data
 public class Route {
 
     @NotNull
-    @Positive(message = "Id should be positive integer!")
     private Integer id;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "name is null")
+    @NotBlank(message = "name is blank")
     private String name;
 
-    @NotNull
+    @NotNull(message = "coordinates is null")
     private Coordinates coordinates;
 
     private String creationDate;

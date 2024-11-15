@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 public class Location {
 
-    @NotNull
     private Long id;
 
     @NotNull(message = "location.x is not provided")
