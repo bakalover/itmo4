@@ -11,7 +11,7 @@ public class Location {
     private Long id;
 
     @NotNull(message = "location.x is not provided")
-    private Double x;
+    private long x;
 
     @NotNull(message = "location.y is not provided")
     private Integer y;

@@ -22,7 +22,7 @@ public class RoutesManagerImpl implements RoutesManager {
     @PersistenceContext(unitName = "routesPersistence")
     private EntityManager em;
 
-    private Route safeFind(Long id) throws EntityNotFoundException {
+    private Route safeFind(Integer id) throws EntityNotFoundException {
         var r = em.find(Route.class, id);
         if (r == null) {
             log.warn("Route with id:{} not found", id);
@@ -72,7 +72,7 @@ public class RoutesManagerImpl implements RoutesManager {
     }
 
     @Override
-    public Route getRoute(Long id) throws EntityNotFoundException {
+    public Route getRoute(Integer id) throws EntityNotFoundException {
         return safeFind(id);
     }
 
@@ -101,7 +101,7 @@ public class RoutesManagerImpl implements RoutesManager {
     }
 
     @Override
-    public void deleteRoute(Long id) throws EntityNotFoundException {
+    public void deleteRoute(Integer  id) throws EntityNotFoundException {
         var r = safeFind(id);
         em.remove(r);
     }

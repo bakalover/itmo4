@@ -12,13 +12,13 @@ public interface RoutesManager {
         public void addRoute(Route r)
                         throws EntityExistsException;
 
-        public Route getRoute(Long id)
+        public Route getRoute(Integer id)
                         throws EntityNotFoundException;
 
         public List<Route> getRoutes(List<Predicate<Route>> fs)
                         throws EntityNotFoundException;
 
-        public void deleteRoute(Long id)
+        public void deleteRoute(Integer id)
                         throws EntityNotFoundException;
 
         public void updateRoute(Route updatedRoute)

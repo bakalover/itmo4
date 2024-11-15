@@ -82,7 +82,7 @@ public class RestAPI extends Application {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRoute(@PathParam("id") long id) {
+    public Response getRoute(@PathParam("id") int id) {
         log.info("Get route by id: {}", id);
         return okWith(rm.getRoute(id));
     }
@@ -120,7 +120,7 @@ public class RestAPI extends Application {
     @PATCH
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateRoute(@PathParam("id") long id, @Valid Route route) {
+    public Response updateRoute(@PathParam("id") int id, @Valid Route route) {
         route.setId(id);
         log.info("Update route, new route: {}", route);
         rm.updateRoute(route);
@@ -129,7 +129,7 @@ public class RestAPI extends Application {
 
     @DELETE
     @Path("/{id}")
-    public Response deleteRoute(@PathParam("id") long id) {
+    public Response deleteRoute(@PathParam("id") int id) {
         log.info("Delete route with id:{}", id);
         rm.deleteRoute(id);
         return okWith(justOk);

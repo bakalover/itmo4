@@ -24,7 +24,7 @@ import lombok.Data;
 public class Route {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	private Integer id;
 
 	@NotNull(message = "name is null")
 	@NotBlank(message = "name is blank")
