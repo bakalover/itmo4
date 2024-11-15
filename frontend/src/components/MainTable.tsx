@@ -540,7 +540,7 @@ const MainTable: React.FC<MainTableProps> = ({
                             <tbody>
                             {routes.map((route, index) => (
                                 <tr key={route.id}>
-                                    <td>{index + 1}</td>
+                                    <td>{(index + 1) + ((currentPage-1) * pageSize)}</td>
                                     <td>{route.id}</td>
                                     <td>{route.name}</td>
                                     <td>{route.coordinates.x?.toString()}</td>
