@@ -1,17 +1,23 @@
-export function parseObjectAndGetAllValues(currentObject: any): any[] {
+export function parseObjectAndGetAllValues(currentObject: any, getPath: boolean = false, currentPath: string = ''): any[] {
     const values: any[] = [];
     for (const key in currentObject) {
         if (currentObject.hasOwnProperty(key)) {
-            if (typeof currentObject[key] === 'object') {
-                const nestedValues = parseObjectAndGetAllValues(currentObject[key]);
+            const newPath: string = (currentPath !== '' ? currentPath + '.' + key : key.toString());
+            if (typeof currentObject[key] === 'object' && currentObject[key] !== null) {
+                const nestedValues = parseObjectAndGetAllValues(currentObject[key], getPath, newPath);
                 values.push(...nestedValues);
             } else {
-                values.push(currentObject[key]);
+                if (getPath) {
+                    values.push({path: newPath, value: currentObject[key]});
+                } else {
+                    values.push(currentObject[key]);
+                }
             }
         }
     }
     return values;
 }
+
 
 export function parseObjectAndGenerateTemplate(currentObject: any, defaultValue: any): any {
     if (defaultValue !== true) console.log('template is: ', currentObject)

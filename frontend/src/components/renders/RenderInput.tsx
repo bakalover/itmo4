@@ -150,7 +150,13 @@ export const RenderInput: React.FC<RenderInputProps> = ({
         if (emptyParse[0] === null) {
             if (curConst.blank_able) return [true]
             else return [false, 'строка не может быть пуста']
-        } else return [true] //assume what name " " is okayz
+        } else {
+            if (emptyParse[0].toString().trim().length === 0) {
+                if (curConst.blank_able) return [true]
+                else return [false, "строка из одних пробелов эквивалентна пустой"]
+            }
+            else return [true]
+        }
     }
 
     const saveChange = (parseResult: any[]) => {

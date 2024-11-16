@@ -2,6 +2,9 @@ import React, {useState} from "react";
 import {UserRoute} from "../model/types";
 import PaginationPanel from "./PaginationPanel";
 import {RenderFilter} from "./renders/RenderFilter";
+import {parseObjectAndGetAllValues} from "../utils/objectParser";
+import {Simulate} from "react-dom/test-utils";
+import copy = Simulate.copy;
 
 interface MainTableProps {
     routes: UserRoute[];
@@ -145,39 +148,20 @@ const MainTable: React.FC<MainTableProps> = ({
     };
 
     const getFiltersForAPI = async () => {
-        const filtersArray: string[] = [];
-        let route = filters["route"];
-        for (const key in route) {
-            const value = route[key as keyof typeof route];
-            if (typeof value === "object" && value !== null) {
-                console.log('will be checked: ', key, value)
-                for (const subKey in value) {
-                    let subValue: any;
-                    if (subKey === "val" || subKey === "type") {
-                        subValue = value;
-                        if (subValue["val"] !== "" && subValue["val"] !== " ") {
-                            if (subValue["type"] === "=")
-                                filtersArray.push(`${key}._eq_${subValue["val"]}`);
-                            else if (subValue["type"] === "<")
-                                filtersArray.push(`${key}.$_lt_${subValue["val"]}`);
-                            else if (subValue["type"] === ">")
-                                filtersArray.push(`${key}.$_gt_${subValue["val"]}`);
-                        }
-                    } else {
-                        subValue = value[subKey as keyof typeof value];
-                        if (subValue["val"] !== "" && subValue["val"] !== " ") {
-                            console.log("filters array is", filtersArray);
-                            if (subValue["type"] === "=")
-                                filtersArray.push(`${key}.${subKey}_eq_${subValue["val"]}`);
-                            else if (subValue["type"] === "<")
-                                filtersArray.push(`${key}.${subKey}_lt_${subValue["val"]}`);
-                            else if (subValue["type"] === ">")
-                                filtersArray.push(`${key}.${subKey}_gt_${subValue["val"]}`);
-                        }
-                    }
+        const dataArray = parseObjectAndGetAllValues(filters.route, true)
+        const filtersArray = []
+        for(let i = 0; i < dataArray.length; i+=2) {
+            if(!dataArray[i].hasOwnProperty('value')) continue
+            let val = dataArray[i].value
+            let path = dataArray[i].path.substring(0, dataArray[i].path.lastIndexOf('.'))
+            console.log(val, path)
 
-                }
-            }
+            let type = dataArray[i + 1].value
+
+            if (val === '' || val === undefined || val === null) continue
+            if (type === "=") filtersArray.push(`${path}_eq_${val}`)
+            else if (type === "<") filtersArray.push(`${path}_lt_${val}`)
+            else if (type === ">") filtersArray.push(`${path}_gt_${val}`);
         }
         return filtersArray.join(",");
     };

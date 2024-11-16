@@ -8,7 +8,7 @@ const MAX_FLOAT = new bigDecimal(3.4 * (10 ** 38))
 export interface FieldConstraints {
     dataType: string; //type can be: int, long, float, string
     min?: any;
-    max?:  any;
+    max?: any;
     nullable: boolean;
     blank_able?: boolean;
     inputComment?: string;
@@ -31,7 +31,7 @@ export const inputConstraints: {
     "route.coordinates.x": {
         dataType: "long",
         inputComment: "целое знаковое 64-битное",
-        nullable: true,
+        nullable: false, //primitive can not be null
         min: BigInt(-867),
         max: BigInt(MAX_LONG - 1),
     },
@@ -56,7 +56,7 @@ export const inputConstraints: {
     "route.from.x": {
         dataType: "long",
         inputComment: "целое знаковое 64-битное",
-        nullable: true,
+        nullable: false, //primitive can not be null
         min: BigInt(-MAX_LONG),
         max: BigInt(MAX_LONG - 1),
     },
@@ -69,7 +69,7 @@ export const inputConstraints: {
     },
     "route.from.z": {
         dataType: "float",
-        inputComment: "вещественное float",
+        inputComment: "с точностью не более 8 знаков вещественное float",
         nullable: false,
         min: MIN_FLOAT,
         max: MAX_FLOAT,
@@ -88,7 +88,7 @@ export const inputConstraints: {
     "route.to.x": {
         dataType: "long",
         inputComment: "целое знаковое 64-битное",
-        nullable: true,
+        nullable: false, //primitive can not be null
         min: BigInt(-MAX_LONG),
         max: BigInt(MAX_LONG - 1),
     },
@@ -101,7 +101,7 @@ export const inputConstraints: {
     },
     "route.to.z": {
         dataType: "float",
-        inputComment: "вещественное float",
+        inputComment: "с точностью не более 8 знаков вещественное float",
         nullable: false,
         min: MIN_FLOAT,
         max: MAX_FLOAT,
@@ -109,7 +109,7 @@ export const inputConstraints: {
     "route.distance": {
         dataType: "long",
         inputComment: "целое знаковое 64-битное",
-        nullable: true,
+        nullable: false, //primitive can not be null
         min: BigInt(2),
         max: BigInt(MAX_LONG - 1),
     },
@@ -127,10 +127,10 @@ export const inputConstraints: {
         max: BigInt(MAX_LONG - 1),
         nullable: false,
     },
-    "simpleRoute.distance": { //this is route distance
+    "simpleRoute.distance": {
         dataType: "long",
         inputComment: "целое знаковое 64-битное",
-        nullable: true,
+        nullable: false, //primitive can not be null
         min: BigInt(2),
         max: BigInt(MAX_LONG - 1),
     },
@@ -151,7 +151,7 @@ export const inputConstraints: {
     distance: {
         dataType: "long",
         inputComment: "целое знаковое 64-битное",
-        nullable: true,
+        nullable: false, //primitive can not be null
         min: BigInt(2),
         max: BigInt(MAX_LONG - 1),
     }
