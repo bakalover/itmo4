@@ -28,13 +28,15 @@ const PaginationPanel: React.FC<PaginationPanelProps> = ({
 
 
     const handlePageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newPage = parseInt(e.target.value, 10);
-        setCurrentPage(newPage);
+        const newPage = parseInt(e.target.value);
         if (!isNaN(newPage) && newPage >= 1 && newPage <= totalPages) {
             setCurrentPageCorrect(true)
         } else {
+            console.log('error: ', newPage, isNaN(newPage), newPage >= 1 && newPage <= totalPages)
+            console.log('total pages: ', totalPages)
             setCurrentPageCorrect(false)
         }
+        setCurrentPage(newPage);
     };
 
     const handlePreviousPage = async () => {
@@ -85,7 +87,7 @@ const PaginationPanel: React.FC<PaginationPanelProps> = ({
                         <p>Текущая </p>
                         <button onClick={handlePreviousPage}
                                 className={'nav'}
-                                disabled={!currentPageCorrect}
+                                disabled={!currentPageCorrect || totalPages === 0}
                         >{'<'}</button>
                         <input
                             value={isNaN(currentPage) ? '' : currentPage}
@@ -94,10 +96,10 @@ const PaginationPanel: React.FC<PaginationPanelProps> = ({
                             min={1}
                             max={totalPages}
                         />
-                        <button onClick={handleNextPage} className={'nav'} disabled={!currentPageCorrect}>{'>'}</button>
+                        <button onClick={handleNextPage} className={'nav'} disabled={!currentPageCorrect || totalPages === 0}>{'>'}</button>
 
                         <br/>
-                        <button onClick={handleGoToPage} disabled={!currentPageCorrect}>Перейти</button>
+                        <button onClick={handleGoToPage} disabled={!currentPageCorrect || totalPages === 0}>Перейти</button>
                     </td>
                 </tr>
                 </tbody>
