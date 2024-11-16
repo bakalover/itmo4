@@ -158,7 +158,7 @@ const MainTable: React.FC<MainTableProps> = ({
 
             let type = dataArray[i + 1].value
 
-            if (val === '' || val === undefined || val === null) continue
+            if (val === undefined || val === null || val === ''  || val.trim().length === 0 ) continue
             if (type === "=") filtersArray.push(`${path}_eq_${val}`)
             else if (type === "<") filtersArray.push(`${path}_lt_${val}`)
             else if (type === ">") filtersArray.push(`${path}_gt_${val}`);
