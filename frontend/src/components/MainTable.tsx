@@ -2,7 +2,11 @@ import React, {useState} from "react";
 import {UserRoute} from "../model/types";
 import PaginationPanel from "./PaginationPanel";
 import {RenderFilter} from "./renders/RenderFilter";
-import {parseObjectAndGetAllValues} from "../utils/objectParser";
+import {
+    parseObjectAndGenerateTemplate,
+    parseObjectAndGetAllValues,
+    parseObjectAndGetValue, parseObjectAndSetValue
+} from "../utils/objectParser";
 import {Simulate} from "react-dom/test-utils";
 import copy = Simulate.copy;
 
@@ -43,6 +47,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                                  onPageChanged,
                                                  message
                                              }) => {
+
     const [filters, setFilters] = useState({
         route: {
             id: {val: "", type: "="},
@@ -69,6 +74,8 @@ const MainTable: React.FC<MainTableProps> = ({
             distance: {val: "", type: "="},
         },
     });
+
+    const [correctness, setCorrectness] = useState(parseObjectAndGenerateTemplate(filters.route, true))
 
     const [checkboxes, setCheckboxes] = useState({
         id: false,
@@ -97,26 +104,23 @@ const MainTable: React.FC<MainTableProps> = ({
 
     const [pageSize, setPageSize] = useState(10); // размер страницы
     const [currentPage, setCurrentPage] = useState(1); // текущая страница
+    const [filterButtonBlocked, setFilterButtonBlocked] = useState(false)
 
-    const handleFilterChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    ) => {
-        const {name, value} = e.target;
-        console.log(name, value);
-        setFilters((prevFilters) => {
-            const newFilters = {...prevFilters};
-            const keys = name.split(".");
-            let current: any = newFilters;
-            for (let i = 0; i < keys.length - 1; i++) {
-                const key = keys[i];
-                if (!(key in current)) current[key] = {};
-                current = current[key];
-            }
-            current[keys[keys.length - 1]] = value;
-            return newFilters;
-        });
+    const checkFullCorrectness = (correctnessValues: boolean[]) => {
+        for (let i = 0; i < correctnessValues.length; i++) {
+            if (!correctnessValues[i]) return false;
+        }
+        return true;
     };
 
+    const handleFilterCorrectness = (path: string, value: boolean) => {
+        let curPath = path.substring(path.indexOf('.') + 1)
+        console.log('filter correctness: ', path, value, curPath, parseObjectAndGetValue(correctness, curPath))
+        let newCorrectness = parseObjectAndSetValue(correctness, curPath, value)
+        setCorrectness(newCorrectness)
+        let allData = parseObjectAndGetAllValues(correctness)
+        setFilterButtonBlocked(!checkFullCorrectness(allData))
+    }
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, checked} = e.target;
         setCheckboxes((prevCheckboxes) => {
@@ -150,15 +154,15 @@ const MainTable: React.FC<MainTableProps> = ({
     const getFiltersForAPI = async () => {
         const dataArray = parseObjectAndGetAllValues(filters.route, true)
         const filtersArray = []
-        for(let i = 0; i < dataArray.length; i+=2) {
-            if(!dataArray[i].hasOwnProperty('value')) continue
+        for (let i = 0; i < dataArray.length; i += 2) {
+            if (!dataArray[i].hasOwnProperty('value')) continue
             let val = dataArray[i].value
             let path = dataArray[i].path.substring(0, dataArray[i].path.lastIndexOf('.'))
             console.log(val, path)
 
             let type = dataArray[i + 1].value
 
-            if (val === undefined || val === null || val === ''  || val.trim().length === 0 ) continue
+            if (val === undefined || val === null || val === '' || val.trim().length === 0) continue
             if (type === "=") filtersArray.push(`${path}_eq_${val}`)
             else if (type === "<") filtersArray.push(`${path}_lt_${val}`)
             else if (type === ">") filtersArray.push(`${path}_gt_${val}`);
@@ -208,7 +212,8 @@ const MainTable: React.FC<MainTableProps> = ({
                     </tr>
                     <tr>
                         <td>
-                            <button onClick={applyFiltersAndSort}>
+                            <button onClick={applyFiltersAndSort}
+                            disabled={filterButtonBlocked}>
                                 Применить фильтры и сортировку
                             </button>
                         </td>
@@ -241,6 +246,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
+                                    onCorrectnessChange={handleFilterCorrectness}
                                 />
                             </th>
                             <th rowSpan={2}>
@@ -259,6 +265,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
+                                    onCorrectnessChange={handleFilterCorrectness}
                                 />
                             </th>
                             <th colSpan={2}>Координаты</th>
@@ -291,6 +298,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
+                                    onCorrectnessChange={handleFilterCorrectness}
                                 />
                             </th>
                             <th rowSpan={2}></th>
@@ -311,6 +319,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
+                                    onCorrectnessChange={handleFilterCorrectness}
                                 />
                             </th>
                             <th>
@@ -328,6 +337,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
+                                    onCorrectnessChange={handleFilterCorrectness}
                                 />
                             </th>
                             <th>
@@ -338,6 +348,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     name="from.name"
                                     checked={checkboxes.from?.name || false}
                                     onChange={handleCheckboxChange}
+
                                 />
                                 <br/>
                                 <RenderFilter
@@ -346,6 +357,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
+                                    onCorrectnessChange={handleFilterCorrectness}
                                 />
                             </th>
                             <th>
@@ -356,6 +368,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     name="from.id"
                                     checked={checkboxes.from?.id || false}
                                     onChange={handleCheckboxChange}
+
                                 />
                                 <br/>
                                 <RenderFilter
@@ -364,6 +377,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
+                                    onCorrectnessChange={handleFilterCorrectness}
                                 />
                             </th>
                             <th>
@@ -381,6 +395,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
+                                    onCorrectnessChange={handleFilterCorrectness}
                                 />
                             </th>
                             <th>
@@ -390,6 +405,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     name="from.y"
                                     checked={checkboxes.from?.y || false}
                                     onChange={handleCheckboxChange}
+
                                 />
                                 <br/>
                                 <RenderFilter
@@ -398,6 +414,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
+                                    onCorrectnessChange={handleFilterCorrectness}
                                 />
                             </th>
                             <th>
@@ -415,6 +432,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
+                                    onCorrectnessChange={handleFilterCorrectness}
                                 />
                             </th>
                             <th>
@@ -433,6 +451,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
+                                    onCorrectnessChange={handleFilterCorrectness}
                                 />
                             </th>
                             <th>
@@ -451,6 +470,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
+                                    onCorrectnessChange={handleFilterCorrectness}
                                 />
                             </th>
                             <th>
@@ -468,6 +488,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
+                                    onCorrectnessChange={handleFilterCorrectness}
                                 />
                             </th>
                             <th>
@@ -485,6 +506,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
+                                    onCorrectnessChange={handleFilterCorrectness}
                                 />
                             </th>
                             <th>
@@ -502,6 +524,7 @@ const MainTable: React.FC<MainTableProps> = ({
                                     state={filters}
                                     setState={setFilters}
                                     inline={false}
+                                    onCorrectnessChange={handleFilterCorrectness}
                                 />
                             </th>
                         </tr>
@@ -511,7 +534,7 @@ const MainTable: React.FC<MainTableProps> = ({
                             <tbody>
                             {routes.map((route, index) => (
                                 <tr key={route.id}>
-                                    <td>{(index + 1) + ((currentPage-1) * pageSize)}</td>
+                                    <td>{(index + 1) + ((currentPage - 1) * pageSize)}</td>
                                     <td>{route.id}</td>
                                     <td>{route.name}</td>
                                     <td>{route.coordinates.x?.toString()}</td>

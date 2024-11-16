@@ -8,6 +8,7 @@ interface RenderFilterProps {
     state: any;
     setState: React.Dispatch<React.SetStateAction<any>>;
     inline: boolean;
+    onCorrectnessChange : any;
 
 }
 
@@ -16,11 +17,13 @@ export const RenderFilter: React.FC<RenderFilterProps> = ({
                                                               path,
                                                               state,
                                                               setState,
-                                                              inline = false
+                                                              inline = false,
+                                                              onCorrectnessChange
                                                           }) => {
 
-    const handleFilterCorrectionChange = (path : string, value : boolean) => {
-        console.log('filter changed correction, but it doesnt matter')
+    const handleFilterCorrectionChange = (path: string, value: boolean) => {
+        //console.log('filter changed correction, but it doesnt matter')
+        onCorrectnessChange(path, value)
     }
 
     const keys = (path + '.type').split('.');
