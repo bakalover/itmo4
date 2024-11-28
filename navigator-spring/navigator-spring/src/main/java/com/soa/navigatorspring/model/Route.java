@@ -1,0 +1,33 @@
+package com.soa.navigatorspring.model;
+
+import lombok.Data;
+
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
+@Data
+public class Route {
+
+    @NotNull
+    @Positive(message = "Id should be positive integer!")
+    private Integer id;
+
+    @NotNull
+    @NotBlank
+    private String name;
+
+    @NotNull
+    private Coordinates coordinates;
+
+    private String creationDate;
+
+    @NotNull(message = "from location is null")
+    private Location from;
+
+    private Location to;
+
+    @DecimalMin(value = "2", message = "distance should be greater 1")
+    private long distance;
+}
