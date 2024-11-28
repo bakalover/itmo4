@@ -5,6 +5,8 @@ import com.soa.navigatorspring.model.Coordinates;
 import com.soa.navigatorspring.model.GetStat;
 import com.soa.navigatorspring.model.Location;
 import com.soa.navigatorspring.model.Route;
+import com.soa.navigatorspring.service.DiscoveryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -30,6 +32,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/")
 public class NavigatorController {
+
+    private final DiscoveryService discoveryService;
+
+    @Autowired
+    public NavigatorController(DiscoveryService coreApplicationClient) {
+        this.discoveryService = coreApplicationClient;
+    }
+
+    @GetMapping("/")
+    public String getDataFromCore() {
+        return discoveryService.getCoreData();
+    }
 
     //private final RestTemplate restTemplate;
 
