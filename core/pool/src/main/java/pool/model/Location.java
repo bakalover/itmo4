@@ -1,20 +1,21 @@
-package core.model;
+package pool.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import core.helpers.validation.NullableNotBlank;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
+import pool.helpers.validation.NullableNotBlank;
 
 @Entity
 @Data
-public class Location {
+public class Location implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

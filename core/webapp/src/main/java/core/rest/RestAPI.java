@@ -3,26 +3,37 @@
  */
 package core.rest;
 
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.*;
-import jakarta.ws.rs.core.Response.Status;
 import core.helpers.Filter;
-import core.model.*;
-import core.routes.RoutesManager;
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
-
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import pool.ejb.RoutesManager;
+import pool.model.GetStat;
+import pool.model.Route;
 
 @ApplicationScoped
 @Path("/routes")
 @Slf4j
 public class RestAPI extends Application {
 
-    @Inject
+    @EJB(
+        lookup = "java:global/pool/RouterManagerPoolInstance!pool.ejb.RoutesManager"
+    )
     private RoutesManager rm;
 
     private final String justOk = "Ok";
@@ -35,26 +46,41 @@ public class RestAPI extends Application {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllRoutes(
-            @QueryParam("page") @DefaultValue("0") int page,
-            @QueryParam("size") @DefaultValue("10") int size,
-            @QueryParam("sort") String sort,
-            @QueryParam("filter") String filters) {
-
-        log.info("Got params:\npage:{}\nsize:{}\nsort:{}\nfilters:{}", page, size, sort, filters);
+        @QueryParam("page") @DefaultValue("0") int page,
+        @QueryParam("size") @DefaultValue("10") int size,
+        @QueryParam("sort") String sort,
+        @QueryParam("filter") String filters
+    ) {
+        log.info(
+            "Got params:\npage:{}\nsize:{}\nsort:{}\nfilters:{}",
+            page,
+            size,
+            sort,
+            filters
+        );
         if (page < 0) {
-            return Response.status(Status.BAD_REQUEST).entity("Invalid page value").build();
+            return Response.status(Status.BAD_REQUEST)
+                .entity("Invalid page value")
+                .build();
         }
         if (size <= 0) {
-            return Response.status(Status.BAD_REQUEST).entity("Invalid size value").build();
+            return Response.status(Status.BAD_REQUEST)
+                .entity("Invalid size value")
+                .build();
         }
         GetStat stat = new GetStat();
         List<Route> routes;
         var all = rm.getRoutes(Filter.withoutFilters());
         routes = all;
         if (filters != null) {
-            routes = Filter.applyFilters(routes, Filter.tryParseFilters(filters));
+            routes = Filter.applyFilters(
+                routes,
+                Filter.tryParseFilters(filters)
+            );
             if (routes.isEmpty()) {
-                return Response.status(Status.NOT_FOUND).entity("No routes after filter apply").build();
+                return Response.status(Status.NOT_FOUND)
+                    .entity("No routes after filter apply")
+                    .build();
             }
         }
         if (sort != null && routes.size() > 1) {
@@ -66,13 +92,17 @@ public class RestAPI extends Application {
         stat.setNumberOfElements(routes.size());
         stat.setTotalElements(all.size());
 
-        stat.setTotalPages((int) Math.ceil((double) stat.getTotalElements() / (double) size));
+        stat.setTotalPages(
+            (int) Math.ceil((double) stat.getTotalElements() / (double) size)
+        );
         if (page == 0) { // All routes, size - ignored
             return okWith(stat);
         }
         var routesCutted = Filter.cut(routes, page, size);
         if (routesCutted.isEmpty()) {
-            return Response.status(Status.NOT_FOUND).entity("No routes at specified page").build();
+            return Response.status(Status.NOT_FOUND)
+                .entity("No routes at specified page")
+                .build();
         }
         stat.setRoutes(routesCutted);
         stat.setNumberOfElements(routesCutted.size());

@@ -1,4 +1,4 @@
-package core.model;
+package pool.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -6,11 +6,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import java.io.Serializable;
 import lombok.Data;
 
 @Entity
 @Data
-public class Coordinates {
+public class Coordinates implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

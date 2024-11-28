@@ -20,7 +20,6 @@ public class ExceptionInterceptor implements ExceptionMapper<Exception> {
 
     @Override
     public Response toResponse(Exception e) {
-        // All my exception got wrapped inside jakarta EJB Exception
         log.warn("Exception!");
         var flatten = e.getCause();
         if (flatten == null) { // If request does not reach bean, produces exception is not wrapped

@@ -1,6 +1,5 @@
-package core.helpers;
+package pool.helpers;
 
-import core.model.Route;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +9,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import pool.model.Route;
 
 @Slf4j
 public class Filter {

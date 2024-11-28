@@ -1,21 +1,22 @@
-package core.routes;
+package pool.ejb;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Predicate;
-
-import core.helpers.Filter;
-import core.model.Location;
-import core.model.Route;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Predicate;
 import lombok.extern.slf4j.Slf4j;
+import org.jboss.ejb3.annotation.Pool;
+import pool.helpers.Filter;
+import pool.model.Location;
+import pool.model.Route;
 
-@Stateless
+@Stateless(name = "RouterManagerPoolInstance")
+@Pool("slsb-strict-max-pool")
 @Slf4j
 public class RoutesManagerImpl implements RoutesManager {
 
