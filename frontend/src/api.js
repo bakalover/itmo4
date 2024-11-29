@@ -1,4 +1,31 @@
-const CORE_URL = "https://localhost:35443/routes";
+const CORE_CONSUL_URL = "http://localhost:8500/v1/catalog/service/core-service";
+
+const fetchServiceUrl = async () => {
+  try {
+    const response = await fetch(CORE_CONSUL_URL);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const urls = data.map((service) => {
+      const { ServicePort, Address } = service;
+      return `https://${Address}:${ServicePort}/routes`;
+    });
+
+    // Return the first URL from the array
+    return urls[0];
+  } catch (error) {
+    console.error("Error fetching service information:", error);
+  }
+};
+let CORE_URL = "";
+(async () => {
+  CORE_URL = await fetchServiceUrl();
+  console.log(CORE_URL);
+})();
+
+
 const NAVIGATOR_URL = "https://localhost:34443/navigator";
 
 function serverError() {
