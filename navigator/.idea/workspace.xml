@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="450eda56-8719-4cdc-b30f-7e3bb7c02f80" name="Changes" comment="Fixed methods responce statuses">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/soa/navigator/app/NavigatorResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/soa/navigator/app/NavigatorResource.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+      <option value="module" />
+    </option>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="soa-core" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;themyav&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/bakalover/itmo4&quot;,
+    &quot;accountId&quot;: &quot;0b29f82a-b442-45e0-a047-e9b73003c023&quot;
+  }
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2mwLQ0oDMlCgmn7JqcQNCbqxz80" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.navigator [clean].executor": "Run",
+    "Maven.navigator [package].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "soa-navigator",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/myav/IdeaProjects/itmo4/navigator",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java/com/soa/helpers/validation" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/soa/model" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="450eda56-8719-4cdc-b30f-7e3bb7c02f80" name="Changes" comment="" />
+      <created>1727982671710</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1727982671710</updated>
+      <workItem from="1727982673023" duration="372000" />
+      <workItem from="1727983599842" duration="1052000" />
+      <workItem from="1727984918800" duration="799000" />
+      <workItem from="1727986732389" duration="222000" />
+      <workItem from="1727987031852" duration="343000" />
+      <workItem from="1727987818778" duration="684000" />
+      <workItem from="1727990634087" duration="5266000" />
+      <workItem from="1728038073696" duration="829000" />
+      <workItem from="1728057777155" duration="3890000" />
+      <workItem from="1729262912702" duration="4906000" />
+    </task>
+    <task id="LOCAL-00001" summary="New jakarta.persistence library version">
+      <option name="closed" value="true" />
+      <created>1727991050342</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1727991050342</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Expanded templates for navigator methods">
+      <option name="closed" value="true" />
+      <created>1727995558709</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1727995558709</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Order-by switch case implementation">
+      <option name="closed" value="true" />
+      <created>1728060122355</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1728060122355</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Added errors handling to the method">
+      <option name="closed" value="true" />
+      <created>1728063132189</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1728063132189</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Finished first approximation of response system">
+      <option name="closed" value="true" />
+      <created>1728064221554</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1728064221554</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Made possible to deploy it on payara">
+      <option name="closed" value="true" />
+      <created>1729184394327</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1729184394327</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Fixed api path">
+      <option name="closed" value="true" />
+      <created>1729184772134</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1729184772134</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Fixed methods responce statuses">
+      <option name="closed" value="true" />
+      <created>1729266707032</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1729266707032</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="soa-navigator" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="New jakarta.persistence library version" />
+    <MESSAGE value="Expanded templates for navigator methods" />
+    <MESSAGE value="Order-by switch case implementation" />
+    <MESSAGE value="Added errors handling to the method" />
+    <MESSAGE value="Finished first approximation of response system" />
+    <MESSAGE value="Made possible to deploy it on payara" />
+    <MESSAGE value="Fixed api path" />
+    <MESSAGE value="Fixed methods responce statuses" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed methods responce statuses" />
+  </component>
+</project>

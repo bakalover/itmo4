@@ -1,0 +1,395 @@
+openapi: 3.0.0
+info:
+  title: Лабораторная работа №1
+  version: 0.0.1
+  description: Управление объектами класса Route
+servers:
+  - url: http://localhost:8080/api/
+components:
+  schemas:
+    Route:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+          description: |
+            Поле не может быть null, 
+            Значение поля должно быть больше 0, 
+            Значение этого поля должно быть уникальным, 
+            Значение этого поля должно генерироваться автоматически
+        name:
+          type: string
+          example: "Маршрут 1"
+          description: |
+            Поле не может быть null, 
+            Строка не может быть пустой
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+        creationDate:
+          type: string
+          format: date-time
+          description: |
+            Поле не может быть null, 
+            Значение этого поля должно генерироваться автоматически
+        from:
+          $ref: '#/components/schemas/Location'
+        to:
+          $ref: '#/components/schemas/Location'
+          nullable: true
+        distance:
+          type: integer
+          format: int64
+          example: 100
+          description: |
+            Значение поля должно быть больше 1
+
+    Coordinates:
+      type: object
+      properties:
+        x:
+          type: integer
+          description: Значение поля должно быть больше -868
+        y:
+          type: integer
+          example: -350
+          description: |
+            Поле не может быть null, 
+            Значение поля должно быть больше -355
+
+    Location:
+      type: object
+      properties:
+        x:
+          type: number
+          format: double
+          description: Поле не может быть null
+        y:
+          type: integer
+          description: Поле не может быть null
+        z:
+          type: number
+          format: float
+          description: Поле не может быть null
+        name:
+          type: string
+          nullable: true
+          description: Строка не может быть пустой, Поле может быть null
+
+    RouteExample:
+      type: object
+      properties:
+        route:
+          $ref: '#/components/schemas/Route'
+      example:
+        route:
+          id: 1
+          name: "Москва-Питер"
+          coordinates:
+            x: 10
+            y: -350
+          creationDate: "2024-09-06T03:42:51Z"
+          from:
+            x: 55.7558
+            y: 37.6173
+            z: 0.0
+            name: "Москва"
+          to:
+            x: 59.9343
+            y: 30.3351
+            z: 0.0
+            name: "Санкт-Петербург"
+          distance: 700
+paths:
+  /routes:
+    get:
+      summary: Метод получения всех маршрутов с возможностью фильтрации, сортировки и постраничного вывода
+      tags:
+      - Базовые операции
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: Номер страницы для постраничного вывода (по умолчанию 0)
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          required: false
+          description: Размер страницы (по умолчанию 10)
+          schema:
+            type: integer
+            default: 10
+        - name: sort
+          in: query
+          required: false
+          description: Поля для сортировки (например, "name,asc" или "distance,desc")
+          schema:
+            type: string
+        - name: filter
+          in: query
+          required: false
+          description: Поля для фильтрации (например, "name,asc" или "distance,desc")
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Успешный ответ с массивом маршрутов
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RouteExample'
+                  totalElements:
+                    type: integer
+                    description: Общее количество элементов в коллекции
+                  totalPages:
+                    type: integer
+                    description: Общее количество страниц с учетом размера страницы
+                  numberOfElements:
+                    type: integer
+                    description: Количество элементов на текущей странице
+        '400':
+          description: Указаны несуществующие фильтры или некорректный номер страницы
+        '404':
+          description: Маршруты не найдены
+        '500':
+          description: Внутренняя ошибка сервера
+
+    put:
+      summary: Метод добавления нового маршрута
+      tags:
+      - Базовые операции
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteExample'
+      responses:
+        '200':
+          description: Успешное создание маршрута
+        '400':
+          description: Ошибка валидации входных данных
+        '409':
+          description: Маршрут с указанным id уже существует
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /routes/{id}:
+    get:
+      summary: Получение маршрута по id
+      tags:
+      - Базовые операции
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор маршрута
+          schema:
+            type: integer
+
+      responses:
+        '200':
+          description: Успешный ответ с маршрутом
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteExample'
+        '400':
+          description: Невалидный id
+        '404':
+          description: Маршрут не найден
+        '500':
+          description: Внутренняя ошибка сервера
+
+    patch:
+      summary: Обновление маршрута по id
+      tags:
+      - Базовые операции
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор маршрута
+          schema:
+            type: integer
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteExample'
+
+      responses:
+        '200':
+          description: Успешное обновление маршрута
+        '400':
+          description: Невалидные входные данные или параметр id
+        '404':
+          description: Маршрут не найден
+        '500':
+          description: Внутренняя ошибка сервера
+
+    delete:
+      summary: Удаление маршрута по id
+      tags:
+      - Базовые операции
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Идентификатор маршрута
+          schema:
+            type: integer
+
+      responses:
+        '204':
+          description: Успешное удаление маршрута
+        '400':
+          description: Невалидное значение параметра id
+        '404':
+          description: Маршрут не найден
+        '500':
+          description: Внутренняя ошибка сервера
+  /routes/min-id:
+    get:
+      summary: Получить элемент с минимальным id
+      tags:
+      - Дополнительные операции
+      responses:
+        '200':
+          description: Элемент с минимальным id успешно получен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteExample'
+        '404':
+          description: Коллекция маршрутов пуста
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /routes/distance/count/{value}:
+    get:
+      summary: Получить количество объектов с заданным значением distance
+      tags:
+      - Дополнительные операции
+      parameters:
+        - name: value
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Количество объектов успешно получено.
+          content:
+            application/json:
+              schema:
+                type: integer
+        '400':
+          description: Невалидное значение distance
+        '404':
+          description: Элементы не найдены.
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /routes/distance/greater/{value}:
+    get:
+      summary: Получить массив объектов с distance больше заданного значения
+      tags:
+      - Дополнительные операции
+      parameters:
+        - name: value
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Список маршрутов успешно получен.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RouteExample'
+        '400':
+          description: Невалидное значение distance
+        '404':
+          description: Элементы не найдены.
+        '500':
+          description: Внутренняя ошибка сервера
+  /navigator/routes/{id-from}/{id-to}/{order-by}:
+    get:
+      summary: Найти все маршруты между указанными локациями и отсортировать по параметру
+      tags:
+      - Сервис №2
+      parameters:
+        - name: id-from
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: id-to
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: order-by
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Список маршрутов успешно получен.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Route'
+        '400':
+          description: Ошибка валидации параметров запроса
+        '404':
+          description: Маршруты не найдены.
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /navigator/route/add/{id-from}/{id-to}/{distance}:
+    post:
+      summary: Добавить новый маршрут между указанными локациями
+      tags:
+      - Сервис №2
+      parameters:
+        - name: id-from
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: id-to
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: distance
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: Новый маршрут успешно добавлен.
+        '400':
+          description: Ошибка валидации параметров запроса
+        '500':
+          description: Внутренняя ошибка сервера
