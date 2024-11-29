@@ -1,5 +1,28 @@
-const CORE_URL = "https://localhost:35443/routes";
-const NAVIGATOR_URL = "https://localhost:34443/navigator";
+const NAVIGATOR_URL = "http://localhost:8080/navigator";
+
+const CORE_CONSUL_URL = "http://localhost:8500/v1/catalog/service/core-service";
+
+const fetchServiceUrl = async () => {
+  try {
+    const response = await fetch(CORE_CONSUL_URL);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const urls = data.map((service) => {
+      const { ServicePort, Address } = service;
+      return `http://${Address}:${ServicePort}/routes`;
+    });
+
+    // Return the first URL from the array
+    return urls[0];
+  } catch (error) {
+    console.error("Error fetching service information:", error);
+  }
+};
+let CORE_URL = "";
+CORE_URL = await fetchServiceUrl();
 
 function serverError() {
   throw new Error("Внутренняя ошибка сервера!");
@@ -57,12 +80,8 @@ export const getRoutes = async (
   const response = await fetch(url);
 
   if (!response.ok) {
-    if (response.status === 404)
-      throw new Error(
-        await response.text()
-      );
-    else if (response.status === 400)
-      throw new Error(await response.text());
+    if (response.status === 404) throw new Error(await response.text());
+    else if (response.status === 400) throw new Error(await response.text());
     else serverError();
   }
 
@@ -79,10 +98,8 @@ export const addRoute = async (route) => {
     body: serializeBigInt(route),
   });
   if (response.status === 200) return response;
-  else if (response.status === 400)
-    throw new Error(await response.text());
-  else if (response.status === 409)
-    throw new Error(await response.text());
+  else if (response.status === 400) throw new Error(await response.text());
+  else if (response.status === 409) throw new Error(await response.text());
   else serverError();
 };
 
@@ -104,8 +121,7 @@ export const updateRouteById = async (id, route) => {
   });
   if (response.status === 200) return response;
   else if (response.status === 400) throw new Error(await response.text());
-  else if (response.status === 404)
-    throw new Error(await response.text());
+  else if (response.status === 404) throw new Error(await response.text());
   else serverError();
 };
 
@@ -117,11 +133,8 @@ export const addRoutesWithId = async (idTo, idFrom, distance) => {
       method: "POST",
     },
   );
-  if (response.status === 201) return response;
-  else if (response.status === 400)
-    throw new Error(
-      await response.text()
-    );
+  if (response.status === 200) return response;
+  else if (response.status === 400) throw new Error(await response.text());
   else serverError();
 };
 
@@ -131,10 +144,7 @@ export const getRouteBeetweenLocations = async (idFrom, idTo) => {
     method: "GET",
   });
   if (response.status === 200) return await response.json();
-  else if (response.status === 400)
-    throw new Error(
-      await response.text()
-    );
+  else if (response.status === 400) throw new Error(await response.text());
   else if (response.status === 404) throw new Error(await response.text());
   else serverError();
 };
@@ -149,8 +159,7 @@ export const fetchMinRoute = async () => {
 export const getRouteById = async (id) => {
   const response = await fetch(`${CORE_URL}/${id}`);
   if (response.status === 200) return await response.json();
-  else if (response.status === 400)
-    throw Error(await response.text());
+  else if (response.status === 400) throw Error(await response.text());
   else if (response.status === 404) throw Error(await response.text());
   else serverError();
 };
@@ -159,8 +168,7 @@ export const getRoutesWithDistanceGreater = async (distance) => {
   const response = await fetch(`${CORE_URL}/distance/greater/${distance}`);
 
   if (response.status === 200) return await response.json();
-  else if (response.status === 400)
-    throw Error(await response.text());
+  else if (response.status === 400) throw Error(await response.text());
   else if (response.status === 404) throw Error(await response.text());
   else serverError();
 };
@@ -169,8 +177,7 @@ export const getRoutesWithDistanceCount = async (distance) => {
   const response = await fetch(`${CORE_URL}/distance/count/${distance}`);
 
   if (response.status === 200) return Number(await response.text());
-  else if (response.status === 400)
-    throw Error(await response.text());
+  else if (response.status === 400) throw Error(await response.text());
   else if (response.status === 404) throw Error(await response.text());
   else serverError();
 };
@@ -180,9 +187,7 @@ export const deleteRouteById = async (id) => {
     method: "DELETE",
   });
   if (response.status === 200) return response;
-  else if (response.status === 400)
-    throw new Error(await response.text());
-  else if (response.status === 404)
-    throw new Error(await response.text());
+  else if (response.status === 400) throw new Error(await response.text());
+  else if (response.status === 404) throw new Error(await response.text());
   else serverError();
 };

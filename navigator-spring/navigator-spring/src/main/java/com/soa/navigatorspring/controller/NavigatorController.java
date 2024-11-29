@@ -179,7 +179,7 @@ public class NavigatorController {
     }
 
     private Location findLocationById(Long id) {
-        String urlFrom = coreUrl + "filter" + "from.id_eq_" + id;
+        String urlFrom = coreUrl + "?" + "filter" + "=" + "from.id_eq_" + id;
 
         try {
             ResponseEntity<GetStat> responseFrom = discoveryService
@@ -213,7 +213,7 @@ public class NavigatorController {
     }
 
     private Location findLocationByToId(Long id) {
-        String urlTo = coreUrl + "filter" + "to.id_eq_" + id;
+        String urlTo = coreUrl + "?" + "filter" + "=" + "to.id_eq_" + id;
 
         try {
             ResponseEntity<GetStat> responseTo = discoveryService
