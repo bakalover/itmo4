@@ -1,5 +1,4 @@
-const NAVIGATOR_URL = "http://localhost:8080/navigator";
-
+const NAVIGATOR_URL = "https://localhost:8080/navigator";
 const CORE_CONSUL_URL = "http://localhost:8500/v1/catalog/service/core-service";
 
 const fetchServiceUrl = async () => {

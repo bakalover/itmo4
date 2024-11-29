@@ -1,34 +1,39 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.2.10.RELEASE</version>  <!-- Downgrade Spring Boot -->
-		<relativePath/>
+		<relativePath />
 	</parent>
 	<groupId>com.soa</groupId>
 	<artifactId>zuul</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>zuul</name>
 	<description>Zuul proxy for SOA lab3</description>
-	<url/>
+	<url />
 	<licenses>
-		<license/>
+		<license />
 	</licenses>
 	<developers>
-		<developer/>
+		<developer />
 	</developers>
 	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
+		<connection />
+		<developerConnection />
+		<tag />
+		<url />
 	</scm>
 	<properties>
-		<java.version>1.8</java.version>  <!-- Use Java 8 or 11 for Spring Boot 2.2.x -->
-		<spring-cloud.version>Hoxton.SR11</spring-cloud.version> <!-- Add Spring Cloud Version -->
+		<java.version
+        >1.8</java.version>  <!-- Use Java 8 or 11 for Spring Boot 2.2.x -->
+		<spring-cloud.version
+        >Hoxton.SR11</spring-cloud.version> <!-- Add Spring Cloud Version -->
 	</properties>
 	<dependencies>
 		<dependency>
@@ -49,6 +54,14 @@
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 			<version>2.2.10.RELEASE</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-config-client -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-config-client</artifactId>
+        </dependency>
+
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
