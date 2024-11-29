@@ -1,6 +1,12 @@
 spring:
   application:
     name: navigator
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        register: false  # Don't register with Consul
 
 server:
   port: 8081

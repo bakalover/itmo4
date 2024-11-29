@@ -35,14 +35,14 @@ public class NavigatorController {
 
     private final DiscoveryService discoveryService;
 
-    @Autowired
-    public NavigatorController(DiscoveryService coreApplicationClient) {
-        this.discoveryService = coreApplicationClient;
+    public NavigatorController(DiscoveryService discoveryService) {
+        this.discoveryService = discoveryService;
     }
+
 
     @GetMapping("/")
     public String getDataFromCore() {
-        return discoveryService.getCoreData();
+        return discoveryService.getCoreHello();
     }
 
     //private final RestTemplate restTemplate;
