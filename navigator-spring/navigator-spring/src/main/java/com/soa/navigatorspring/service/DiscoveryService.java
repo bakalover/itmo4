@@ -20,9 +20,9 @@ public class DiscoveryService {
     }
 
     public String getCoreHello() {
-        List<ServiceInstance> instances = consulDiscoveryClient.getInstances("core");
+        List<ServiceInstance> instances = consulDiscoveryClient.getInstances("core-service");
         if (instances.isEmpty()) {
-            throw new RuntimeException("No instances of 'core' service found in Consul");
+            throw new RuntimeException("No instances of 'core-service' service found in Consul");
         }
 
         ServiceInstance serviceInstance = instances.get(0);
