@@ -1,6 +1,8 @@
 const CORE_URL = "https://localhost:35443/routes";
 const NAVIGATOR_URL = "https://localhost:34443/navigator";
 
+const EUREKA_URL = "http://localhost:8761/eureka/apps"
+
 function serverError() {
   throw new Error("Внутренняя ошибка сервера!");
 }
@@ -10,6 +12,14 @@ const serializeBigInt = (obj) => {
     typeof value === "bigint" ? value.toString() : value,
   );
 };
+
+export const getNavigatorService = async(
+
+) => {
+  const response = await fetch(EUREKA_URL);
+  console.log(response)
+
+}
 
 export const getRoutes = async (
   filters = "",
