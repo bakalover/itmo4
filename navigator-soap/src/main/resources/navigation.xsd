@@ -10,7 +10,7 @@
     <xs:complexType name="location">
         <xs:sequence>
             <xs:element name="id" type="xs:long" />
-            <xs:element name="x" type="xs:long" />
+            <xs:element name="x" type="xs:float" />
             <xs:element name="y" type="xs:int" />
             <xs:element name="z" type="xs:float" />
             <xs:element name="name" type="xs:string" minOccurs="0" />
@@ -105,12 +105,7 @@
     <xs:element name="getAllRoutesBetweenLocationsResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element
-                    name="routes"
-                    type="ns0:route"
-                    minOccurs="0"
-                    maxOccurs="unbounded"
-                />
+                <xs:element name="routes" type="ns0:routes" />
                 <xs:element name="status" type="xs:string" />
                 <xs:element name="message" type="xs:string" minOccurs="0" />
             </xs:sequence>

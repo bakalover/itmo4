@@ -2,12 +2,14 @@ package com.example.producing_web_service.endpoints;
 
 import com.service.navigator.AddRouteBetweenLocationsRequest;
 import com.service.navigator.AddRouteBetweenLocationsResponse;
+import com.service.navigator.GetAllRoutesBetweenLocationsRequest;
+import com.service.navigator.GetAllRoutesBetweenLocationsResponse;
 import com.service.navigator.GetAllRoutesRequest;
 import com.service.navigator.GetAllRoutesResponse;
 import com.service.navigator.HelloRequest;
 import com.service.navigator.HelloResponse;
-import com.service.navigator.Route;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.ws.client.WebServiceTransportException;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
@@ -17,7 +19,8 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 @Endpoint
 public class NavigatorEndpoint {
 
-    private static final String NAMESPACE_URI = "http://navigator.service.com";
+    private final String NAMESPACE_URI = "http://navigator.service.com";
+    private final String CORE_MULE_URL = "http://localhost:39080/mule/routes";
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "helloRequest")
     @ResponsePayload
@@ -27,67 +30,42 @@ public class NavigatorEndpoint {
         return response;
     }
 
-    //    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getAllRoutesBetweenLocationsRequest")
-    //    @ResponsePayload
-    //    public GetAllRoutesBetweenLocationsResponse getAllRoutesBetweenLocations(
-    //            @RequestPayload GetAllRoutesBetweenLocationsRequest request
-    //    ) {
-    //        GetAllRoutesBetweenLocationsResponse response = new GetAllRoutesBetweenLocationsResponse();
-    //        String filterString = "filter=from.id_eq_" + request.getIdFrom() + ",to.id_eq_" + request.getIdTo();
-    //        String sortString = "&sort=" + request.getOrderBy();
-    //
-    //        /*
-    //        Perform getAllRoutes request to Mule application. Unpack returned data to getAllRoutesResponse:
-    //
-    //        <xs:element name="getAllRoutesResponse">
-    //        <xs:complexType>
-    //            <xs:sequence>
-    //                <xs:element name="getStat" type="tns:GetStat" minOccurs="0"/>
-    //                <xs:element name="fault" type="tns:Fault" minOccurs="0"/>
-    //            </xs:sequence>
-    //        </xs:complexType>
-    //    </xs:element>
-    //         */
-    //
-    //        try {
-    //            ResponseEntity<GetStat> routesResponse = discoveryService
-    //                    .t()
-    //                    .getForEntity(url, GetStat.class);
-    //
-    //            if (routesResponse.getStatusCode() == HttpStatus.OK) {
-    //                GetStat stat = routesResponse.getBody();
-    //                response.setRoutes(stat.getRoutes());
-    //                response.setStatus("OK");
-    //            } else if (routesResponse.getStatusCode() == HttpStatus.BAD_REQUEST) {
-    //                response.setStatus("BAD_REQUEST");
-    //                response.setMessage("Incorrect sort parameters are provided");
-    //            } else if (routesResponse.getStatusCode() == HttpStatus.NOT_FOUND) {
-    //                response.setStatus("NOT_FOUND");
-    //                response.setMessage("There are no routes from  " + request.getIdFrom() + " to " + request.getIdTo());
-    //            } else {
-    //                response.setStatus(routesResponse.getStatusCode().toString());
-    //                response.setMessage(routesResponse.getBody().toString());
-    //            }
-    //        } catch (HttpClientErrorException e) {
-    //            if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
-    //                response.setStatus("BAD_REQUEST");
-    //                response.setMessage("Incorrect sort parameters are provided");
-    //            } else if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
-    //                response.setStatus("NOT_FOUND");
-    //                response.setMessage("There are no routes from  " + request.getIdFrom() + " to " + request.getIdTo());
-    //            } else {
-    //                response.setStatus("INTERNAL_SERVER_ERROR");
-    //                response.setMessage("Could not perform request to core service\nTry later");
-    //            }
-    //        } catch (HttpServerErrorException e) {
-    //            response.setStatus("INTERNAL_SERVER_ERROR");
-    //            response.setMessage("Could not perform request to core service\nTry later");
-    //        } catch (Exception e) {
-    //            response.setStatus("INTERNAL_SERVER_ERROR");
-    //            response.setMessage("Could not perform request to core service\nTry later");
-    //        }
-    //        return response;
-    //    }
+    @PayloadRoot(
+        namespace = NAMESPACE_URI,
+        localPart = "getAllRoutesBetweenLocationsRequest"
+    )
+    @ResponsePayload
+    public GetAllRoutesBetweenLocationsResponse getAllRoutesBetweenLocations(
+        @RequestPayload GetAllRoutesBetweenLocationsRequest request
+    ) {
+        GetAllRoutesBetweenLocationsResponse response =
+            new GetAllRoutesBetweenLocationsResponse();
+
+        String filterString =
+            "?filter=from.id_eq_" +
+            request.getIdFrom() +
+            ",to.id_eq_" +
+            request.getIdTo();
+        String sortString = "&sort=" + request.getOrderBy();
+
+        try {
+            WebServiceTemplate webTemplate = new WebServiceTemplate();
+            var marshaller = new Jaxb2Marshaller();
+            marshaller.setContextPath("com.service.navigator");
+            webTemplate.setMarshaller(marshaller);
+            webTemplate.setUnmarshaller(marshaller);
+            var getAllRoutesResponse =
+                (GetAllRoutesResponse) webTemplate.marshalSendAndReceive(
+                    CORE_MULE_URL + filterString + sortString,
+                    new GetAllRoutesRequest()
+                );
+            response.setRoutes(getAllRoutesResponse.getGetStat().getRoutes());
+        } catch (WebServiceTransportException e) {
+            e.printStackTrace();
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
 
     @PayloadRoot(
         namespace = NAMESPACE_URI,
@@ -148,10 +126,6 @@ public class NavigatorEndpoint {
         //            route.setTo(locationTo);
         //            route.setDistance(request.getDistance());
 
-        // Create the SOAP request
-        String coreUrl = "http://localhost:39080/mule/routes";
-        Route route = new Route();
-
         //            String soapRequest = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:gs=\"" + namespace + "\">" +
         //                    "<soapenv:Header/>" +
         //                    "<soapenv:Body>" +
@@ -184,31 +158,6 @@ public class NavigatorEndpoint {
         //                    "</soapenv:Envelope>";
 
         // Send the SOAP request
-        WebServiceTemplate webTemplate = new WebServiceTemplate();
-        var marshaller = new Jaxb2Marshaller();
-        marshaller.setContextPath("com.service.navigator");
-        webTemplate.setMarshaller(marshaller);
-        webTemplate.setUnmarshaller(marshaller);
-        try {
-            var r = (GetAllRoutesResponse) webTemplate.marshalSendAndReceive(
-                coreUrl,
-                new GetAllRoutesRequest()
-            );
-            var stat = r.getGetStat();
-            System.out.println(stat.getTotalPages());
-            System.out.println(stat.getNumberOfElements());
-            System.out.println(stat.getNumberOfElements());
-            stat
-                .getRoutes()
-                .getRoute()
-                .stream()
-                .forEach(k -> {
-                    System.out.println(k.getId());
-                    System.out.println(k.getName());
-                });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         //            // Process the response
         //            if (responseEntity.getStatusCode().is2xxSuccessful()) {
