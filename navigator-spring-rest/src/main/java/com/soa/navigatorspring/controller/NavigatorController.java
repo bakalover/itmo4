@@ -1,8 +1,8 @@
 // src/main/java/com/soa/navigator/controller/NavigatorResource.java
 package com.soa.navigatorspring.controller;
 
-import com.soa.navigatorspring.model.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.RouteMatcher;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +14,13 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 
 import java.util.List;
 import java.util.Objects;
+
+import com.service.navigator.AddRouteBetweenLocationsRequest;
+import com.service.navigator.AddRouteBetweenLocationsResponse;
+import com.service.navigator.GetAllRoutesBetweenLocationsRequest;
+import com.service.navigator.GetAllRoutesBetweenLocationsResponse;
+import com.service.navigator.Route;
+
 
 @RestController
 @RequestMapping("/")
