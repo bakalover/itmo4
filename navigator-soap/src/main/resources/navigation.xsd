@@ -43,6 +43,36 @@
         </xs:sequence>
     </xs:complexType>
 
+
+    <xs:complexType name="Fault">
+        <xs:sequence>
+            <xs:element name="code" type="xs:string"/>
+            <xs:element name="message" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:element name="getAllRoutesRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="page" type="xs:int" minOccurs="0" default="0"/>
+                <xs:element name="size" type="xs:int" minOccurs="0" default="10"/>
+                <xs:element name="sort" type="xs:string" minOccurs="0"/>
+                <xs:element name="filters" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllRoutesResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="getStat" type="tns:GetStat" minOccurs="0"/>
+                <xs:element name="fault" type="tns:Fault" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
     <!-- Request and Response Types for getAllRoutesBetweenLocations -->
     <xs:element name="getAllRoutesBetweenLocationsRequest">
         <xs:complexType>
