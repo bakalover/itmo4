@@ -1,53 +1,61 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:tns="http://navigator.service.com"
-           targetNamespace="http://navigator.service.com"
-           elementFormDefault="qualified">
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:ns0="http://navigator.service.com"
+    targetNamespace="http://navigator.service.com"
+    elementFormDefault="qualified"
+>
 
     <!-- Complex Types -->
-    <xs:complexType name="Location">
+    <xs:complexType name="location">
         <xs:sequence>
-            <xs:element name="id" type="xs:long"/>
-            <xs:element name="x" type="xs:long"/>
-            <xs:element name="y" type="xs:int"/>
-            <xs:element name="z" type="xs:float"/>
-            <xs:element name="name" type="xs:string" minOccurs="0"/>
+            <xs:element name="id" type="xs:long" />
+            <xs:element name="x" type="xs:long" />
+            <xs:element name="y" type="xs:int" />
+            <xs:element name="z" type="xs:float" />
+            <xs:element name="name" type="xs:string" minOccurs="0" />
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="Coordinates">
+    <xs:complexType name="coordinates">
         <xs:sequence>
-            <xs:element name="x" type="xs:long" minOccurs="0"/>
-            <xs:element name="y" type="xs:int"/>
+            <xs:element name="x" type="xs:long" minOccurs="0" />
+            <xs:element name="y" type="xs:int" />
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="Route">
+    <xs:complexType name="route">
         <xs:sequence>
-            <xs:element name="id" type="xs:int"/>
-            <xs:element name="name" type="xs:string"/>
-            <xs:element name="coordinates" type="tns:Coordinates"/>
-            <xs:element name="creationDate" type="xs:string" minOccurs="0"/>
-            <xs:element name="from" type="tns:Location"/>
-            <xs:element name="to" type="tns:Location" minOccurs="0"/>
-            <xs:element name="distance" type="xs:long"/>
+            <xs:element name="id" type="xs:int" />
+            <xs:element name="name" type="xs:string" />
+            <xs:element name="coordinates" type="ns0:coordinates" />
+            <xs:element name="creationDate" type="xs:string" minOccurs="0" />
+            <xs:element name="from" type="ns0:location" />
+            <xs:element name="to" type="ns0:location" minOccurs="0" />
+            <xs:element name="distance" type="xs:long" />
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="GetStat">
+    <xs:complexType name="routes">
         <xs:sequence>
-            <xs:element name="routes" type="tns:Route" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="totalElements" type="xs:int" minOccurs="0"/>
-            <xs:element name="totalPages" type="xs:int" minOccurs="0"/>
-            <xs:element name="numberOfElements" type="xs:int" minOccurs="0"/>
+            <xs:element name="route" type="ns0:route" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="getStat">
+        <xs:sequence>
+            <xs:element name="numberOfElements" type="xs:int" minOccurs="0" />
+            <xs:element name="totalElements" type="xs:int" minOccurs="0" />
+            <xs:element name="totalPages" type="xs:int" minOccurs="0" />
+            <xs:element name="routes" type="ns0:routes" />
         </xs:sequence>
     </xs:complexType>
 
 
-    <xs:complexType name="Fault">
+    <xs:complexType name="fault">
         <xs:sequence>
-            <xs:element name="code" type="xs:string"/>
-            <xs:element name="message" type="xs:string"/>
+            <xs:element name="code" type="xs:string" />
+            <xs:element name="message" type="xs:string" />
         </xs:sequence>
     </xs:complexType>
 
@@ -55,10 +63,20 @@
     <xs:element name="getAllRoutesRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="page" type="xs:int" minOccurs="0" default="0"/>
-                <xs:element name="size" type="xs:int" minOccurs="0" default="10"/>
-                <xs:element name="sort" type="xs:string" minOccurs="0"/>
-                <xs:element name="filters" type="xs:string" minOccurs="0"/>
+                <xs:element
+                    name="page"
+                    type="xs:int"
+                    minOccurs="0"
+                    default="0"
+                />
+                <xs:element
+                    name="size"
+                    type="xs:int"
+                    minOccurs="0"
+                    default="10"
+                />
+                <xs:element name="sort" type="xs:string" minOccurs="0" />
+                <xs:element name="filters" type="xs:string" minOccurs="0" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -66,8 +84,8 @@
     <xs:element name="getAllRoutesResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="getStat" type="tns:GetStat" minOccurs="0"/>
-                <xs:element name="fault" type="tns:Fault" minOccurs="0"/>
+                <xs:element name="getStat" type="ns0:getStat" minOccurs="0" />
+                <xs:element name="fault" type="ns0:fault" minOccurs="0" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -77,9 +95,9 @@
     <xs:element name="getAllRoutesBetweenLocationsRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="idFrom" type="xs:long"/>
-                <xs:element name="idTo" type="xs:long"/>
-                <xs:element name="orderBy" type="xs:string"/>
+                <xs:element name="idFrom" type="xs:long" />
+                <xs:element name="idTo" type="xs:long" />
+                <xs:element name="orderBy" type="xs:string" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -87,9 +105,14 @@
     <xs:element name="getAllRoutesBetweenLocationsResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="routes" type="tns:Route" minOccurs="0" maxOccurs="unbounded"/>
-                <xs:element name="status" type="xs:string"/>
-                <xs:element name="message" type="xs:string" minOccurs="0"/>
+                <xs:element
+                    name="routes"
+                    type="ns0:route"
+                    minOccurs="0"
+                    maxOccurs="unbounded"
+                />
+                <xs:element name="status" type="xs:string" />
+                <xs:element name="message" type="xs:string" minOccurs="0" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -98,9 +121,9 @@
     <xs:element name="addRouteBetweenLocationsRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="idFrom" type="xs:long"/>
-                <xs:element name="idTo" type="xs:long"/>
-                <xs:element name="distance" type="xs:int"/>
+                <xs:element name="idFrom" type="xs:long" />
+                <xs:element name="idTo" type="xs:long" />
+                <xs:element name="distance" type="xs:int" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -108,21 +131,21 @@
     <xs:element name="addRouteBetweenLocationsResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="status" type="xs:string"/>
-                <xs:element name="message" type="xs:string"/>
+                <xs:element name="status" type="xs:string" />
+                <xs:element name="message" type="xs:string" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
     <!-- Request and Response Types for hello -->
     <xs:element name="helloRequest">
-        <xs:complexType/>
+        <xs:complexType />
     </xs:element>
 
     <xs:element name="helloResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="message" type="xs:string"/>
+                <xs:element name="message" type="xs:string" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
