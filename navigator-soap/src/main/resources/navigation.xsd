@@ -8,24 +8,38 @@
     <xs:complexType name="Location">
         <xs:sequence>
             <xs:element name="id" type="xs:long"/>
-            <xs:element name="name" type="xs:string"/>
+            <xs:element name="x" type="xs:long"/>
+            <xs:element name="y" type="xs:int"/>
+            <xs:element name="z" type="xs:float"/>
+            <xs:element name="name" type="xs:string" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="Coordinates">
         <xs:sequence>
-            <xs:element name="x" type="xs:int"/>
+            <xs:element name="x" type="xs:long" minOccurs="0"/>
             <xs:element name="y" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="Route">
         <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
             <xs:element name="name" type="xs:string"/>
             <xs:element name="coordinates" type="tns:Coordinates"/>
+            <xs:element name="creationDate" type="xs:string" minOccurs="0"/>
             <xs:element name="from" type="tns:Location"/>
-            <xs:element name="to" type="tns:Location"/>
-            <xs:element name="distance" type="xs:int"/>
+            <xs:element name="to" type="tns:Location" minOccurs="0"/>
+            <xs:element name="distance" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="GetStat">
+        <xs:sequence>
+            <xs:element name="routes" type="tns:Route" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="totalElements" type="xs:int" minOccurs="0"/>
+            <xs:element name="totalPages" type="xs:int" minOccurs="0"/>
+            <xs:element name="numberOfElements" type="xs:int" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
